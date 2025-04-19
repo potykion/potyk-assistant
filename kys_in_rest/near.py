@@ -70,8 +70,16 @@ def near(metro: str):
 
             for rest in tag_rests:
                 yield f'• [{rest["name"]}]({rest["yandex_maps"]})'
-                if rest.get("comment"):
-                    yield f'_{rest["comment"]}_'
+                if rest.get("comment") or rest.get("from_channel"):
+                    comment = rest["comment"]
+
+                    if rest.get("from_channel"):
+                        if rest["from_post"]:
+                            comment = f'{comment} © [{rest["from_channel"]}]({rest["from_post"]})'
+                        else:
+                            comment = f'{comment} © {rest["from_channel"]}'
+                    yield f'_{comment}_'
+
                 yield ""
 
-    return "\n".join(_gen())
+    return "\n".join(_gen()).replace(".", r"\.")

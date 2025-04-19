@@ -6,7 +6,9 @@
     "tags": [
       "ramen"
     ],
-    "comment": ""
+    "comment": "",
+    "from_channel": "",
+    "from_post": ""
   },
   {
     "metro": "Новослободская",
@@ -31,20 +33,22 @@
     "name": "Китайский Самовар Ипинлао",
     "yandex_maps": "https://yandex.ru/maps/-/CHVwmFM6",
     "tags": [
-      "chinese",
-      "korean"
+      "chinese"
     ],
-    "comment": ""
+    "comment": "",
+    "from_channel": "",
+    "from_post": ""
   },
   {
     "metro": "Киевская",
     "name": "Soluxe",
     "yandex_maps": "https://yandex.ru/maps/-/CHV-E6~W",
     "tags": [
-      "chinese",
-      "korean"
+      "chinese"
     ],
-    "comment": "Утка за 3.5к по выхам"
+    "comment": "Утка за 3.5к по выхам",
+    "from_channel": "ВКУСОВЩИНА",
+    "from_post": "https://t.me/vkuso_vshina/3103"
   },
   {
     "metro": "Калужская",
@@ -54,7 +58,9 @@
       "chinese",
       "korean"
     ],
-    "comment": "Безлимитный барбекю"
+    "comment": "Безлимитный барбекю",
+    "from_channel": "по столовкам",
+    "from_post": "https://t.me/postolovkam/457"
   },
   {
     "metro": "Университет",
@@ -64,7 +70,9 @@
       "chinese",
       "korean"
     ],
-    "comment": "Пибимпаб и чачжанмен"
+    "comment": "Пибимпаб и чачжанмен",
+    "from_channel": "куриная лапка",
+    "from_post": "https://t.me/streetlapka/6150"
   },
   {
     "metro": "Университет",
@@ -94,7 +102,7 @@
       "chinese",
       "korean"
     ],
-    "comment": ""
+    "comment": "(бля 4 китайки в 1 здании)"
   },
   {
     "metro": "Раменки",
@@ -124,7 +132,9 @@
       "kebab",
       "shawarma"
     ],
-    "comment": ""
+    "comment": "",
+    "from_channel": "Что нового в Москве?",
+    "from_post": "https://t.me/newinmoscow/4560?single"
   },
   {
     "metro": "Лубянка",
@@ -134,7 +144,9 @@
       "kebab",
       "shawarma"
     ],
-    "comment": ""
+    "comment": "",
+    "from_channel": "Кантина мира",
+    "from_post": "https://t.me/cantinabytanya"
   },
   {
     "metro": "Пушкинская",
@@ -144,7 +156,9 @@
       "burger",
       "sandwich"
     ],
-    "comment": "Смэш бургер"
+    "comment": "Смэш бургер",
+    "from_channel": "",
+    "from_post": ""
   },
   {
     "metro": "Трубная",
@@ -154,7 +168,9 @@
       "burger",
       "sandwich"
     ],
-    "comment": "Самый топ бургер"
+    "comment": "Самый топ бургер",
+    "from_channel": "Vagitarian",
+    "from_post": "https://t.me/vagitarian/1148"
   },
   {
     "metro": "Сухаревская",
@@ -164,7 +180,9 @@
       "burger",
       "sandwich"
     ],
-    "comment": "Сэндвичи"
+    "comment": "Сэндвичи",
+    "from_channel": "тг",
+    "from_post": "https://t.me/dodgysandwiches"
   },
   {
     "metro": "Китай Город",
@@ -174,7 +192,9 @@
       "italian",
       "spanish"
     ],
-    "comment": ""
+    "comment": "",
+    "from_channel": "",
+    "from_post": ""
   },
   {
     "metro": "Китай Город",
@@ -194,7 +214,9 @@
       "italian",
       "spanish"
     ],
-    "comment": "Качо Пепе"
+    "comment": "Качо Пепе",
+    "from_channel": "все пошло по еде",
+    "from_post": "https://t.me/eat_and_pray/1171"
   },
   {
     "metro": "Пушка",
@@ -204,7 +226,9 @@
       "italian",
       "spanish"
     ],
-    "comment": "Карпаччо, тартар, аранчини"
+    "comment": "Карпаччо, тартар, аранчини",
+    "from_channel": "ешь с красавиной",
+    "from_post": "https://t.me/krasavina_eats/1991?single"
   },
   {
     "metro": "Кузнецкий мост",
@@ -223,7 +247,9 @@
     "tags": [
       "fish"
     ],
-    "comment": ""
+    "comment": "",
+    "from_channel": "",
+    "from_post": ""
   },
   {
     "metro": "Цветной бульвар",
@@ -232,6 +258,8 @@
     "tags": [
       "fish"
     ],
-    "comment": "Чебуреки с крабом и креветками, осьмидог"
+    "comment": "Чебуреки с крабом и креветками, осьмидог",
+    "from_channel": "Московский мул",
+    "from_post": ""
   }
-] 
+]

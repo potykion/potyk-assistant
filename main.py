@@ -16,7 +16,7 @@ async def near_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     print(metro)
 
     near_rests = near(metro)
-    await update.message.reply_text(near_rests, parse_mode="Markdown")
+    await update.message.reply_markdown_v2(near_rests)
 
 
 async def post_init(application: Application) -> None:
