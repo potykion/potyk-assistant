@@ -2,7 +2,7 @@ name: Deploy Application
 
 on:
   push:
-    branches: [ main ]  # Триггер на пуш в main ветку
+    branches: [ master ]  # Триггер на пуш в main ветку
 
 jobs:
   deploy:
