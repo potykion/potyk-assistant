@@ -25,7 +25,7 @@ async def near_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
             keyboard.append(row)
             
         reply_markup = InlineKeyboardMarkup(keyboard)
-        await update.message.reply_text("Где?", reply_markup=reply_markup)
+        await update.message.reply_text("гдэ?", reply_markup=reply_markup)
         return
         
     metro = update.message.text.split(None, 1)[1]

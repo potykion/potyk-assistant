@@ -1,0 +1,27 @@
+name: Deploy Application
+
+on:
+  push:
+    branches: [ main ]  # Триггер на пуш в main ветку
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Add SSH Private Key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Execute Deployment Commands
+        run: |
+          ssh -o StrictHostKeyChecking=no -l leybovich-nikita 84.201.131.244 << 'EOF'
+          cd kys_in_rest
+          git pull
+          source ./.venv/bin/activate
+          pkill -f "python main.py" || true  # Игнорируем ошибку, если процесс не найден
+          nohup python main.py > output.log 2>&1 &
+          EOF
