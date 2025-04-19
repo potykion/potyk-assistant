@@ -3,22 +3,28 @@
 ### Серв
 
 ```sh
+ssh -l leybovich-nikita 84.201.131.244
 git clone https://github.com/potykion/kys_in_rest.git
 cd kys_in_rest
 # Пишем туда TG_TOKEN=...
 nano .env
 # sudo apt install python3.12-venv
 python3 -m venv ".venv"
-source /.venv/bin/activate
+source ./.venv/bin/activate
 pip install -r requirements.txt
 # Запуск в режиме демона
 nohup python main.py > output.log 2>&1 &
 # Выводит pid
 ```
 
-#### Перезагрузка
+#### Обновление
 
 ```sh
-kill {pid}
+ssh -l leybovich-nikita 84.201.131.244
+cd kys_in_rest
+git pull
+source ./.venv/bin/activate
+# pgrep -f "python main.py" + kill
+pkill -f "python main.py" 
 nohup python main.py > output.log 2>&1 &
 ```
