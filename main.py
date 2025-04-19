@@ -1,16 +1,37 @@
-# This is a sample Python script.
+import dotenv
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, Application
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from kys_in_rest.near import near
 
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+TG_TOKEN = dotenv.get_key(".env", "TG_TOKEN")
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text(f"Hello {update.effective_user.first_name}")
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+async def near_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    metro = update.message.text.split(None, 1)[1]
+    print(metro)
+
+    near_rests = near(metro)
+    await update.message.reply_text(near_rests, parse_mode="Markdown")
+
+
+async def post_init(application: Application) -> None:
+    await application.bot.set_my_commands([("near", "Ищет рестики по метро")])
+
+
+def main():
+    app = ApplicationBuilder().token(TG_TOKEN).post_init(post_init).build()
+
+    app.add_handler(CommandHandler("hello", hello))
+    app.add_handler(CommandHandler("near", near_handler))
+
+    print("run_polling...")
+    app.run_polling()
+
+
+if __name__ == "__main__":
+    main()

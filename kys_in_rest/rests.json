@@ -1,0 +1,237 @@
+[
+  {
+    "metro": "Улица 1905 года",
+    "name": "Naruto Ramen",
+    "yandex_maps": "https://yandex.ru/maps/-/CHVweRmS",
+    "tags": [
+      "ramen"
+    ],
+    "comment": ""
+  },
+  {
+    "metro": "Новослободская",
+    "name": "Tom Yam Bar",
+    "yandex_maps": "https://yandex.ru/maps/org/tom_yam/40176927687?si=potyk-io",
+    "tags": [
+      "tom-yam"
+    ],
+    "comment": ""
+  },
+  {
+    "metro": "Лубянка",
+    "name": "Chang",
+    "yandex_maps": "https://yandex.ru/maps/org/chang/16970850930?si=potyk-io",
+    "tags": [
+      "tom-yam"
+    ],
+    "comment": "Лучший Том Ям в городе"
+  },
+  {
+    "metro": "Новослободская",
+    "name": "Китайский Самовар Ипинлао",
+    "yandex_maps": "https://yandex.ru/maps/-/CHVwmFM6",
+    "tags": [
+      "chinese",
+      "korean"
+    ],
+    "comment": ""
+  },
+  {
+    "metro": "Киевская",
+    "name": "Soluxe",
+    "yandex_maps": "https://yandex.ru/maps/-/CHV-E6~W",
+    "tags": [
+      "chinese",
+      "korean"
+    ],
+    "comment": "Утка за 3.5к по выхам"
+  },
+  {
+    "metro": "Калужская",
+    "name": "Jungli",
+    "yandex_maps": "https://yandex.ru/maps/-/CHVdVCIq",
+    "tags": [
+      "chinese",
+      "korean"
+    ],
+    "comment": "Безлимитный барбекю"
+  },
+  {
+    "metro": "Университет",
+    "name": "Мисянь / Рисарт",
+    "yandex_maps": "https://yandex.ru/maps/-/CHVwyA9D",
+    "tags": [
+      "chinese",
+      "korean"
+    ],
+    "comment": "Пибимпаб и чачжанмен"
+  },
+  {
+    "metro": "Университет",
+    "name": "Ланьчжоу",
+    "yandex_maps": "https://yandex.ru/maps/-/CHVwyU6t",
+    "tags": [
+      "chinese",
+      "korean"
+    ],
+    "comment": ""
+  },
+  {
+    "metro": "Университет",
+    "name": "Китайский самовар",
+    "yandex_maps": "https://yandex.ru/maps/-/CHVwyJZC",
+    "tags": [
+      "chinese",
+      "korean"
+    ],
+    "comment": ""
+  },
+  {
+    "metro": "Университет",
+    "name": "Hi Малатан",
+    "yandex_maps": "https://yandex.ru/maps/-/CHVwyR8v",
+    "tags": [
+      "chinese",
+      "korean"
+    ],
+    "comment": ""
+  },
+  {
+    "metro": "Раменки",
+    "name": "Чайна Рай",
+    "yandex_maps": "https://yandex.ru/maps/-/CHVweSjz",
+    "tags": [
+      "chinese",
+      "korean"
+    ],
+    "comment": ""
+  },
+  {
+    "metro": "Чистые пруды",
+    "name": "Durum Kebab",
+    "yandex_maps": "https://yandex.ru/maps/-/CHRFID0I",
+    "tags": [
+      "kebab",
+      "shawarma"
+    ],
+    "comment": ""
+  },
+  {
+    "metro": "Китай Город",
+    "name": "Kebab Ø18",
+    "yandex_maps": "https://yandex.ru/maps/-/CHV-mYod",
+    "tags": [
+      "kebab",
+      "shawarma"
+    ],
+    "comment": ""
+  },
+  {
+    "metro": "Лубянка",
+    "name": "So far kebab",
+    "yandex_maps": "https://yandex.ru/maps/org/so_far_kebab/218732866203?si=potyk-io",
+    "tags": [
+      "kebab",
+      "shawarma"
+    ],
+    "comment": ""
+  },
+  {
+    "metro": "Пушкинская",
+    "name": "Все твои друзья",
+    "yandex_maps": "https://yandex.ru/maps/-/CHV-aVnO",
+    "tags": [
+      "burger",
+      "sandwich"
+    ],
+    "comment": "Смэш бургер"
+  },
+  {
+    "metro": "Трубная",
+    "name": "Smoke BBQ",
+    "yandex_maps": "https://yandex.ru/maps/-/CHV-4LIB",
+    "tags": [
+      "burger",
+      "sandwich"
+    ],
+    "comment": "Самый топ бургер"
+  },
+  {
+    "metro": "Сухаревская",
+    "name": "Dodgy",
+    "yandex_maps": "https://yandex.ru/maps/-/CHV-Y428",
+    "tags": [
+      "burger",
+      "sandwich"
+    ],
+    "comment": "Сэндвичи"
+  },
+  {
+    "metro": "Китай Город",
+    "name": "Пицца 22 см",
+    "yandex_maps": "https://yandex.ru/maps/-/CHVwmOoQ",
+    "tags": [
+      "italian",
+      "spanish"
+    ],
+    "comment": ""
+  },
+  {
+    "metro": "Китай Город",
+    "name": "Веладора",
+    "yandex_maps": "https://yandex.ru/maps/-/CHV-eQN9",
+    "tags": [
+      "italian",
+      "spanish"
+    ],
+    "comment": "Пицца по слайсам у автомойки"
+  },
+  {
+    "metro": "Мендель",
+    "name": "Прошуттерия",
+    "yandex_maps": "https://yandex.ru/maps/-/CHVwe28a",
+    "tags": [
+      "italian",
+      "spanish"
+    ],
+    "comment": "Качо Пепе"
+  },
+  {
+    "metro": "Пушка",
+    "name": "Grassa",
+    "yandex_maps": "https://yandex.ru/maps/org/grassa/86771150001?si=potyk-io",
+    "tags": [
+      "italian",
+      "spanish"
+    ],
+    "comment": "Карпаччо, тартар, аранчини"
+  },
+  {
+    "metro": "Кузнецкий мост",
+    "name": "Bruno",
+    "yandex_maps": "https://yandex.ru/maps/org/bruno/50206086671?si=potyk-io",
+    "tags": [
+      "italian",
+      "spanish"
+    ],
+    "comment": "Тартар, биф Веллингтон, суфле"
+  },
+  {
+    "metro": "Смоленская",
+    "name": "Тресковия",
+    "yandex_maps": "https://yandex.ru/maps/org/treskoviya/121535393211?si=potyk-io",
+    "tags": [
+      "fish"
+    ],
+    "comment": ""
+  },
+  {
+    "metro": "Цветной бульвар",
+    "name": "Anchovy's Club",
+    "yandex_maps": "https://yandex.ru/maps/org/anchovy_s_club/214459289040?si=potyk-io",
+    "tags": [
+      "fish"
+    ],
+    "comment": "Чебуреки с крабом и креветками, осьмидог"
+  }
+] 
