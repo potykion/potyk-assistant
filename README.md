@@ -28,3 +28,5 @@ source ./.venv/bin/activate
 pkill -f "python main.py" 
 nohup python main.py > output.log 2>&1 &
 ```
+
+[Сурс](https://chat.deepseek.com/a/chat/s/783c3446-773e-4482-80da-bf83c91a7b74)
