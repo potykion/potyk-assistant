@@ -8,7 +8,7 @@ class Restaurant(TypedDict):
     city: str
     metro: str
     prices: str
-    rating: str
+    rating: int | None
     comment: str
     date_created: str
     telegram: str
