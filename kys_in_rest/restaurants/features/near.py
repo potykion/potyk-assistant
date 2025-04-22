@@ -1,5 +1,7 @@
+import sqlite3
 from collections import defaultdict
 
+from kys_in_rest.core.cfg import root_dir
 from kys_in_rest.core.tg_utils import escape
 from kys_in_rest.restaurants.entries.metro import metro_colors
 from kys_in_rest.restaurants.entries.tag import tag_groups
@@ -7,7 +9,11 @@ from kys_in_rest.restaurants.infra.rest_repo import load_rests
 
 
 def near(metro: str):
-    metro_rests = load_rests(metro, rating=7)
+    conn = sqlite3.connect(root_dir / "db.sqlite")
+    conn.row_factory = sqlite3.Row
+    curr = conn.cursor()
+
+    metro_rests = load_rests(curr, metro, rating=7)
 
     def _gen():
         yield f"*{metro_colors[metro]} {metro.upper()}*"

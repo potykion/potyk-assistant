@@ -1,14 +1,9 @@
 import sqlite3
 
-from kys_in_rest.core.cfg import root_dir
 from kys_in_rest.restaurants.entries.restaurant import Restaurant
 
 
-def load_rests(metro=None, rating=None):
-    conn = sqlite3.connect(root_dir / "db.sqlite")
-    conn.row_factory = sqlite3.Row
-    curr = conn.cursor()
-
+def load_rests(cursor: sqlite3.Cursor, metro=None, rating=None) -> list[Restaurant]:
     q = "select * from restaurants"
     params = []
 
@@ -24,5 +19,5 @@ def load_rests(metro=None, rating=None):
     if where_parts:
         q = f"{q} where {' AND '.join(where_parts)}"
 
-    rows = curr.execute(q, params).fetchall()
+    rows = cursor.execute(q, params).fetchall()
     return [Restaurant(**row) for row in rows]
