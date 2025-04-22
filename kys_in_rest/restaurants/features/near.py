@@ -1,6 +1,8 @@
+from collections import defaultdict
+
 from kys_in_rest.core.tg_utils import escape
 from kys_in_rest.restaurants.entries.metro import metro_colors
-from kys_in_rest.restaurants.entries.tag import tag_names
+from kys_in_rest.restaurants.entries.tag import tag_groups
 from kys_in_rest.restaurants.infra.rest_repo import load_rests
 
 
@@ -15,18 +17,14 @@ def near(metro: str):
         yield f'*{metro_colors[metro_rests[0]["metro"]]} {metro_rests[0]["metro"].upper()}*'
         yield ""
 
-        metro_rests_by_tags = {}
+        metro_rests_by_tags = defaultdict(list)
         for rest in metro_rests:
-            if not rest["tags"]:
-                continue
-
-            primary_tag = tuple(sorted(rest["tags"]))
-            if primary_tag not in metro_rests_by_tags:
-                metro_rests_by_tags[primary_tag] = []
-            metro_rests_by_tags[primary_tag].append(rest)
+            for group, tags in tag_groups.items():
+                if frozenset(rest["tags"]) & frozenset(tags):
+                    metro_rests_by_tags[group].append(rest)
 
         for tags, tag_rests in sorted(metro_rests_by_tags.items()):
-            yield " ".join(f"*{tag_names[tag]}*" for tag in tags)
+            yield " ".join(f"*{tag}*" for tag in tags)
 
             for rest in tag_rests:
                 yield f'• [{rest["name"]}]({rest["yandex_maps"]})'
