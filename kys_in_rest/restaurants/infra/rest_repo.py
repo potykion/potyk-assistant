@@ -10,11 +10,11 @@ def load_rests(cursor: sqlite3.Cursor, metro=None, rating=None) -> list[Restaura
     where_parts = []
 
     if metro:
-        where_parts.append("metro like ?")
+        where_parts.append("(metro like ?)")
         params.append(f"%{metro}%")
     if rating:
-        where_parts.append("rating is null or rating >= ?")
-        params.append("?")
+        where_parts.append("(rating is null or rating >= ?)")
+        params.append(rating)
 
     if where_parts:
         q = f"{q} where {' AND '.join(where_parts)}"
