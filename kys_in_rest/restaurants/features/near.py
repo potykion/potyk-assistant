@@ -10,13 +10,12 @@ def near(metro: str):
     metro_rests = load_rests(metro)
 
     def _gen():
-        yield f'*{metro_colors[metro]} {metro.upper()}*'
+        yield f"*{metro_colors[metro]} {metro.upper()}*"
         yield ""
 
         if not metro_rests:
             yield f"Рестораны рядом с метро {metro} не найдены"
             return
-
 
         metro_rests_by_tag_groups = defaultdict(list)
         for rest in metro_rests:
@@ -28,7 +27,7 @@ def near(metro: str):
             yield f"*{tag_group}*"
 
             for rest in tag_rests:
-                yield f'• [{rest["name"]}]({rest["yandex_maps"]})'
+                yield f'• [{escape(rest["name"])}]({rest["yandex_maps"]})'
                 if rest.get("comment") or rest.get("from_channel"):
                     comment = escape(rest["comment"])
 
