@@ -17,14 +17,14 @@ def near(metro: str):
         yield f'*{metro_colors[metro_rests[0]["metro"]]} {metro_rests[0]["metro"].upper()}*'
         yield ""
 
-        metro_rests_by_tags = defaultdict(list)
+        metro_rests_by_tag_groups = defaultdict(list)
         for rest in metro_rests:
             for group, tags in tag_groups.items():
-                if frozenset(rest["tags"]) & frozenset(tags):
-                    metro_rests_by_tags[group].append(rest)
+                if frozenset(rest["tags"].split(",")) & frozenset(tags):
+                    metro_rests_by_tag_groups[group].append(rest)
 
-        for tags, tag_rests in sorted(metro_rests_by_tags.items()):
-            yield " ".join(f"*{tag}*" for tag in tags)
+        for tag_group, tag_rests in sorted(metro_rests_by_tag_groups.items()):
+            yield f"*{tag_group}*"
 
             for rest in tag_rests:
                 yield f'• [{rest["name"]}]({rest["yandex_maps"]})'
