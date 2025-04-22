@@ -4,16 +4,19 @@ from kys_in_rest.core.cfg import root_dir
 from kys_in_rest.restaurants.entries.restaurant import Restaurant
 
 
-def load_rests(metro=None):
+def load_rests(metro=None, rating=None):
     conn = sqlite3.connect(root_dir / "db.sqlite")
     conn.row_factory = sqlite3.Row
     curr = conn.cursor()
 
     q = "select * from restaurants"
-    params = tuple()
+    params = []
     if metro:
-        q = "select * from restaurants where metro like ?"
-        params = (f"%{metro}%",)
+        q = f"{q} where metro like ?"
+        params.append(f"%{metro}%")
+    if rating:
+        q = f"{q} where rating is null or rating >= ?"
+        params.append("?")
 
     rows = curr.execute(q, params).fetchall()
     return [Restaurant(**row) for row in rows]

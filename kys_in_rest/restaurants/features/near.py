@@ -7,7 +7,7 @@ from kys_in_rest.restaurants.infra.rest_repo import load_rests
 
 
 def near(metro: str):
-    metro_rests = load_rests(metro)
+    metro_rests = load_rests(metro, rating=7)
 
     def _gen():
         yield f"*{metro_colors[metro]} {metro.upper()}*"
