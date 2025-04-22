@@ -10,12 +10,13 @@ def near(metro: str):
     metro_rests = load_rests(metro)
 
     def _gen():
+        yield f'*{metro_colors[metro]} {metro.upper()}*'
+        yield ""
+
         if not metro_rests:
             yield f"Рестораны рядом с метро {metro} не найдены"
             return
 
-        yield f'*{metro_colors[metro_rests[0]["metro"]]} {metro_rests[0]["metro"].upper()}*'
-        yield ""
 
         metro_rests_by_tag_groups = defaultdict(list)
         for rest in metro_rests:
