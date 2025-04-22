@@ -1,51 +1,13 @@
-import json
-import os
-
-metro_colors = {
-    "Калужская": "🟠",
-    "Киевская": "🔵",
-    "Китай Город": "🟠",
-    "Кузнецкий мост": "🟣",
-    "Лубянка": "🔴",
-    "Новослободская": "🩶",
-    "Пушкинская": "🟣",
-    "Раменки": "🟡",
-    "Смоленская": "🔵",
-    "Сухаревская": "🟠",
-    "Трубная": "🩶",
-    "Улица 1905 года": "🟣",
-    "Университет": "🔴",
-    "Цветной бульвар": "🩶",
-    "Чистые пруды": "🔴",
-}
-tag_names = {
-    "ramen": "РАМЕН",
-    "tom-yam": "ТОМ ЯМ",
-    "chinese": "КИТАЙКИ",
-    "korean": "КОРЕЙКИ",
-    "kebab": "КЕБАБЫ ДЮРУМЫ",
-    "shawarma": "ШАУРМА",
-    "burger": "БУРГЕРЫ",
-    "sandwich": "СЭНДВИЧИ",
-    "italian": "ИТАЛИЯ",
-    "spanish": "ИСПАНИЯ",
-    "fish": "РЫБА",
-}
-
-
-def load_rests():
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    json_path = os.path.join(current_dir, "rests.json")
-    with open(json_path, "r", encoding="utf-8") as f:
-        return json.load(f)
+from kys_in_rest.core.tg_utils import escape
+from kys_in_rest.restaurants.entries.metro import metro_colors
+from kys_in_rest.restaurants.entries.tag import tag_names
+from kys_in_rest.restaurants.infra.rest_repo import load_rests
 
 
 def near(metro: str):
-    rests = load_rests()
+    metro_rests = load_rests(metro)
 
     def _gen():
-        metro_rests = [rest for rest in rests if rest["metro"].lower() == metro.lower()]
-
         if not metro_rests:
             yield f"Рестораны рядом с метро {metro} не найдены"
             return
@@ -83,10 +45,3 @@ def near(metro: str):
     message = "\n".join(_gen())
 
     return message
-
-
-def escape(text):
-    to_escape = ".()-"
-    for ch in to_escape:
-        text = text.replace(ch, rf"\{ch}")
-    return text

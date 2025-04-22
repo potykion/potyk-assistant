@@ -1,8 +1,17 @@
+import itertools
+
 import dotenv
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, Application, CallbackQueryHandler
+from telegram.ext import (
+    ApplicationBuilder,
+    CommandHandler,
+    ContextTypes,
+    Application,
+    CallbackQueryHandler,
+)
 
-from kys_in_rest.near import near, metro_colors
+from kys_in_rest.restaurants.features.list_metro import list_metro_items
+from kys_in_rest.restaurants.features.near import near
 
 TG_TOKEN = dotenv.get_key(".env", "TG_TOKEN")
 
@@ -13,21 +22,20 @@ async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def near_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if len(update.message.text.split()) == 1:
-        # Команда вызвана без параметров
-        keyboard = []
-        row = []
-        for i, (metro, color) in enumerate(sorted(metro_colors.items(), key=lambda item: item[1])):
-            row.append(InlineKeyboardButton(f"{color} {metro}", callback_data=f"metro_{metro}"))
-            if (i + 1) % 3 == 0:  # По 3 кнопки в ряду
-                keyboard.append(row)
-                row = []
-        if row:  # Добавляем оставшиеся кнопки
-            keyboard.append(row)
-            
+        metro_items = list_metro_items()
+
+        keyboard = [
+            [
+                InlineKeyboardButton(metro_str, callback_data=metro_cb)
+                for (metro_str, metro_cb) in row
+            ]
+            for row in itertools.batched(metro_items, 3)
+        ]
         reply_markup = InlineKeyboardMarkup(keyboard)
+
         await update.message.reply_text("гдэ??", reply_markup=reply_markup)
         return
-        
+
     metro = update.message.text.split(None, 1)[1]
     print(metro)
 
@@ -38,7 +46,7 @@ async def near_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
     await query.answer()
-    
+
     if query.data.startswith("metro_"):
         metro = query.data[6:]  # Убираем префикс "metro_"
         near_rests = near(metro)
