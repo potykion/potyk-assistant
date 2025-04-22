@@ -10,14 +10,14 @@ from telegram.ext import (
     CallbackQueryHandler,
 )
 
+from kys_in_rest.core.cfg import root_dir
+from kys_in_rest.core.sqlite_utils import make_cursor
+from kys_in_rest.restaurants.features.add_new import AddNewRestaurant
 from kys_in_rest.restaurants.features.list_metro import list_metro_items
 from kys_in_rest.restaurants.features.near import near
+from kys_in_rest.restaurants.infra.rest_repo import SqliteRestRepo
 
 TG_TOKEN = dotenv.get_key(".env", "TG_TOKEN")
-
-
-async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text(f"Hello {update.effective_user.first_name}")
 
 
 async def near_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -43,6 +43,11 @@ async def near_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     await update.message.reply_markdown_v2(near_rests)
 
 
+async def new_rest_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    add_new_restaurant = AddNewRestaurant(SqliteRestRepo(make_cursor(root_dir / "db.sqlite")))
+    add_new_restaurant.do()
+
+
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
     await query.answer()
@@ -54,14 +59,20 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
 
 async def post_init(application: Application) -> None:
-    await application.bot.set_my_commands([("near", "Ищет рестики по метро")])
+    await application.bot.set_my_commands(
+        [
+            ("near", "Ищет рестики по метро"),
+            # todo uncomment when AddNewRestaurant will be implemented
+            #   ("new", "Добавить рест"),
+        ]
+    )
 
 
 def main():
     app = ApplicationBuilder().token(TG_TOKEN).post_init(post_init).build()
 
-    app.add_handler(CommandHandler("hello", hello))
     app.add_handler(CommandHandler("near", near_handler))
+    app.add_handler(CommandHandler("new", new_rest_handler))
     app.add_handler(CallbackQueryHandler(button_callback))
 
     print("run_polling...")

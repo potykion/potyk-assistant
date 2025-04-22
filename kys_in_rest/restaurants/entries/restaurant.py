@@ -18,3 +18,4 @@ class Restaurant(TypedDict):
     visited: str
     from_channel: str
     from_post: str
+    draft: bool
