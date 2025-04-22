@@ -11,12 +11,18 @@ def load_rests(metro=None, rating=None):
 
     q = "select * from restaurants"
     params = []
+
+    where = []
+
     if metro:
-        q = f"{q} where metro like ?"
+        q = f"metro like ?"
         params.append(f"%{metro}%")
     if rating:
-        q = f"{q} where rating is null or rating >= ?"
+        q = f"rating is null or rating >= ?"
         params.append("?")
+
+    if where:
+        q = f"{q} where {' AND '.join(where)}"
 
     rows = curr.execute(q, params).fetchall()
     return [Restaurant(**row) for row in rows]
