@@ -1,51 +1,49 @@
-import sqlite3
 from collections import defaultdict
 
-from kys_in_rest.core.cfg import root_dir
 from kys_in_rest.core.tg_utils import escape
 from kys_in_rest.restaurants.entries.metro import metro_colors
 from kys_in_rest.restaurants.entries.tag import tag_groups
-from kys_in_rest.restaurants.infra.rest_repo import load_rests
+from kys_in_rest.restaurants.features.ports import RestRepo
 
 
-def near(metro: str):
-    conn = sqlite3.connect(root_dir / "db.sqlite")
-    conn.row_factory = sqlite3.Row
-    curr = conn.cursor()
+class GetNearRestaurants:
+    def __init__(self, rest_repo: RestRepo):
+        self.rest_repo = rest_repo
 
-    metro_rests = load_rests(curr, metro, rating=7)
+    def do(self, metro: str):
+        metro_rests = self.rest_repo.list_restaurants(metro, rating=7)
 
-    def _gen():
-        yield f"*{metro_colors[metro]} {metro.upper()}*"
-        yield ""
+        def _gen():
+            yield f"*{metro_colors[metro]} {metro.upper()}*"
+            yield ""
 
-        if not metro_rests:
-            yield f"Рестораны рядом с метро {metro} не найдены"
-            return
+            if not metro_rests:
+                yield f"Рестораны рядом с метро {metro} не найдены"
+                return
 
-        metro_rests_by_tag_groups = defaultdict(list)
-        for rest in metro_rests:
-            for group, tags in tag_groups.items():
-                if frozenset(rest["tags"].split(",")) & frozenset(tags):
-                    metro_rests_by_tag_groups[group].append(rest)
+            metro_rests_by_tag_groups = defaultdict(list)
+            for rest in metro_rests:
+                for group, tags in tag_groups.items():
+                    if frozenset(rest["tags"].split(",")) & frozenset(tags):
+                        metro_rests_by_tag_groups[group].append(rest)
 
-        for tag_group, tag_rests in sorted(metro_rests_by_tag_groups.items()):
-            yield f"*{tag_group}*"
+            for tag_group, tag_rests in sorted(metro_rests_by_tag_groups.items()):
+                yield f"*{tag_group}*"
 
-            for rest in tag_rests:
-                yield f'• [{escape(rest["name"])}]({rest["yandex_maps"]})'
-                if rest.get("comment") or rest.get("from_channel"):
-                    comment = escape(rest["comment"])
+                for rest in tag_rests:
+                    yield f'• [{escape(rest["name"])}]({rest["yandex_maps"]})'
+                    if rest.get("comment") or rest.get("from_channel"):
+                        comment = escape(rest["comment"])
 
-                    if rest.get("from_channel"):
-                        if rest["from_post"]:
-                            comment = f'{comment} © [{rest["from_channel"]}]({rest["from_post"]})'
-                        else:
-                            comment = f'{comment} © {rest["from_channel"]}'
-                    yield f"_{comment}_"
+                        if rest.get("from_channel"):
+                            if rest["from_post"]:
+                                comment = f'{comment} © [{rest["from_channel"]}]({rest["from_post"]})'
+                            else:
+                                comment = f'{comment} © {rest["from_channel"]}'
+                        yield f"_{comment}_"
 
-                yield ""
+                    yield ""
 
-    message = "\n".join(_gen())
+        message = "\n".join(_gen())
 
-    return message
+        return message

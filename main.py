@@ -11,13 +11,12 @@ from telegram.ext import (
 )
 
 from kys_in_rest.core.cfg import root_dir
-from kys_in_rest.core.sqlite_utils import make_cursor
-from kys_in_rest.restaurants.features.add_new import AddNewRestaurant
 from kys_in_rest.restaurants.features.list_metro import list_metro_items
-from kys_in_rest.restaurants.features.near import near
-from kys_in_rest.restaurants.infra.rest_repo import SqliteRestRepo
+from kys_in_rest.restaurants.prep.ioc import RestFactory
 
 TG_TOKEN = dotenv.get_key(".env", "TG_TOKEN")
+
+fact = RestFactory(root_dir / "db.sqlite")
 
 
 async def near_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -39,12 +38,13 @@ async def near_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     metro = update.message.text.split(None, 1)[1]
     print(metro)
 
-    near_rests = near(metro)
+    get_near_restaurants = fact.make_get_near_restaurants()
+    near_rests = get_near_restaurants.do(metro)
     await update.message.reply_markdown_v2(near_rests)
 
 
 async def new_rest_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    add_new_restaurant = AddNewRestaurant(SqliteRestRepo(make_cursor(root_dir / "db.sqlite")))
+    add_new_restaurant = fact.make_add_new_restaurant()
     add_new_restaurant.do()
 
 
@@ -54,7 +54,10 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
     if query.data.startswith("metro_"):
         metro = query.data[6:]  # Убираем префикс "metro_"
-        near_rests = near(metro)
+
+        get_near_restaurants = fact.make_get_near_restaurants()
+        near_rests = get_near_restaurants.do(metro)
+
         await query.message.reply_markdown_v2(near_rests)
 
 
