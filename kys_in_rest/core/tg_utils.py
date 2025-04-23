@@ -5,5 +5,7 @@ def escape(text):
     return text
 
 
-class AskForDataTg(Exception):
-    ...
+class AskForData(Exception):
+    def __init__(self, question, field=None):
+        self.question = question
+        self.field = field

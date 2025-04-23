@@ -8,9 +8,12 @@ from telegram.ext import (
     ContextTypes,
     Application,
     CallbackQueryHandler,
+    MessageHandler,
 )
 
 from kys_in_rest.core.cfg import root_dir
+from kys_in_rest.core.tg_utils import AskForData
+from kys_in_rest.restaurants.features.add_new import AddNewRestaurant
 from kys_in_rest.restaurants.features.list_metro import list_metro_items
 from kys_in_rest.restaurants.prep.ioc import RestFactory
 
@@ -44,8 +47,16 @@ async def near_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 
 async def new_rest_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    add_new_restaurant = fact.make_add_new_restaurant()
-    add_new_restaurant.do()
+    text = update.message.text
+
+    add_new_restaurant: AddNewRestaurant = fact.make_add_new_restaurant()
+
+    try:
+        add_new_restaurant.do(None if text.startswith("/new") else text)
+    except AskForData as e:
+        await update.message.reply_text(e.question)
+    else:
+        await update.message.reply_text("Записал 👌")
 
 
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -77,6 +88,8 @@ def main():
     app.add_handler(CommandHandler("near", near_handler))
     app.add_handler(CommandHandler("new", new_rest_handler))
     app.add_handler(CallbackQueryHandler(button_callback))
+
+    app.add_handler(MessageHandler(None, new_rest_handler))
 
     print("run_polling...")
     app.run_polling()

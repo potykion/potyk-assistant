@@ -8,8 +8,20 @@ class SqliteRestRepo(RestRepo):
     def __init__(self, cursor: sqlite3.Cursor):
         self.cursor = cursor
 
-    def get_or_create_draft(self) -> Restaurant:
-        pass
+    def get_or_create_draft(self) -> tuple[Restaurant, bool]:
+        row = self.cursor.execute(
+            "select * from restaurants where draft = 1"
+        ).fetchone()
+        if not row:
+            self.cursor.execute("""insert into restaurants (draft) values (1);""")
+            self.cursor.connection.commit()
+            rest = Restaurant(draft=True)
+            created = True
+        else:
+            rest = Restaurant(**row)
+            created = False
+
+        return rest, created
 
     def list_restaurants(self, metro=None, rating=None) -> list[Restaurant]:
         q = "select * from restaurants"
@@ -29,3 +41,47 @@ class SqliteRestRepo(RestRepo):
 
         rows = self.cursor.execute(q, params).fetchall()
         return [Restaurant(**row) for row in rows]
+
+    def update_draft(self, rest):
+        self.cursor.execute(
+            """
+            update restaurants
+            set name         = ?,
+                yandex_maps  = ?,
+                tags         = ?,
+                city         = ?,
+                metro        = ?,
+                prices       = ?,
+                rating       = ?,
+                comment      = ?,
+                date_created = ?,
+                telegram     = ?,
+                site         = ?,
+                owner        = ?,
+                chief        = ?,
+                visited      = ?,
+                from_channel = ?,
+                from_post    = ?,
+                draft        = ?
+            where draft = 1""",
+            (
+                rest.get("name", ""),
+                rest.get("yandex_maps", ""),
+                rest.get("tags", ""),
+                rest.get("city", ""),
+                rest.get("metro", ""),
+                rest.get("prices", ""),
+                rest.get("rating", ""),
+                rest.get("comment", ""),
+                rest.get("date_created", ""),
+                rest.get("telegram", ""),
+                rest.get("site", ""),
+                rest.get("owner", ""),
+                rest.get("chief", ""),
+                rest.get("visited", ""),
+                rest.get("from_channel", ""),
+                rest.get("from_post", ""),
+                rest.get("draft", ""),
+            ),
+        )
+        self.cursor.connection.commit()

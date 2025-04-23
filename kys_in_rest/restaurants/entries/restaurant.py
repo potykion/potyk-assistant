@@ -1,7 +1,7 @@
 from typing import TypedDict
 
 
-class Restaurant(TypedDict):
+class Restaurant(TypedDict, total=False):
     name: str
     yandex_maps: str
     tags: str
