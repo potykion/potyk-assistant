@@ -24,7 +24,7 @@ class GetNearRestaurants:
             metro_rests_by_tag_groups = defaultdict(list)
             for rest in metro_rests:
                 for group, tags in tag_groups.items():
-                    if frozenset(rest["tags"].split(",")) & frozenset(tags):
+                    if frozenset((rest.get("tags") or "").split(",")) & frozenset(tags):
                         metro_rests_by_tag_groups[group].append(rest)
 
             for tag_group, tag_rests in sorted(metro_rests_by_tag_groups.items()):

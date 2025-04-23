@@ -14,7 +14,17 @@ def test_add_new(rest_factory):
     assert rest
     assert not created
 
-    rest = add_new_rest.do("test")
+    for text in [
+        "test",
+        "https://yandex.ru/maps/-/CHfaeW5p",
+        "Китай Город",
+    ]:
+        try:
+            rest = add_new_rest.do(text)
+        except AskForData:
+            pass
 
     assert rest["name"] == "test"
+    assert rest["yandex_maps"] == "https://yandex.ru/maps/-/CHfaeW5p"
+    assert rest["metro"] == "Китай Город"
     assert rest["draft"] is False

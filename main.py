@@ -1,7 +1,5 @@
-import itertools
-
 import dotenv
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import Update
 from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
@@ -12,7 +10,7 @@ from telegram.ext import (
 )
 
 from kys_in_rest.core.cfg import root_dir
-from kys_in_rest.core.tg_utils import AskForData
+from kys_in_rest.core.tg_utils import AskForData, build_keyboard
 from kys_in_rest.restaurants.features.add_new import AddNewRestaurant
 from kys_in_rest.restaurants.features.list_metro import list_metro_items
 from kys_in_rest.restaurants.prep.ioc import RestFactory
@@ -25,17 +23,10 @@ fact = RestFactory(root_dir / "db.sqlite")
 async def near_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if len(update.message.text.split()) == 1:
         metro_items = list_metro_items()
-
-        keyboard = [
-            [
-                InlineKeyboardButton(metro_str, callback_data=metro_cb)
-                for (metro_str, metro_cb) in row
-            ]
-            for row in itertools.batched(metro_items, 3)
-        ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-
-        await update.message.reply_text("гдэ??", reply_markup=reply_markup)
+        await update.message.reply_text(
+            "гдэ??",
+            reply_markup=build_keyboard(metro_items),
+        )
         return
 
     metro = update.message.text.split(None, 1)[1]
@@ -54,7 +45,10 @@ async def new_rest_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     try:
         add_new_restaurant.do(None if text.startswith("/new") else text)
     except AskForData as e:
-        await update.message.reply_text(e.question)
+        await update.message.reply_text(
+            e.question,
+            reply_markup=build_keyboard(e.options) if e.options else None,
+        )
     else:
         await update.message.reply_text("Записал 👌")
 
