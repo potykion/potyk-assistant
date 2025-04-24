@@ -1,3 +1,4 @@
+import os
 from typing import Callable
 
 import dotenv
@@ -17,7 +18,8 @@ from kys_in_rest.restaurants.prep.ioc import RestFactory
 from kys_in_rest.tg.entities.flow import TgCommand
 from kys_in_rest.tg.features.flow_repo import FlowRepo
 
-TG_TOKEN = dotenv.get_key(".env", "TG_TOKEN")
+dotenv.load_dotenv()
+TG_TOKEN = os.environ["TG_TOKEN"]
 
 fact = RestFactory(root_dir / "db.sqlite")
 
@@ -88,10 +90,7 @@ async def new_rest_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
     await query.answer()
-
-    if query.data.startswith("metro_"):
-        metro = query.data[6:]  # Убираем префикс "metro_"
-        await _continue_flow_handler(query, metro)
+    await _continue_flow_handler(query, query.data)
 
 
 async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -102,8 +101,7 @@ async def post_init(application: Application) -> None:
     await application.bot.set_my_commands(
         [
             (TgCommand.near, "Ищет рестики по метро"),
-            # todo uncomment when AddNewRestaurant will be implemented
-            #   ("new", "Добавить рест"),
+            (TgCommand.new, "Добавить рест"),
         ]
     )
 
