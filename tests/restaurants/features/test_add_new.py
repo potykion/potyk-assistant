@@ -6,7 +6,7 @@ from kys_in_rest.restaurants.infra.rest_repo import SqliteRestRepo
 
 def test_add_new(rest_factory):
     add_new_rest = rest_factory.make_add_new_restaurant()
-    repo: SqliteRestRepo = rest_factory.make_sqlite_rest_repo()
+    repo: SqliteRestRepo = rest_factory.make_rest_repo()
 
     with pytest.raises(AskForData):
         add_new_rest.do()

@@ -11,16 +11,21 @@ def escape(text):
     return text
 
 
-class AskForData(Exception):
-    def __init__(self, question, field=None, options=None):
-        self.question = question
-        self.field = field
-        self.options = options
-
-
 class TgCbOption(NamedTuple):
     label: str
     cb_data: str
+
+
+class AskForData(Exception):
+    def __init__(
+        self,
+        question: str,
+        field: str | None = None,
+        options: list[TgCbOption] = None,
+    ):
+        self.question = question
+        self.field = field
+        self.options = options
 
 
 def build_keyboard(options: list[TgCbOption], buttons=3):
@@ -36,4 +41,4 @@ def build_keyboard(options: list[TgCbOption], buttons=3):
 
 
 class TgFeature:
-    def do(self, text: str | None = None) -> str:...
+    def do(self, text: str | None = None) -> str: ...
