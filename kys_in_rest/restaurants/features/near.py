@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+from kys_in_rest.core.str_utils import split_strip
 from kys_in_rest.core.tg_utils import escape, TgFeature, AskForData
 from kys_in_rest.restaurants.entries.metro import metro_colors
 from kys_in_rest.restaurants.entries.tag import tag_groups
@@ -16,7 +17,7 @@ class GetNearRestaurants(TgFeature):
         if not metro:
             raise AskForData(
                 "Гдэ???",
-                options= list_metro_items(),
+                options=list_metro_items(),
             )
 
         metro_rests = self.rest_repo.list_restaurants(metro, rating=7)
@@ -32,7 +33,7 @@ class GetNearRestaurants(TgFeature):
             metro_rests_by_tag_groups = defaultdict(list)
             for rest in metro_rests:
                 for group, tags in tag_groups.items():
-                    if frozenset((rest.get("tags") or "").split(",")) & frozenset(tags):
+                    if frozenset(split_strip(rest.get("tags") or "")) & frozenset(tags):
                         metro_rests_by_tag_groups[group].append(rest)
 
             for tag_group, tag_rests in sorted(metro_rests_by_tag_groups.items()):

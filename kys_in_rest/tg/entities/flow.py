@@ -8,4 +8,5 @@ class TgCommand(enum.StrEnum):
 
 
 class TgFlow(NamedTuple):
-    command: str
+    command: TgCommand
+    tg_user_id: int

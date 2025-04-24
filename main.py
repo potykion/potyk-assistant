@@ -1,7 +1,7 @@
 from typing import Callable
 
 import dotenv
-from telegram import Update
+from telegram import Update, CallbackQuery
 from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
@@ -30,7 +30,7 @@ command_features: dict[TgCommand, Callable[[], TgFeature]] = {
 
 async def _start_flow_handler(update: Update, command: TgCommand) -> None:
     flow_repo: FlowRepo = fact.make_flow_repo()
-    flow = flow_repo.start_or_continue_flow(command)
+    flow = flow_repo.start_or_continue_flow(command, update.effective_user.id)
 
     feature = command_features[flow.command]()
 
@@ -52,19 +52,28 @@ async def _start_flow_handler(update: Update, command: TgCommand) -> None:
         await update.message.reply_markdown_v2(message)
 
 
-async def _continue_flow_handler(update, text):
+async def _continue_flow_handler(
+    update_or_query: Update | CallbackQuery,
+    text,
+):
     flow_repo = fact.make_flow_repo()
-    flow = flow_repo.get_current_flow()
+
+    if isinstance(update_or_query, CallbackQuery):
+        user_id = update_or_query.from_user.id
+    else:
+        user_id = update_or_query.effective_user.id
+
+    flow = flow_repo.get_current_flow(user_id)
     feature = command_features[flow.command]()
     try:
         message = feature.do(text)
     except AskForData as e:
-        await update.message.reply_text(
+        await update_or_query.message.reply_text(
             e.question,
             reply_markup=build_keyboard(e.options) if e.options else None,
         )
     else:
-        await update.message.reply_markdown_v2(message)
+        await update_or_query.message.reply_markdown_v2(message)
 
 
 async def near_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
