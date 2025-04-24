@@ -10,7 +10,7 @@ def rest_factory():
     rest_repo_ = fact.make_sqlite_rest_repo()
     rest_repo_.cursor.execute("delete from restaurants where draft = 1")
     rest_repo_.cursor.connection.commit()
-
+    rest_repo_.delete_by_name(name="test")
     return fact
 
 

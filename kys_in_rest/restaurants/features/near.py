@@ -1,16 +1,18 @@
 from collections import defaultdict
 
-from kys_in_rest.core.tg_utils import escape
+from kys_in_rest.core.tg_utils import escape, TgFeature
 from kys_in_rest.restaurants.entries.metro import metro_colors
 from kys_in_rest.restaurants.entries.tag import tag_groups
 from kys_in_rest.restaurants.features.ports import RestRepo
 
 
-class GetNearRestaurants:
+class GetNearRestaurants(TgFeature):
     def __init__(self, rest_repo: RestRepo):
         self.rest_repo = rest_repo
 
-    def do(self, metro: str):
+    def do(self, text: str | None = None) -> str:
+        metro = text
+
         metro_rests = self.rest_repo.list_restaurants(metro, rating=7)
 
         def _gen():

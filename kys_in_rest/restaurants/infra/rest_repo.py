@@ -85,3 +85,13 @@ class SqliteRestRepo(RestRepo):
             ),
         )
         self.cursor.connection.commit()
+
+    def get_by_name(self, name: str) -> Restaurant:
+        row = self.cursor.execute(
+            "select * from restaurants where name = ?", (name,)
+        ).fetchone()
+        return Restaurant(**row)
+
+    def delete_by_name(self, name: str):
+        self.cursor.execute("delete from restaurants where name = ?", (name,))
+        self.cursor.connection.commit()

@@ -47,5 +47,4 @@ class AddNewRestaurant:
 
         rest["draft"] = False
         self.rest_repo.update_draft(rest)
-
-        return rest
+        return "Записал 👌"

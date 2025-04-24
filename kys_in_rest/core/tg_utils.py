@@ -33,3 +33,7 @@ def build_keyboard(options: list[TgCbOption], buttons=3):
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     return reply_markup
+
+
+class TgFeature:
+    def do(self, text: str | None = None) -> str:...
