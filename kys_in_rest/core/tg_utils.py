@@ -41,4 +41,8 @@ def build_keyboard(options: list[TgCbOption], buttons=3):
 
 
 class TgFeature:
-    def do(self, text: str | None = None) -> str: ...
+    def do(
+        self,
+        text: str | None,
+        tg_user_id: int,
+    ) -> str: ...

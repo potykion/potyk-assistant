@@ -29,10 +29,7 @@ command_features: dict[TgCommand, Callable[[], TgFeature]] = {
 
 
 async def _start_flow_handler(update: Update, command: TgCommand) -> None:
-    flow_repo: FlowRepo = fact.make_flow_repo()
-    flow = flow_repo.start_or_continue_flow(command, update.effective_user.id)
-
-    feature = command_features[flow.command]()
+    tg_user_id = update.effective_user.id
 
     text = update.message.text
     if text.startswith(f"/{command}"):
@@ -41,8 +38,12 @@ async def _start_flow_handler(update: Update, command: TgCommand) -> None:
         except IndexError:
             text = None
 
+    flow_repo: FlowRepo = fact.make_flow_repo()
+    flow = flow_repo.start_or_continue_flow(command, tg_user_id)
+    feature = command_features[flow.command]()
+
     try:
-        message = feature.do(text)
+        message = feature.do(text, tg_user_id)
     except AskForData as e:
         await update.message.reply_text(
             e.question,
@@ -56,17 +57,17 @@ async def _continue_flow_handler(
     update_or_query: Update | CallbackQuery,
     text,
 ):
-    flow_repo = fact.make_flow_repo()
-
     if isinstance(update_or_query, CallbackQuery):
-        user_id = update_or_query.from_user.id
+        tg_user_id = update_or_query.from_user.id
     else:
-        user_id = update_or_query.effective_user.id
+        tg_user_id = update_or_query.effective_user.id
 
-    flow = flow_repo.get_current_flow(user_id)
+    flow_repo = fact.make_flow_repo()
+    flow = flow_repo.get_current_flow(tg_user_id)
     feature = command_features[flow.command]()
+
     try:
-        message = feature.do(text)
+        message = feature.do(text, tg_user_id)
     except AskForData as e:
         await update_or_query.message.reply_text(
             e.question,

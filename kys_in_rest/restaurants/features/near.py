@@ -12,7 +12,11 @@ class GetNearRestaurants(TgFeature):
     def __init__(self, rest_repo: RestRepo):
         self.rest_repo = rest_repo
 
-    def do(self, text: str | None = None) -> str:
+    def do(
+        self,
+        text: str | None,
+        tg_user_id: int,
+    ) -> str:
         metro = text
         if not metro:
             raise AskForData(

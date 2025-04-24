@@ -1,7 +1,8 @@
+import os
 from typing import NamedTuple, Callable
 
 from kys_in_rest.core.str_utils import parse_link
-from kys_in_rest.core.tg_utils import AskForData, TgCbOption
+from kys_in_rest.core.tg_utils import AskForData, TgCbOption, TgFeature
 from kys_in_rest.restaurants.entries.restaurant import Restaurant
 from kys_in_rest.restaurants.features.list_metro import list_metro_items
 from kys_in_rest.restaurants.features.ports import RestRepo
@@ -21,11 +22,14 @@ rest_params = [
 ]
 
 
-class AddNewRestaurant:
+class AddNewRestaurant(TgFeature):
     def __init__(self, rest_repo: RestRepo) -> None:
         self.rest_repo = rest_repo
 
-    def do(self, text: str = None):
+    def do(self, text: str | None, tg_user_id: int):
+        if tg_user_id != os.environ["TG_ADMIN"]:
+            raise AskForData("Тебе нельзя")
+
         rest, _ = self.rest_repo.get_or_create_draft()
         rest: Restaurant
 
