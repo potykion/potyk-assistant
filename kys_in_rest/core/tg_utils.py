@@ -16,16 +16,17 @@ class TgCbOption(NamedTuple):
     cb_data: str
 
 
-class AskForData(Exception):
+class SendTgMessageInterrupt(Exception):
     def __init__(
         self,
-        question: str,
-        field: str | None = None,
+        message: str,
         options: list[TgCbOption] = None,
     ):
-        self.question = question
-        self.field = field
+        self.question = message
         self.options = options
+
+
+class AskForData(SendTgMessageInterrupt): ...
 
 
 def build_keyboard(options: list[TgCbOption], buttons=3):

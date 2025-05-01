@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from kys_in_rest.restaurants.prep.ioc import RestFactory
@@ -17,3 +19,7 @@ def rest_factory():
 @pytest.fixture()
 def rest_repo(rest_factory):
     return rest_factory.make_rest_repo()
+
+@pytest.fixture()
+def tg_admin_user_id():
+    return os.environ.setdefault("TG_ADMIN", "1")
