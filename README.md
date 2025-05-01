@@ -36,4 +36,13 @@ pkill -f "python main.py"
 nohup python main.py > output.log 2>&1 &
 ```
 
+#### Грохнуть сервис
+
+```sh
+ssh -l leybovich-nikita 84.201.131.244
+cd kys_in_rest
+source ./.venv/bin/activate
+pkill -f "python main.py" 
+```
+
 [Сурс](https://chat.deepseek.com/a/chat/s/783c3446-773e-4482-80da-bf83c91a7b74)
