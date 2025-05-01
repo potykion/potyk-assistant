@@ -18,4 +18,3 @@ jobs:
           cd kys_in_rest
           source ./.venv/bin/activate
           pkill -f "python main.py"
-          EOF 
