@@ -27,7 +27,39 @@ fact = RestFactory(root_dir / "db.sqlite")
 command_features: dict[TgCommand, Callable[[], TgFeature]] = {
     TgCommand.near: fact.make_get_near_restaurants,
     TgCommand.new: fact.make_add_new_restaurant,
+    TgCommand.new_beer: fact.make_add_new_beer,
 }
+
+
+async def near_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await _start_flow_handler(update, TgCommand.near)
+
+
+async def new_rest_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await _start_flow_handler(update, TgCommand.new)
+
+
+async def new_beer_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await _start_flow_handler(update, TgCommand.new_beer)
+
+
+async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    query = update.callback_query
+    await query.answer()
+    await _continue_flow_handler(query, query.data)
+
+
+async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await _continue_flow_handler(update, update.message.text)
+
+
+async def post_init(application: Application) -> None:
+    await application.bot.set_my_commands(
+        [
+            (TgCommand.near, "Ищет рестики по метро"),
+            (TgCommand.new, "Добавить рест"),
+        ]
+    )
 
 
 async def _start_flow_handler(update: Update, command: TgCommand) -> None:
@@ -79,38 +111,13 @@ async def _continue_flow_handler(
         await update_or_query.message.reply_markdown_v2(message)
 
 
-async def near_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await _start_flow_handler(update, TgCommand.near)
-
-
-async def new_rest_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await _start_flow_handler(update, TgCommand.new)
-
-
-async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    query = update.callback_query
-    await query.answer()
-    await _continue_flow_handler(query, query.data)
-
-
-async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await _continue_flow_handler(update, update.message.text)
-
-
-async def post_init(application: Application) -> None:
-    await application.bot.set_my_commands(
-        [
-            (TgCommand.near, "Ищет рестики по метро"),
-            (TgCommand.new, "Добавить рест"),
-        ]
-    )
-
-
 def main():
     app = ApplicationBuilder().token(TG_TOKEN).post_init(post_init).build()
 
     app.add_handler(CommandHandler(TgCommand.near, near_handler))
     app.add_handler(CommandHandler(TgCommand.new, new_rest_handler))
+    app.add_handler(CommandHandler(TgCommand.new_beer, new_beer_handler))
+
     app.add_handler(CallbackQueryHandler(button_callback))
 
     app.add_handler(MessageHandler(None, message_handler))

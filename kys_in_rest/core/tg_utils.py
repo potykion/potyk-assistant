@@ -1,3 +1,4 @@
+import abc
 import itertools
 from typing import NamedTuple
 
@@ -42,6 +43,7 @@ def build_keyboard(options: list[TgCbOption], buttons=3):
 
 
 class TgFeature:
+    @abc.abstractmethod
     def do(
         self,
         text: str | None,

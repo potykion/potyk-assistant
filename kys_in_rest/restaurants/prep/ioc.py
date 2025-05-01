@@ -1,5 +1,6 @@
 from functools import cached_property
 
+from kys_in_rest.beer.add_new_beer import AddNewBeer
 from kys_in_rest.core.sqlite_utils import make_sqlite_cursor
 from kys_in_rest.restaurants.features.add_new import AddNewRestaurant
 from kys_in_rest.restaurants.features.near import GetNearRestaurants
@@ -22,6 +23,9 @@ class RestFactory:
 
     def make_add_new_restaurant(self):
         return AddNewRestaurant(self.make_rest_repo())
+
+    def make_add_new_beer(self):
+        return AddNewBeer()
 
     def make_rest_repo(self) -> RestRepo:
         return SqliteRestRepo(self.sqlite_cursor)

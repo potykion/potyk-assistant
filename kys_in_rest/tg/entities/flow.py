@@ -5,6 +5,7 @@ from typing import NamedTuple
 class TgCommand(enum.StrEnum):
     near = enum.auto()
     new = enum.auto()
+    new_beer = enum.auto()
 
 
 class TgFlow(NamedTuple):
