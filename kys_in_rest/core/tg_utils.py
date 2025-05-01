@@ -4,6 +4,8 @@ from typing import NamedTuple
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
+from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
+
 
 def escape(text):
     to_escape = ".()-!+"
@@ -48,4 +50,5 @@ class TgFeature:
         self,
         text: str | None,
         tg_user_id: int,
+        msg: InputTgMsg | None = None,
     ) -> str: ...

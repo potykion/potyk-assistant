@@ -16,6 +16,7 @@ from kys_in_rest.core.cfg import root_dir
 from kys_in_rest.core.tg_utils import AskForData, build_keyboard, TgFeature
 from kys_in_rest.restaurants.prep.ioc import RestFactory
 from kys_in_rest.tg.entities.flow import TgCommand
+from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 from kys_in_rest.tg.features.flow_repo import FlowRepo
 
 dotenv.load_dotenv()
@@ -46,11 +47,11 @@ async def new_beer_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
     await query.answer()
-    await _continue_flow_handler(query, query.data)
+    await _continue_flow_handler(query, InputTgMsg.parse(query.data))
 
 
 async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await _continue_flow_handler(update, update.message.text)
+    await _continue_flow_handler(update, InputTgMsg.parse(update))
 
 
 async def post_init(application: Application) -> None:
@@ -89,7 +90,7 @@ async def _start_flow_handler(update: Update, command: TgCommand) -> None:
 
 async def _continue_flow_handler(
     update_or_query: Update | CallbackQuery,
-    text,
+    msg: InputTgMsg,
 ):
     if isinstance(update_or_query, CallbackQuery):
         tg_user_id = update_or_query.from_user.id
@@ -101,7 +102,7 @@ async def _continue_flow_handler(
     feature = command_features[flow.command]()
 
     try:
-        message = feature.do(text, tg_user_id)
+        message = feature.do(msg.text, tg_user_id, msg)
     except AskForData as e:
         await update_or_query.message.reply_text(
             e.question,
