@@ -1,6 +1,7 @@
 from functools import cached_property
 
-from kys_in_rest.beer.add_new_beer import AddNewBeer
+from kys_in_rest.beer.features.add_new_beer import AddNewBeer
+from kys_in_rest.beer.infra.beer_post_repo import SqliteBeerPostRepo
 from kys_in_rest.core.sqlite_utils import make_sqlite_cursor
 from kys_in_rest.restaurants.features.add_new import AddNewRestaurant
 from kys_in_rest.restaurants.features.near import GetNearRestaurants
@@ -10,7 +11,7 @@ from kys_in_rest.tg.features.flow_repo import FlowRepo
 from kys_in_rest.tg.infra.flow_repo import SqliteFlowRepo
 
 
-class RestFactory:
+class MainFactory:
     def __init__(self, db_path: str):
         self.db_path = db_path
 
@@ -25,10 +26,13 @@ class RestFactory:
         return AddNewRestaurant(self.make_rest_repo())
 
     def make_add_new_beer(self):
-        return AddNewBeer()
+        return AddNewBeer(self.make_beer_post_repo())
 
     def make_rest_repo(self) -> RestRepo:
         return SqliteRestRepo(self.sqlite_cursor)
 
     def make_flow_repo(self) -> FlowRepo:
         return SqliteFlowRepo(self.sqlite_cursor)
+
+    def make_beer_post_repo(self):
+        return SqliteBeerPostRepo(self.sqlite_cursor)

@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from kys_in_rest.beer.parse_beer import parse_style
+from kys_in_rest.beer.features.parse_beer import parse_style
 
 
 @pytest.mark.parametrize(

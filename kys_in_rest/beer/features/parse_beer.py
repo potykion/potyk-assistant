@@ -1,35 +1,11 @@
 from typing_extensions import NamedTuple
 
-hops = [
-    "Citra",
-    "Citra Cryo",
-    "Nectaron",
-    "Hopburst Nectaron",
-    "Cascade NZ",
-    "Pacifica Amplifire",
-    "Rakau",
-    "Green Bullet",
-    "Superdelic",
-]
-
-# todo use stemmer
-fruits = [
-    ("грушей", "груша"),
-    ("манго", "манго"),
-    ("маракуйей", "маракуйя"),
-    ("вишня", "вишня"),
-    ("карамель", "карамель"),
-    ("абрикосы", "абрикос"),
-    ("апельсина", "апельсин"),
-    ("облепихи", "облепиха"),
-    ("корицы", "корица"),
-]
+from kys_in_rest.beer.entities.beer_post import hops, fruits, BeerStyleName, BeerStyle
 
 
 class StyleParser(NamedTuple):
-    pattern: str
     parsed_style: str
-
+    pattern: str
     parse_hops: bool = False
     parse_fruits: bool = False
     # Кейс слово Эль + есть фрукты в тексте
@@ -37,20 +13,22 @@ class StyleParser(NamedTuple):
 
 
 style_parsers = [
-    StyleParser("тройной индийский пэйл эль", "TIPA", parse_hops=True),
-    StyleParser("NE IPA", "NE IPA", parse_hops=True),
-    StyleParser("American IPA", "IPA", parse_hops=True),
-    StyleParser("мид", "Mead", parse_fruits=True),
-    StyleParser("саур эль", "Sour Ale", parse_fruits=True),
-    StyleParser("Sour", "Sour Ale", parse_fruits=True),
-    StyleParser("эль", "Sour Ale", parse_fruits=True, match_if_parsed_fruits=True),
+    StyleParser(BeerStyleName.TIPA, "тройной индийский пэйл эль", parse_hops=True),
+    StyleParser(BeerStyleName.NE_IPA, "NE IPA", parse_hops=True),
+    StyleParser(BeerStyleName.IPA, "American IPA", parse_hops=True),
+    StyleParser(BeerStyleName.MEAD, "мид", parse_fruits=True),
+    StyleParser(BeerStyleName.SOUR_ALE, "саур эль", parse_fruits=True),
+    StyleParser(BeerStyleName.SOUR_ALE, "Sour", parse_fruits=True),
+    StyleParser(
+        BeerStyleName.SOUR_ALE, "эль", parse_fruits=True, match_if_parsed_fruits=True
+    ),
 ]
 
 
 def parse_name(text: str) -> str: ...
 
 
-def parse_style(text: str) -> str:
+def parse_style(text: str) -> BeerStyle:
     lower = text.lower()
 
     style = ""

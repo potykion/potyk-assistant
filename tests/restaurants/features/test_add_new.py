@@ -6,9 +6,9 @@ from kys_in_rest.core.tg_utils import AskForData
 from kys_in_rest.restaurants.infra.rest_repo import SqliteRestRepo
 
 
-def test_add_new(rest_factory, tg_admin_user_id):
-    add_new_rest = rest_factory.make_add_new_restaurant()
-    repo: SqliteRestRepo = rest_factory.make_rest_repo()
+def test_add_new(main_factory, tg_admin_user_id):
+    add_new_rest = main_factory.make_add_new_restaurant()
+    repo: SqliteRestRepo = main_factory.make_rest_repo()
 
     with pytest.raises(AskForData):
         add_new_rest.do(None, tg_admin_user_id)

@@ -14,10 +14,10 @@ class GetNearRestaurants(TgFeature):
 
     def do(
         self,
-        text: str | None,
+        deprecated_text: str | None,
         tg_user_id: int,
     ) -> str:
-        metro = text
+        metro = deprecated_text
         if not metro:
             raise AskForData(
                 "Гдэ???",

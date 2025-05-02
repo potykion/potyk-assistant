@@ -13,8 +13,13 @@ from telegram.ext import (
 )
 
 from kys_in_rest.core.cfg import root_dir
-from kys_in_rest.core.tg_utils import AskForData, build_keyboard, TgFeature
-from kys_in_rest.restaurants.prep.ioc import RestFactory
+from kys_in_rest.core.tg_utils import (
+    AskForData,
+    build_keyboard,
+    TgFeature,
+    SendTgMessageInterrupt,
+)
+from kys_in_rest.restaurants.prep.ioc import MainFactory
 from kys_in_rest.tg.entities.flow import TgCommand
 from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 from kys_in_rest.tg.features.flow_repo import FlowRepo
@@ -22,7 +27,7 @@ from kys_in_rest.tg.features.flow_repo import FlowRepo
 dotenv.load_dotenv()
 TG_TOKEN = os.environ["TG_TOKEN"]
 
-fact = RestFactory(root_dir / "db.sqlite")
+fact = MainFactory(root_dir / "db.sqlite")
 
 
 command_features: dict[TgCommand, Callable[[], TgFeature]] = {
@@ -79,9 +84,9 @@ async def _start_flow_handler(update: Update, command: TgCommand) -> None:
 
     try:
         message = feature.do(text, tg_user_id)
-    except AskForData as e:
+    except SendTgMessageInterrupt as e:
         await update.message.reply_text(
-            e.question,
+            e.message,
             reply_markup=build_keyboard(e.options) if e.options else None,
         )
     else:
@@ -103,9 +108,9 @@ async def _continue_flow_handler(
 
     try:
         message = feature.do(msg.text, tg_user_id, msg)
-    except AskForData as e:
+    except SendTgMessageInterrupt as e:
         await update_or_query.message.reply_text(
-            e.question,
+            e.message,
             reply_markup=build_keyboard(e.options) if e.options else None,
         )
     else:
