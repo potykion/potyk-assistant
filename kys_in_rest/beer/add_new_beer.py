@@ -1,5 +1,6 @@
 import os
 
+from kys_in_rest.beer.parse_beer import parse_style, parse_name
 from kys_in_rest.core.tg_utils import TgFeature, SendTgMessageInterrupt, AskForData
 from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 
@@ -18,5 +19,9 @@ class AddNewBeer(TgFeature):
         if not text:
             raise AskForData("Скинь пост про пиво")
 
-        style = "ipa"
-        return f"🍺 [{msg.forward_channel_name} — пив • _{style}_]({msg.forward_link})"
+        # todo ask for name
+        name = "пиво"
+        # name = parse_name(msg.text)
+
+        style = parse_style(msg.text)
+        return f"🍺 [{msg.forward_channel_name} — {name} • _{style}_]({msg.forward_link})"
