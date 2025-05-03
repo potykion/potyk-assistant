@@ -14,7 +14,6 @@ from telegram.ext import (
 
 from kys_in_rest.core.cfg import root_dir
 from kys_in_rest.core.tg_utils import (
-    AskForData,
     build_keyboard,
     TgFeature,
     SendTgMessageInterrupt,
@@ -52,7 +51,7 @@ async def new_beer_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
     await query.answer()
-    await _continue_flow_handler(query, InputTgMsg.parse(query.data))
+    await _continue_flow_handler(query, InputTgMsg.parse(query))
 
 
 async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -80,10 +79,15 @@ async def _start_flow_handler(update: Update, command: TgCommand) -> None:
 
     flow_repo: FlowRepo = fact.make_flow_repo()
     flow = flow_repo.start_or_continue_flow(command, tg_user_id)
-    feature = command_features[flow.command]()
+    feature: TgFeature = command_features[flow.command]()
+
+    msg = InputTgMsg(
+        text=text,
+        tg_user_id=tg_user_id,
+    )
 
     try:
-        message = feature.do(text, tg_user_id)
+        message = feature.do(msg)
     except SendTgMessageInterrupt as e:
         await update.message.reply_text(
             e.message,
@@ -97,17 +101,13 @@ async def _continue_flow_handler(
     update_or_query: Update | CallbackQuery,
     msg: InputTgMsg,
 ):
-    if isinstance(update_or_query, CallbackQuery):
-        tg_user_id = update_or_query.from_user.id
-    else:
-        tg_user_id = update_or_query.effective_user.id
 
     flow_repo = fact.make_flow_repo()
-    flow = flow_repo.get_current_flow(tg_user_id)
+    flow = flow_repo.get_current_flow(msg.tg_user_id)
     feature = command_features[flow.command]()
 
     try:
-        message = feature.do(msg.text, tg_user_id, msg)
+        message = feature.do(msg)
     except SendTgMessageInterrupt as e:
         await update_or_query.message.reply_text(
             e.message,

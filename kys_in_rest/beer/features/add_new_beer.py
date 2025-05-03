@@ -1,7 +1,6 @@
 import os
 
-from kys_in_rest.beer.entities import beer_post
-from kys_in_rest.beer.entities.beer_post import BeerPost, BeerLine, BeerStyle
+from kys_in_rest.beer.entities.beer_post import BeerPost, BeerLine
 from kys_in_rest.beer.features.beer_post_repo import BeerPostRepo
 from kys_in_rest.beer.features.parse_beer import parse_style
 from kys_in_rest.core.tg_utils import TgFeature, SendTgMessageInterrupt, AskForData
@@ -12,13 +11,8 @@ class AddNewBeer(TgFeature):
     def __init__(self, beer_post_repo: BeerPostRepo):
         self.beer_post_repo = beer_post_repo
 
-    def do(
-        self,
-        _: str | None,
-        tg_user_id: int,
-        msg: InputTgMsg | None = None,
-    ) -> str:
-        if int(tg_user_id) != int(os.environ["TG_ADMIN"]):
+    def do(self, msg: InputTgMsg) -> str:
+        if int(msg.tg_user_id) != int(os.environ["TG_ADMIN"]):
             raise SendTgMessageInterrupt("Тебе нельзя")
 
         if not msg:

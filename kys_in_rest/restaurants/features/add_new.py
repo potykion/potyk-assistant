@@ -33,27 +33,29 @@ class AddNewRestaurant(TgFeature):
     def __init__(self, rest_repo: RestRepo) -> None:
         self.rest_repo = rest_repo
 
-    def do(self, deprecated_text: str | None, tg_user_id: int):
-        if int(tg_user_id) != int(os.environ["TG_ADMIN"]):
+    def do(self, msg):
+        if int(msg.tg_user_id) != int(os.environ["TG_ADMIN"]):
             raise SendTgMessageInterrupt("Тебе нельзя")
+
+        text = msg.text
 
         rest, _ = self.rest_repo.get_or_create_draft()
         rest: Restaurant
 
         for param in rest_params:
             if not rest.get(param.name):
-                if param.parser and deprecated_text:
-                    deprecated_text = param.parser(deprecated_text)
+                if param.parser and text:
+                    text = param.parser(text)
 
-                if not deprecated_text:
+                if not text:
                     raise AskForData(
                         param.question,
                         param.options() if param.options else None,
                     )
 
-                rest[param.name] = deprecated_text
+                rest[param.name] = text
                 self.rest_repo.update_draft(rest)
-                deprecated_text = None
+                text = None
 
         rest["draft"] = False
         self.rest_repo.update_draft(rest)

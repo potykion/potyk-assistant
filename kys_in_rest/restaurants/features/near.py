@@ -6,6 +6,7 @@ from kys_in_rest.restaurants.entries.metro import metro_colors
 from kys_in_rest.restaurants.entries.tag import tag_groups
 from kys_in_rest.restaurants.features.list_metro import list_metro_items
 from kys_in_rest.restaurants.features.ports import RestRepo
+from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 
 
 class GetNearRestaurants(TgFeature):
@@ -14,10 +15,9 @@ class GetNearRestaurants(TgFeature):
 
     def do(
         self,
-        deprecated_text: str | None,
-        tg_user_id: int,
+        msg: InputTgMsg,
     ) -> str:
-        metro = deprecated_text
+        metro = msg.text
         if not metro:
             raise AskForData(
                 "Гдэ???",

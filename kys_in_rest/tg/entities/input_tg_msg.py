@@ -8,7 +8,8 @@ channels = [
 
 
 class InputTgMsg(NamedTuple):
-    text: str
+    text: str | None
+    tg_user_id: int
     forward_link: str | None = None
     forward_channel_name: str | None = None
     forward_channel_id: str | None = None
@@ -18,6 +19,11 @@ class InputTgMsg(NamedTuple):
         cls,
         update_or_query: Update | CallbackQuery,
     ):
+
+        if isinstance(update_or_query, CallbackQuery):
+            text = update_or_query.data
+            return cls(text=text, tg_user_id=update_or_query.from_user.id)
+
         text = update_or_query.message.text or update_or_query.message.caption
 
         forward_link = None
@@ -30,6 +36,7 @@ class InputTgMsg(NamedTuple):
 
         return cls(
             text=text,
+            tg_user_id=update_or_query.effective_user.id,
             forward_link=forward_link,
             forward_channel_name=forward_channel_name,
             forward_channel_id=forward_channel_id,

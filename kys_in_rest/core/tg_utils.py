@@ -22,7 +22,7 @@ class TgCbOption(NamedTuple):
 class SendTgMessageInterrupt(Exception):
     def __init__(
         self,
-        message: str ,
+        message: str,
         options: list[TgCbOption] = None,
     ):
         self.message = message
@@ -48,7 +48,5 @@ class TgFeature:
     @abc.abstractmethod
     def do(
         self,
-        deprecated_text: str | None,
-        tg_user_id: int,
-        msg: InputTgMsg | None = None,
+        msg: InputTgMsg,
     ) -> str: ...
