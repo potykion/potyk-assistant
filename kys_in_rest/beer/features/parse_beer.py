@@ -21,8 +21,10 @@ style_parsers = [
     StyleParser(BeerStyleName.IPA, "American IPA", parse_hops=True),
     StyleParser(BeerStyleName.MEAD, "мид", parse_fruits=True),
     StyleParser(BeerStyleName.SOUR_ALE, "саур эль", parse_fruits=True),
+    StyleParser(BeerStyleName.SOUR_ALE, "саур-эля", parse_fruits=True),
     StyleParser(BeerStyleName.SOUR_ALE, "кислый эль", parse_fruits=True),
     StyleParser(BeerStyleName.SOUR_ALE, "Sour", parse_fruits=True),
+    StyleParser(BeerStyleName.BERLINER, "берлинеров", parse_fruits=True),
     StyleParser(
         BeerStyleName.SOUR_ALE, "эль", parse_fruits=True, match_if_parsed_fruits=True
     ),

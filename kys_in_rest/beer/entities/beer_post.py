@@ -1,7 +1,5 @@
-import dataclasses
 import enum
 from datetime import datetime
-from typing import NamedTuple
 
 from pydantic import BaseModel, Field
 
@@ -35,6 +33,12 @@ fruits = [
     ("роза", "роза"),
     ("малина", "малина"),
     ("личи", "личи"),
+    ("ежевика", "ежевика"),
+    ("черной смородины", "черная смородина"),
+    ("малины", "малина"),
+    ("ревеня", "ревень"),
+    ("черники", "черника"),
+    ("печенье", "печенье"),
 ]
 
 
@@ -44,6 +48,7 @@ class BeerStyleName(enum.StrEnum):
     IPA = "IPA"
     MEAD = "Mead"
     SOUR_ALE = "Sour Ale"
+    BERLINER = "Berliner"
     MILK_STOUT = "Milk Stout"
     WEIZEN = "Weizen"
 
@@ -89,6 +94,6 @@ class BeerPost(BaseModel):
         return "\n".join(
             [
                 "*Новинки*",
-                *(beer.make_beer_line() for beer in self.beers),
+                *sorted(beer.make_beer_line() for beer in self.beers),
             ]
         )

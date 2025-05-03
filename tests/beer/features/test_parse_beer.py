@@ -63,6 +63,28 @@ from kys_in_rest.beer.features.parse_beer import parse_style
             "Rewort - Analog Dream.txt",
             BeerStyle(name=BeerStyleName.SOUR_ALE, fruits=["роза", "малина", "личи"]),
         ),
+        (
+            "Plague - Vivid Vibe Ежевика.txt",
+            BeerStyle(name=BeerStyleName.BERLINER, fruits=["ежевика"]),
+        ),
+        (
+            "4BREWERS - Когда Ницше плакал.txt",
+            BeerStyle(
+                name=BeerStyleName.SOUR_ALE,
+                fruits=["черная смородина", "малина", "ревень"],
+            ),
+        ),
+        (
+            "Chibis - Hop Port Dock 5.txt",
+            BeerStyle(name=BeerStyleName.IPA, hops=["Citra", "Galaxy"]),
+        ),
+        (
+            "Brewmen - Berry Cookie.txt",
+            BeerStyle(
+                name=BeerStyleName.SOUR_ALE,
+                fruits=["черная смородина", "черника", "печенье"],
+            ),
+        ),
     ],
 )
 def test_parse_style(text_file, expected):
