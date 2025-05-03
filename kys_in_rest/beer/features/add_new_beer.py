@@ -21,10 +21,11 @@ class AddNewBeer(TgFeature):
         if int(tg_user_id) != int(os.environ["TG_ADMIN"]):
             raise SendTgMessageInterrupt("Тебе нельзя")
 
-        if not msg.text:
+        if not msg:
             self.beer_post_repo.start_new_post()
             raise AskForData(
-                "Собираем пост. Алгоритм такой: форвардни пост про пиво, напиши название и продолжай пока не закончишь. Вызови команду /new_beer для того чтобы начать пост заново."
+                "Собираем пост. Алгоритм такой: форвардни пост про пиво, напиши название и продолжай пока не закончишь. "
+                "Вызови команду /new_beer для того чтобы начать пост заново."
             )
         else:
             beer_post: BeerPost = self.beer_post_repo.get_last_post()

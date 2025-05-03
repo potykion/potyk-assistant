@@ -3,7 +3,9 @@ import enum
 from datetime import datetime
 from typing import NamedTuple
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
+from kys_in_rest.core.tg_utils import escape
 
 hops = [
     "Citra",
@@ -15,6 +17,8 @@ hops = [
     "Rakau",
     "Green Bullet",
     "Superdelic",
+    "Galaxy",
+    "Mosaic",
 ]
 
 # todo use stemmer
@@ -28,6 +32,9 @@ fruits = [
     ("апельсина", "апельсин"),
     ("облепихи", "облепиха"),
     ("корицы", "корица"),
+    ("роза", "роза"),
+    ("малина", "малина"),
+    ("личи", "личи"),
 ]
 
 
@@ -37,18 +44,20 @@ class BeerStyleName(enum.StrEnum):
     IPA = "IPA"
     MEAD = "Mead"
     SOUR_ALE = "Sour Ale"
+    MILK_STOUT = "Milk Stout"
+    WEIZEN = "Weizen"
 
 
 class BeerStyle(BaseModel):
-    name: BeerStyleName
-    hops: list[str]
-    fruits: list[str]
+    name: BeerStyleName | str
+    hops: list[str] = Field(default_factory=list)
+    fruits: list[str] = Field(default_factory=list)
 
     def make_style_line(self):
         if self.hops:
             return f"{self.name} w/ {', '.join(self.hops)}"
         elif self.fruits:
-            return f"{self.fruits} w/ {', '.join(self.fruits)}"
+            return f"{self.name} w/ {', '.join(self.fruits)}"
         else:
             return self.name
 
@@ -67,29 +76,19 @@ class BeerLine(BaseModel):
             return "🍺"
 
     def make_beer_line(self):
-        return f"{self.brewery} — {self.name} • _{self.style.make_style_line()}_"
+        brewery_w_name = escape(f"{self.brewery} — {self.name}")
+        return f"{self.style_icon} [{brewery_w_name}]({self.link}) • _{self.style.make_style_line()}_"
 
 
 class BeerPost(BaseModel):
-    id: int
-    created: datetime
-    beers: list[BeerLine]
-
-    @classmethod
-    def new(cls):
-        return BeerPost(
-            id=0,
-            created=datetime.utcnow(),
-            beers=[],
-        )
+    id: int = Field(default=0)
+    created: datetime = Field(default_factory=datetime.utcnow)
+    beers: list[BeerLine] = Field(default_factory=list)
 
     def make_post_text(self) -> str:
         return "\n".join(
             [
                 "*Новинки*",
-                *(
-                    f"{beer.style_icon} [{beer.make_beer_line()}]({beer.link})"
-                    for beer in self.beers
-                ),
+                *(beer.make_beer_line() for beer in self.beers),
             ]
         )

@@ -8,7 +8,7 @@ from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 
 
 def escape(text):
-    to_escape = ".()-!+"
+    to_escape = ".()-!+|"
     for ch in to_escape:
         text = text.replace(ch, rf"\{ch}")
     return text

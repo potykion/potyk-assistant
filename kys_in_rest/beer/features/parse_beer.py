@@ -13,11 +13,15 @@ class StyleParser(NamedTuple):
 
 
 style_parsers = [
+    StyleParser(BeerStyleName.WEIZEN, "Weizen"),
+    StyleParser(BeerStyleName.MILK_STOUT, "Молочный стаут"),
     StyleParser(BeerStyleName.TIPA, "тройной индийский пэйл эль", parse_hops=True),
+    StyleParser(BeerStyleName.NE_IPA, "новоанглийских индиа пейл элей", parse_hops=True),
     StyleParser(BeerStyleName.NE_IPA, "NE IPA", parse_hops=True),
     StyleParser(BeerStyleName.IPA, "American IPA", parse_hops=True),
     StyleParser(BeerStyleName.MEAD, "мид", parse_fruits=True),
     StyleParser(BeerStyleName.SOUR_ALE, "саур эль", parse_fruits=True),
+    StyleParser(BeerStyleName.SOUR_ALE, "кислый эль", parse_fruits=True),
     StyleParser(BeerStyleName.SOUR_ALE, "Sour", parse_fruits=True),
     StyleParser(
         BeerStyleName.SOUR_ALE, "эль", parse_fruits=True, match_if_parsed_fruits=True
@@ -51,12 +55,11 @@ def parse_style(text: str) -> BeerStyle:
 
             break
 
-    if style_hops:
-        return f"{style} w/ {', '.join(style_hops)}"
-    elif style_fruits:
-        return f"{style} w/ {', '.join(style_fruits)}"
-    else:
-        return style
+    return BeerStyle(
+        name=style,
+        hops=style_hops,
+        fruits=style_fruits,
+    )
 
 
 def _parse_hops(lower):

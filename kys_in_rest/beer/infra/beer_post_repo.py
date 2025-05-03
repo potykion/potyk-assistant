@@ -10,7 +10,7 @@ class SqliteBeerPostRepo(BeerPostRepo):
         self.cursor = cursor
 
     def start_new_post(self):
-        post = BeerPost.new()
+        post = BeerPost()
         self.cursor.execute(
             """
         insert into beer_posts (created, beers) VALUES  (?, ?)

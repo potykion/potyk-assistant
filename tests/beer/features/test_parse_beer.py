@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 
+from kys_in_rest.beer.entities.beer_post import BeerStyle, BeerStyleName
 from kys_in_rest.beer.features.parse_beer import parse_style
 
 
@@ -10,34 +11,57 @@ from kys_in_rest.beer.features.parse_beer import parse_style
     [
         (
             "4BREWERS - TIPA.txt",
-            "TIPA w/ Citra, Citra Cryo, Nectaron, Hopburst Nectaron",
+            BeerStyle(
+                name=BeerStyleName.TIPA,
+                hops=["Citra", "Citra Cryo", "Nectaron", "Hopburst Nectaron"],
+            ),
         ),
         (
             "Midnight Project - Daily Quest.txt",
-            "NE IPA w/ Cascade NZ, Pacifica Amplifire, Rakau",
+            BeerStyle(
+                name=BeerStyleName.NE_IPA,
+                hops=["Cascade NZ", "Pacifica Amplifire", "Rakau"],
+            ),
         ),
         (
             "Brewlok - Сирин.txt",
-            "Sour Ale w/ груша, манго, маракуйя",
+            BeerStyle(
+                name=BeerStyleName.SOUR_ALE, fruits=["груша", "манго", "маракуйя"]
+            ),
         ),
-        (
-            "On The Bones - Токсовский Трамплин.txt",
-            "IPA",
-        ),
+        ("On The Bones - Токсовский Трамплин.txt", BeerStyle(name=BeerStyleName.IPA)),
         (
             "Khoffner - Неизбежность.txt",
-            "Sour Ale w/ вишня, карамель",
+            BeerStyle(name=BeerStyleName.SOUR_ALE, fruits=["вишня", "карамель"]),
         ),
         (
             "Lost Meadery - Аллергия.txt",
-            "Mead w/ абрикос",
+            BeerStyle(name=BeerStyleName.MEAD, fruits=["абрикос"]),
         ),
         (
             "4BREWERS - How to Human.txt",
-            "Sour Ale w/ апельсин, облепиха, корица",
-        ),  (
+            BeerStyle(
+                name=BeerStyleName.SOUR_ALE, fruits=["апельсин", "облепиха", "корица"]
+            ),
+        ),
+        (
             "Chibis - Ачивка.txt",
-            "NE IPA w/ Citra, Green Bullet, Superdelic",
+            BeerStyle(
+                name=BeerStyleName.NE_IPA, hops=["Citra", "Green Bullet", "Superdelic"]
+            ),
+        ),
+        (
+            "Brewmen - Первый полет на метле.txt",
+            BeerStyle(name=BeerStyleName.MILK_STOUT),
+        ),
+        ("Plague - Trosdorf.txt", BeerStyle(name=BeerStyleName.WEIZEN)),
+        (
+            "Velka Morava - Mysterious Island.txt",
+            BeerStyle(name=BeerStyleName.NE_IPA, hops=["Galaxy", "Mosaic"]),
+        ),
+        (
+            "Rewort - Analog Dream.txt",
+            BeerStyle(name=BeerStyleName.SOUR_ALE, fruits=["роза", "малина", "личи"]),
         ),
     ],
 )
