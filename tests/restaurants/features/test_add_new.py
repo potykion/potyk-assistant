@@ -4,6 +4,7 @@ import pytest
 
 from kys_in_rest.core.tg_utils import AskForData
 from kys_in_rest.restaurants.infra.rest_repo import SqliteRestRepo
+from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 
 
 def test_add_new(main_factory, tg_admin_user_id):
@@ -11,7 +12,7 @@ def test_add_new(main_factory, tg_admin_user_id):
     repo: SqliteRestRepo = main_factory.make_rest_repo()
 
     with pytest.raises(AskForData):
-        add_new_rest.do(None, tg_admin_user_id)
+        add_new_rest.do(InputTgMsg(text=None, tg_user_id=tg_admin_user_id))
 
     rest, created = repo.get_or_create_draft()
     assert rest
@@ -25,7 +26,7 @@ def test_add_new(main_factory, tg_admin_user_id):
         "Сербия 🫓",
     ]:
         try:
-            add_new_rest.do(text, tg_admin_user_id)
+            add_new_rest.do(InputTgMsg(text=text, tg_user_id=tg_admin_user_id))
         except AskForData:
             pass
 
