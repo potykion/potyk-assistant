@@ -41,7 +41,7 @@ from kys_in_rest.beer.features.parse_beer import parse_style
         (
             "4BREWERS - How to Human.txt",
             BeerStyle(
-                name=BeerStyleName.SOUR_ALE, fruits=["апельсин", "облепиха", "корица"]
+                name=BeerStyleName.SOUR_ALE, fruits=['апельсин', 'корица', 'облепиха']
             ),
         ),
         (
@@ -61,7 +61,7 @@ from kys_in_rest.beer.features.parse_beer import parse_style
         ),
         (
             "Rewort - Analog Dream.txt",
-            BeerStyle(name=BeerStyleName.SOUR_ALE, fruits=["роза", "малина", "личи"]),
+            BeerStyle(name=BeerStyleName.SOUR_ALE, fruits=['личи', 'малина', 'роза']),
         ),
         (
             "Plague - Vivid Vibe Ежевика.txt",
@@ -71,7 +71,7 @@ from kys_in_rest.beer.features.parse_beer import parse_style
             "4BREWERS - Когда Ницше плакал.txt",
             BeerStyle(
                 name=BeerStyleName.SOUR_ALE,
-                fruits=["черная смородина", "малина", "ревень"],
+                fruits=['малина', 'ревень', 'черная смородина'],
             ),
         ),
         (
@@ -82,7 +82,7 @@ from kys_in_rest.beer.features.parse_beer import parse_style
             "Brewmen - Berry Cookie.txt",
             BeerStyle(
                 name=BeerStyleName.SOUR_ALE,
-                fruits=["черная смородина", "черника", "печенье"],
+                fruits=['печенье', 'черная смородина', 'черника'],
             ),
         ),
     ],

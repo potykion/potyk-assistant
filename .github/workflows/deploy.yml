@@ -37,6 +37,8 @@ jobs:
           cd kys_in_rest
           git pull
           source ./.venv/bin/activate
+          pip install -r requirements.txt
+          python -c "import nltk; nltk.download('punkt_tab')"
           pkill -f "python main.py" || true  # Игнорируем ошибку, если процесс не найден
           nohup python main.py > output.log 2>&1 &
           EOF

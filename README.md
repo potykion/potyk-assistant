@@ -19,6 +19,7 @@ nano .env
 python3 -m venv ".venv"
 source ./.venv/bin/activate
 pip install -r requirements.txt
+python -c "import nltk; nltk.download('punkt_tab')"
 # Запуск в режиме демона
 nohup python main.py > output.log 2>&1 &
 # Выводит pid
@@ -31,6 +32,8 @@ ssh -l leybovich-nikita 84.201.131.244
 cd kys_in_rest
 git pull
 source ./.venv/bin/activate
+pip install -r requirements.txt
+python -c "import nltk; nltk.download('punkt_tab')"
 # pgrep -f "python main.py" + kill
 pkill -f "python main.py" 
 nohup python main.py > output.log 2>&1 &
