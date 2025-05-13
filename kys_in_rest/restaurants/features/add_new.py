@@ -7,6 +7,7 @@ from kys_in_rest.core.tg_utils import (
     TgCbOption,
     TgFeature,
     SendTgMessageInterrupt,
+    TgMsgToSend,
 )
 from kys_in_rest.restaurants.entries.restaurant import Restaurant
 from kys_in_rest.restaurants.features.list_metro import list_metro_items
@@ -35,7 +36,7 @@ class AddNewRestaurant(TgFeature):
 
     def do(self, msg):
         if int(msg.tg_user_id) != int(os.environ["TG_ADMIN"]):
-            raise SendTgMessageInterrupt("Тебе нельзя")
+            raise SendTgMessageInterrupt(TgMsgToSend("Тебе нельзя"))
 
         text = msg.text
 
@@ -49,8 +50,10 @@ class AddNewRestaurant(TgFeature):
 
                 if not text:
                     raise AskForData(
-                        param.question,
-                        param.options() if param.options else None,
+                        TgMsgToSend(
+                            param.question,
+                            param.options() if param.options else None,
+                        )
                     )
 
                 rest[param.name] = text

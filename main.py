@@ -89,10 +89,11 @@ async def _start_flow_handler(update: Update, command: TgCommand) -> None:
     try:
         message = feature.do(msg)
     except SendTgMessageInterrupt as e:
-        await update.message.reply_text(
-            e.message,
-            reply_markup=build_keyboard(e.options) if e.options else None,
-        )
+        for msg in e.messages:
+            await update.message.reply_text(
+                msg.message,
+                reply_markup=build_keyboard(msg.options) if msg.options else None,
+            )
     else:
         await update.message.reply_markdown_v2(message)
 

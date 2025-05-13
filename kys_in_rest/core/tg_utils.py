@@ -19,14 +19,14 @@ class TgCbOption(NamedTuple):
     cb_data: str
 
 
+class TgMsgToSend(NamedTuple):
+    message: str
+    options: list[TgCbOption] = None
+
+
 class SendTgMessageInterrupt(Exception):
-    def __init__(
-        self,
-        message: str,
-        options: list[TgCbOption] = None,
-    ):
-        self.message = message
-        self.options = options
+    def __init__(self, *messages: TgMsgToSend):
+        self.messages = messages
 
 
 class AskForData(SendTgMessageInterrupt): ...

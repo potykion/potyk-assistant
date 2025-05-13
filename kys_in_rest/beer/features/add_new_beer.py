@@ -3,7 +3,12 @@ import os
 from kys_in_rest.beer.entities.beer_post import BeerPost, BeerLine
 from kys_in_rest.beer.features.beer_post_repo import BeerPostRepo
 from kys_in_rest.beer.features.parse_beer import parse_style
-from kys_in_rest.core.tg_utils import TgFeature, SendTgMessageInterrupt, AskForData
+from kys_in_rest.core.tg_utils import (
+    TgFeature,
+    SendTgMessageInterrupt,
+    AskForData,
+    TgMsgToSend,
+)
 from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 
 
@@ -13,13 +18,15 @@ class AddNewBeer(TgFeature):
 
     def do(self, msg: InputTgMsg) -> str:
         if int(msg.tg_user_id) != int(os.environ["TG_ADMIN"]):
-            raise SendTgMessageInterrupt("Тебе нельзя")
+            raise SendTgMessageInterrupt(TgMsgToSend("Тебе нельзя"))
 
         if not msg:
             self.beer_post_repo.start_new_post()
             raise AskForData(
-                "Собираем пост. Алгоритм такой: форвардни пост про пиво, напиши название и продолжай пока не закончишь. "
-                "Вызови команду /new_beer для того чтобы начать пост заново."
+                TgMsgToSend(
+                    "Собираем пост. Алгоритм такой: форвардни пост про пиво, напиши название и продолжай пока не закончишь. "
+                    "Вызови команду /new_beer для того чтобы начать пост заново."
+                )
             )
         else:
             beer_post: BeerPost = self.beer_post_repo.get_last_post()
@@ -34,7 +41,7 @@ class AddNewBeer(TgFeature):
                 )
             )
             self.beer_post_repo.update_post(beer_post)
-            raise AskForData("Как называется пив?")
+            raise AskForData(TgMsgToSend("Как называется пив?"))
         else:
             beer_post.beers[-1].name = msg.text
             self.beer_post_repo.update_post(beer_post)
