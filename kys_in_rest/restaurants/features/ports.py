@@ -8,7 +8,13 @@ class RestRepo:
     def get_or_create_draft(self) -> Restaurant: ...
 
     @abc.abstractmethod
-    def list_restaurants(self, metro=None, rating=None) -> list[Restaurant]: ...
+    def list_restaurants(
+        self,
+        *,
+        tags=None,
+        metro=None,
+        rating=None,
+    ) -> list[Restaurant]: ...
 
     @abc.abstractmethod
     def update_draft(self, rest): ...

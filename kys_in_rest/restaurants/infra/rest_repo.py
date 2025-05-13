@@ -23,7 +23,13 @@ class SqliteRestRepo(RestRepo):
 
         return rest, created
 
-    def list_restaurants(self, metro=None, rating=None) -> list[Restaurant]:
+    def list_restaurants(
+        self,
+        *,
+        tags=None,
+        metro=None,
+        rating=None,
+    ) -> list[Restaurant]:
         q = "select * from restaurants"
         params = []
 
@@ -32,6 +38,9 @@ class SqliteRestRepo(RestRepo):
         if metro:
             where_parts.append("(metro like ?)")
             params.append(f"%{metro}%")
+        if tags:
+            where_parts.append(" or ".join("(tags like ?)" for _ in tags))
+            params.extend(tags)
         if rating:
             where_parts.append("(rating is null or rating >= ?)")
             params.append(rating)

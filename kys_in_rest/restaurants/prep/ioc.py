@@ -4,7 +4,10 @@ from kys_in_rest.beer.features.add_new_beer import AddNewBeer
 from kys_in_rest.beer.infra.beer_post_repo import SqliteBeerPostRepo
 from kys_in_rest.core.sqlite_utils import make_sqlite_cursor
 from kys_in_rest.restaurants.features.add_new import AddNewRestaurant
-from kys_in_rest.restaurants.features.near import GetNearRestaurants
+from kys_in_rest.restaurants.features.find_near_category import (
+    GetNearRestaurants,
+    FindCategoryRestaurants,
+)
 from kys_in_rest.restaurants.features.ports import RestRepo
 from kys_in_rest.restaurants.infra.rest_repo import SqliteRestRepo
 from kys_in_rest.tg.features.flow_repo import FlowRepo
@@ -36,3 +39,6 @@ class MainFactory:
 
     def make_beer_post_repo(self):
         return SqliteBeerPostRepo(self.sqlite_cursor)
+
+    def make_find_category_restaurants(self):
+        return FindCategoryRestaurants(self.make_rest_repo())

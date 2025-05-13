@@ -1,3 +1,4 @@
+import dataclasses
 import os
 from typing import Callable
 
@@ -29,24 +30,31 @@ TG_TOKEN = os.environ["TG_TOKEN"]
 fact = MainFactory(root_dir / os.environ["DB"])
 
 
-command_features: dict[TgCommand, Callable[[], TgFeature]] = {
-    TgCommand.near: fact.make_get_near_restaurants,
-    TgCommand.new: fact.make_add_new_restaurant,
-    TgCommand.new_beer: fact.make_add_new_beer,
-}
+@dataclasses.dataclass
+class TgCommandSetup:
+    command: TgCommand
+    feature: Callable[[], TgFeature]
+
+    def make_handler(self):
+        async def _handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+            await _start_flow_handler(update, self.command)
+
+        return CommandHandler(self.command, _handler)
 
 
-async def near_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await _start_flow_handler(update, TgCommand.near)
+tg_commands = [
+    TgCommandSetup(TgCommand.category, fact.make_find_category_restaurants),
+    TgCommandSetup(TgCommand.near, fact.make_get_near_restaurants),
+    TgCommandSetup(TgCommand.new, fact.make_add_new_restaurant),
+    TgCommandSetup(TgCommand.new_beer, fact.make_add_new_beer),
+]
 
 
-async def new_rest_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await _start_flow_handler(update, TgCommand.new)
-
-
-async def new_beer_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await _start_flow_handler(update, TgCommand.new_beer)
-
+def find_command_setup(command) -> TgCommandSetup:
+    for setup in tg_commands:
+        if setup.command == command:
+            return setup
+    raise ValueError(f"No {command=} found")
 
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
@@ -62,6 +70,7 @@ async def post_init(application: Application) -> None:
     await application.bot.set_my_commands(
         [
             (TgCommand.near, "Ищет рестики по метро"),
+            (TgCommand.category, "Ищет рестики по категории"),
             (TgCommand.new, "Добавить рест"),
         ]
     )
@@ -79,7 +88,8 @@ async def _start_flow_handler(update: Update, command: TgCommand) -> None:
 
     flow_repo: FlowRepo = fact.make_flow_repo()
     flow = flow_repo.start_or_continue_flow(command, tg_user_id)
-    feature: TgFeature = command_features[flow.command]()
+
+    feature: TgFeature = find_command_setup(flow.command).feature()
 
     msg = InputTgMsg(
         text=text,
@@ -105,15 +115,16 @@ async def _continue_flow_handler(
 
     flow_repo = fact.make_flow_repo()
     flow = flow_repo.get_current_flow(msg.tg_user_id)
-    feature = command_features[flow.command]()
+    feature = find_command_setup(flow.command).feature()
 
     try:
         message = feature.do(msg)
     except SendTgMessageInterrupt as e:
-        await update_or_query.message.reply_text(
-            e.message,
-            reply_markup=build_keyboard(e.options) if e.options else None,
-        )
+        for msg in e.messages:
+            await update_or_query.message.reply_text(
+                msg.message,
+                reply_markup=build_keyboard(msg.options) if msg.options else None,
+            )
     else:
         await update_or_query.message.reply_markdown_v2(message)
 
@@ -121,9 +132,8 @@ async def _continue_flow_handler(
 def main():
     app = ApplicationBuilder().token(TG_TOKEN).post_init(post_init).build()
 
-    app.add_handler(CommandHandler(TgCommand.near, near_handler))
-    app.add_handler(CommandHandler(TgCommand.new, new_rest_handler))
-    app.add_handler(CommandHandler(TgCommand.new_beer, new_beer_handler))
+    for command in tg_commands:
+        app.add_handler(command.make_handler())
 
     app.add_handler(CallbackQueryHandler(button_callback))
 
