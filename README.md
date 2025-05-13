@@ -7,25 +7,26 @@
 
 ## Сетап 
 
-### Серв
+### Серв Первая установка
 
 ```sh
 ssh -l leybovich-nikita 84.201.131.244
 git clone https://github.com/potykion/kys_in_rest.git
 cd kys_in_rest
-# Пишем туда TG_TOKEN=...
+# Пишем туда TG_TOKEN=... и другие переменные из .env.example
 nano .env
 # sudo apt install python3.12-venv
 python3 -m venv ".venv"
 source ./.venv/bin/activate
 pip install -r requirements.txt
 python -c "import nltk; nltk.download('punkt_tab')"
+cp ./db.sqlite ./db_prod.sqlite
 # Запуск в режиме демона
 nohup python main.py > output.log 2>&1 &
 # Выводит pid
 ```
 
-#### Обновление
+### Обновление
 
 ```sh
 ssh -l leybovich-nikita 84.201.131.244
@@ -39,7 +40,7 @@ pkill -f "python main.py"
 nohup python main.py > output.log 2>&1 &
 ```
 
-#### Грохнуть сервис
+### Грохнуть сервис
 
 ```sh
 ssh -l leybovich-nikita 84.201.131.244

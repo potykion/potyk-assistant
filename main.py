@@ -26,7 +26,7 @@ from kys_in_rest.tg.features.flow_repo import FlowRepo
 dotenv.load_dotenv()
 TG_TOKEN = os.environ["TG_TOKEN"]
 
-fact = MainFactory(root_dir / "db.sqlite")
+fact = MainFactory(root_dir / os.environ["DB"])
 
 
 command_features: dict[TgCommand, Callable[[], TgFeature]] = {
