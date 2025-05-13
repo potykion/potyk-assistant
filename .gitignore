@@ -242,3 +242,4 @@ cython_debug/
 #.idea/
 
 db_prod.sqlite
+kill
