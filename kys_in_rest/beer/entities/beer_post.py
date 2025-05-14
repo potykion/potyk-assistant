@@ -22,6 +22,8 @@ hops = [
 fruits = [
     ("абрикос", "абрикос"),
     ("апельсин", "апельсин"),
+    ("ананас", "ананас"),
+    ("мандарин", "мандарин"),
     ("вишн", "вишня"),
     ("груш", "груша"),
     ("ежевик", "ежевика"),
@@ -37,6 +39,12 @@ fruits = [
     ("роз", "роза"),
     ("черн смородин", "черная смородина"),
     ("черник", "черника"),
+    ("ванил", "ваниль"),
+    ("мелисс", "мелисса"),
+    ("raspberry", "малина"),
+    ("passion fruit", "маракуйя"),
+    ("melissa", "мелисса"),
+    ("каламанс", "каламанси"),
 ]
 
 
@@ -49,6 +57,9 @@ class BeerStyleName(enum.StrEnum):
     BERLINER = "Berliner"
     MILK_STOUT = "Milk Stout"
     WEIZEN = "Weizen"
+    LAGER = "Lager"
+    HELLES = "Helles"
+    NON_ALCO_LAGER = "Non-Alco Lager"
 
 
 class BeerStyle(BaseModel):
@@ -57,12 +68,13 @@ class BeerStyle(BaseModel):
     fruits: list[str] = Field(default_factory=list)
 
     def make_style_line(self):
+        name = escape(self.name)
         if self.hops:
-            return f"{self.name} w/ {', '.join(self.hops)}"
+            return f"{name} w/ {', '.join(self.hops)}"
         elif self.fruits:
-            return f"{self.name} w/ {', '.join(self.fruits)}"
+            return f"{name} w/ {', '.join(self.fruits)}"
         else:
-            return self.name
+            return name
 
 
 class BeerLine(BaseModel):

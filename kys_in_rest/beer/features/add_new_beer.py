@@ -20,7 +20,7 @@ class AddNewBeer(TgFeature):
         if int(msg.tg_user_id) != int(os.environ["TG_ADMIN"]):
             raise SendTgMessageInterrupt(TgMsgToSend("Тебе нельзя"))
 
-        if not msg:
+        if not msg.text and not msg.forward_link:
             self.beer_post_repo.start_new_post()
             raise AskForData(
                 TgMsgToSend(
@@ -32,11 +32,15 @@ class AddNewBeer(TgFeature):
             beer_post: BeerPost = self.beer_post_repo.get_last_post()
 
         if msg.forward_link:
+            style = parse_style(msg.text)
+            if not style:
+                raise AskForData(TgMsgToSend("Не удалось распарсить стиль((("))
+
             beer_post.beers.append(
                 BeerLine(
                     name="",
                     brewery=msg.forward_channel_name,
-                    style=parse_style(msg.text),
+                    style=style,
                     link=msg.forward_link,
                 )
             )

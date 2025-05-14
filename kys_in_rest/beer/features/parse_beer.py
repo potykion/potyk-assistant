@@ -15,12 +15,17 @@ class StyleParser(NamedTuple):
 
 style_parsers = [
     StyleParser(BeerStyleName.WEIZEN, "weizen"),
+    StyleParser(BeerStyleName.NON_ALCO_LAGER, "Non-Alco Lager"),
+    StyleParser(BeerStyleName.HELLES, "хеллес"),
+    StyleParser(BeerStyleName.LAGER, "lager"),
+    StyleParser(BeerStyleName.LAGER, "лагер"),
     StyleParser(BeerStyleName.MILK_STOUT, "молочн стаут"),
     StyleParser(BeerStyleName.TIPA, "тройн индийск пэйл эл", parse_hops=True),
     StyleParser(BeerStyleName.NE_IPA, "новоанглийск инд пейл эл", parse_hops=True),
     StyleParser(BeerStyleName.NE_IPA, "ne ipa", parse_hops=True),
     StyleParser(BeerStyleName.IPA, "american ipa", parse_hops=True),
     StyleParser(BeerStyleName.MEAD, "мид", parse_fruits=True),
+    StyleParser(BeerStyleName.SOUR_ALE, "саур", parse_fruits=True),
     StyleParser(BeerStyleName.SOUR_ALE, "саур эл", parse_fruits=True),
     StyleParser(BeerStyleName.SOUR_ALE, "саур-эл", parse_fruits=True),
     StyleParser(BeerStyleName.SOUR_ALE, "кисл эл", parse_fruits=True),
@@ -35,7 +40,7 @@ style_parsers = [
 def parse_name(text: str) -> str: ...
 
 
-def parse_style(text: str) -> BeerStyle:
+def parse_style(text: str) -> BeerStyle | None:
     text = _stem_text(text)
 
     style = ""
@@ -57,6 +62,10 @@ def parse_style(text: str) -> BeerStyle:
                 style_fruits = _parse_fruits(text)
 
             break
+
+    if not style:
+        return None
+
 
     return BeerStyle(
         name=style,

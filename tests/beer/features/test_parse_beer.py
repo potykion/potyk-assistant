@@ -41,7 +41,7 @@ from kys_in_rest.beer.features.parse_beer import parse_style
         (
             "4BREWERS - How to Human.txt",
             BeerStyle(
-                name=BeerStyleName.SOUR_ALE, fruits=['апельсин', 'корица', 'облепиха']
+                name=BeerStyleName.SOUR_ALE, fruits=["апельсин", "корица", "облепиха"]
             ),
         ),
         (
@@ -61,7 +61,7 @@ from kys_in_rest.beer.features.parse_beer import parse_style
         ),
         (
             "Rewort - Analog Dream.txt",
-            BeerStyle(name=BeerStyleName.SOUR_ALE, fruits=['личи', 'малина', 'роза']),
+            BeerStyle(name=BeerStyleName.SOUR_ALE, fruits=["личи", "малина", "роза"]),
         ),
         (
             "Plague - Vivid Vibe Ежевика.txt",
@@ -71,7 +71,7 @@ from kys_in_rest.beer.features.parse_beer import parse_style
             "4BREWERS - Когда Ницше плакал.txt",
             BeerStyle(
                 name=BeerStyleName.SOUR_ALE,
-                fruits=['малина', 'ревень', 'черная смородина'],
+                fruits=["малина", "ревень", "черная смородина"],
             ),
         ),
         (
@@ -82,7 +82,21 @@ from kys_in_rest.beer.features.parse_beer import parse_style
             "Brewmen - Berry Cookie.txt",
             BeerStyle(
                 name=BeerStyleName.SOUR_ALE,
-                fruits=['печенье', 'черная смородина', 'черника'],
+                fruits=["печенье", "черная смородина", "черника"],
+            ),
+        ),
+        (
+            "Plague - Interstate Ontap.txt",
+            BeerStyle(name=BeerStyleName.SOUR_ALE, fruits=["ананас", "мандарин"]),
+        ),
+        (
+            "Knoffner - Сатори.txt",
+            BeerStyle(name=BeerStyleName.NON_ALCO_LAGER),
+        ),
+        (
+            "White Stone - Весело и страшно.txt",
+            BeerStyle(
+                name=BeerStyleName.SOUR_ALE, fruits=["малина", "маракуйя", "мелисса"]
             ),
         ),
     ],
