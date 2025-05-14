@@ -4,9 +4,19 @@ from kys_in_rest.core.str_utils import split_strip
 from kys_in_rest.restaurants.entries.metro import metro_colors
 
 
-@pytest.mark.parametrize("metro", metro_colors)
-def test_list_restaurants(metro, rest_repo):
+def test_list_restaurants(rest_repo):
+    metro = "Алексеевская"
     rating = 7
+
+    rest, _ = rest_repo.get_or_create_draft()
+    rest.update({
+        "name": "test",
+        "yandex_maps": "test",
+        "metro": metro,
+        "tags": "Вьетнамка🥋",
+        "rating": rating,
+    })
+    rest_repo.update_draft(rest)
 
     rests = rest_repo.list_restaurants(metro=metro, rating=rating)
 

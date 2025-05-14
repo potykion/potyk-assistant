@@ -22,6 +22,9 @@ class MainFactory:
     def sqlite_cursor(self):
         return make_sqlite_cursor(self.db_path)
 
+    def teardown(self):
+        self.sqlite_cursor.connection.close()
+
     def make_get_near_restaurants(self):
         return GetNearRestaurants(self.make_rest_repo())
 
