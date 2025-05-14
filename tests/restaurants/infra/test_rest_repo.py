@@ -8,7 +8,7 @@ from kys_in_rest.restaurants.entries.metro import metro_colors
 def test_list_restaurants(metro, rest_repo):
     rating = 7
 
-    rests = rest_repo.list_restaurants(metro, rating)
+    rests = rest_repo.list_restaurants(metro=metro, rating=rating)
 
     assert rests
     assert all(metro in split_strip(rest["metro"]) for rest in rests)
