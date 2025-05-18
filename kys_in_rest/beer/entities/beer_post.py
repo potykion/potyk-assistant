@@ -6,17 +6,19 @@ from pydantic import BaseModel, Field
 from kys_in_rest.core.tg_utils import escape
 
 hops = [
-    "Citra",
-    "Citra Cryo",
-    "Nectaron",
-    "Hopburst Nectaron",
     "Cascade NZ",
+    "Citra Cryo",
+    "Citra",
+    "Galaxy",
+    "Green Bullet",
+    "Hopburst Nectaron",
+    "Mosaic CRYO",
+    "Mosaic",
+    "Nectaron",
     "Pacifica Amplifire",
     "Rakau",
-    "Green Bullet",
     "Superdelic",
-    "Galaxy",
-    "Mosaic",
+    "Vic Secret",
 ]
 
 fruits = [
@@ -50,6 +52,7 @@ fruits = [
 
 class BeerStyleName(enum.StrEnum):
     TIPA = "TIPA"
+    DIPA = "DIPA"
     NE_IPA = "NE IPA"
     IPA = "IPA"
     MEAD = "Mead"

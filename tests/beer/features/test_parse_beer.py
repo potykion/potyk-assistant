@@ -13,7 +13,7 @@ from kys_in_rest.beer.features.parse_beer import parse_style
             "4BREWERS - TIPA.txt",
             BeerStyle(
                 name=BeerStyleName.TIPA,
-                hops=["Citra", "Citra Cryo", "Nectaron", "Hopburst Nectaron"],
+                hops=["Citra Cryo", "Citra", "Hopburst Nectaron", "Nectaron"],
             ),
         ),
         (
@@ -98,6 +98,10 @@ from kys_in_rest.beer.features.parse_beer import parse_style
             BeerStyle(
                 name=BeerStyleName.SOUR_ALE, fruits=["малина", "маракуйя", "мелисса"]
             ),
+        ),
+        (
+            "Midnight - Kusarigama.txt",
+            BeerStyle(name=BeerStyleName.DIPA, hops=['Mosaic CRYO', 'Mosaic', 'Vic Secret']),
         ),
     ],
 )

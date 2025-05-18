@@ -21,6 +21,7 @@ style_parsers = [
     StyleParser(BeerStyleName.LAGER, "лагер"),
     StyleParser(BeerStyleName.MILK_STOUT, "молочн стаут"),
     StyleParser(BeerStyleName.TIPA, "тройн индийск пэйл эл", parse_hops=True),
+    StyleParser(BeerStyleName.DIPA, "Double IPA", parse_hops=True),
     StyleParser(BeerStyleName.NE_IPA, "новоанглийск инд пейл эл", parse_hops=True),
     StyleParser(BeerStyleName.NE_IPA, "ne ipa", parse_hops=True),
     StyleParser(BeerStyleName.IPA, "american ipa", parse_hops=True),
