@@ -1,12 +1,11 @@
 import sqlite3
 
+from kys_in_rest.core.sqlite_utils import SqliteRepo
 from kys_in_rest.restaurants.entries.restaurant import Restaurant
 from kys_in_rest.restaurants.features.ports import RestRepo
 
 
-class SqliteRestRepo(RestRepo):
-    def __init__(self, cursor: sqlite3.Cursor):
-        self.cursor = cursor
+class SqliteRestRepo(RestRepo, SqliteRepo):
 
     def get_or_create_draft(self) -> tuple[Restaurant, bool]:
         row = self.cursor.execute(
