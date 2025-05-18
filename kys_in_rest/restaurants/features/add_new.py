@@ -27,6 +27,8 @@ rest_params = [
     RestParam("yandex_maps", "Скинь ссылку на Яндекс Карты", parse_link),
     RestParam("metro", "Какое метро?", options=lambda: list_metro_items()),
     RestParam("tags", "Какая кухня?", options=lambda: list_tag_items()),
+    RestParam("from_", 'Откуда узнал? Пришли репост или пришли "-"'),
+    RestParam("comment", "Комментарии будут? Типа что брать?"),
 ]
 
 
@@ -44,9 +46,9 @@ class AddNewRestaurant(TgFeature):
         rest: Restaurant
 
         for param in rest_params:
-            if not rest.get(param.name):
-                if param.parser and text:
-                    text = param.parser(text)
+            if param.name == "from_":
+                if rest["from_channel"] and rest["from_post"]:
+                    continue
 
                 if not text:
                     raise AskForData(
@@ -56,9 +58,39 @@ class AddNewRestaurant(TgFeature):
                         )
                     )
 
-                rest[param.name] = text
-                self.rest_repo.update_draft(rest)
-                text = None
+                if text == "-":
+                    rest["from_channel"] = text
+                    rest["from_post"] = text
+                    self.rest_repo.update_draft(rest)
+                    text = None
+                elif msg.forward_link:
+                    rest["from_channel"] = msg.forward_channel_name
+                    rest["from_post"] = msg.forward_link
+                    self.rest_repo.update_draft(rest)
+                    text = None
+
+            else:
+                if not rest.get(param.name):
+                    if param.parser and text:
+                        text = param.parser(text)
+
+                    if not text:
+                        raise AskForData(
+                            TgMsgToSend(
+                                param.question,
+                                param.options() if param.options else None,
+                            )
+                        )
+
+                    if param.name == "name":
+                        if not self.rest_repo.check_name_unique(text):
+                            raise AskForData(
+                                TgMsgToSend("Такой рестик уже был, введи другой")
+                            )
+
+                    rest[param.name] = text
+                    self.rest_repo.update_draft(rest)
+                    text = None
 
         rest["draft"] = False
         self.rest_repo.update_draft(rest)

@@ -104,3 +104,11 @@ class SqliteRestRepo(RestRepo):
     def delete_by_name(self, name: str):
         self.cursor.execute("delete from restaurants where name = ?", (name,))
         self.cursor.connection.commit()
+
+    def check_name_unique(self, name: str) -> bool:
+        name = name.strip().lower()
+        row = self.cursor.execute(
+            "select 1 from restaurants where lower(name) = ?",
+            (name,),
+        ).fetchone()
+        return bool(not row)

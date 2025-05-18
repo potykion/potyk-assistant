@@ -24,3 +24,6 @@ class RestRepo:
 
     @abc.abstractmethod
     def delete_by_name(self, name: str): ...
+
+    @abc.abstractmethod
+    def check_name_unique(self, name: str) -> bool: ...

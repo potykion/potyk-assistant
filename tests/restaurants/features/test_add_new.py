@@ -24,6 +24,8 @@ def test_add_new(main_factory, tg_admin_user_id):
         "https://yandex.ru/maps/-/CHfaeW5p",
         "Китай Город",
         "Сербия 🫓",
+        "-",
+        "comment"
     ]:
         try:
             add_new_rest.do(InputTgMsg(text=text, tg_user_id=tg_admin_user_id))
@@ -35,3 +37,7 @@ def test_add_new(main_factory, tg_admin_user_id):
     assert rest["yandex_maps"] == "https://yandex.ru/maps/-/CHfaeW5p"
     assert rest["metro"] == "Китай Город"
     assert bool(rest["draft"]) is False
+
+    with pytest.raises(AskForData) as e:
+        add_new_rest.do(InputTgMsg(text=name, tg_user_id=tg_admin_user_id))
+        assert e.value.messages[0].message == "Такой рестик уже был, введи другой"
