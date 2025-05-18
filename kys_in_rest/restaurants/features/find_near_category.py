@@ -46,7 +46,7 @@ class GetNearRestaurants(TgFeature):
                 yield f"*{tag_group}*"
 
                 for rest in tag_rests:
-                    yield from _rest_to_tg_strings(rest)
+                    yield _rest_to_tg_string(rest)
 
         message = "\n".join(_gen())
         return message
@@ -70,28 +70,48 @@ class FindCategoryRestaurants(TgFeature):
             yield ""
 
             for rest in rests:
-                yield from _rest_to_tg_strings(rest, with_metro=True)
+                yield _rest_to_tg_string(rest, with_metro=True)
 
         message = "\n".join(_gen())
         return message
 
 
-def _rest_to_tg_strings(
+def _rest_to_tg_string(
     rest: Restaurant,
     *,
     with_metro=False,
-) -> Generator[str, None, None]:
+) -> str:
+    """
+    >>> _rest_to_tg_string(Restaurant(name='Muu', yandex_maps='https://yandex.ru/maps/org/steyk_khaus_muu/132781764150?si=potyk-io', tags=['Американская 🍖'], comment='-', from_channel='-', from_post='-')).strip()
+    '• [Muu](https://yandex.ru/maps/org/steyk_khaus_muu/132781764150?si=potyk-io)'
+    """
+
+    parts = []
+
     rest_line = f'• [{escape(rest["name"])}]({rest["yandex_maps"]})'
     if with_metro:
         rest_line = f"{rest_line} @ {rest['metro']}"
-    yield rest_line
-    if rest.get("comment") or rest.get("from_channel"):
-        comment = escape(rest["comment"])
+    parts.append(rest_line)
 
-        if rest.get("from_channel"):
+    if (rest.get("comment") and rest.get("comment") != "-") or (
+        rest.get("from_channel") and rest.get("from_channel") != "-"
+    ):
+        comment_parts = []
+
+        if rest.get("comment") and rest.get("comment") != "-":
+            comment_parts.append(escape(rest["comment"]))
+
+        if rest.get("from_channel") and rest.get("from_channel") != "-":
             if rest["from_post"]:
-                comment = f'{comment} © [{rest["from_channel"]}]({rest["from_post"]})'
+                comment_parts.append(f'[{rest["from_channel"]}]({rest["from_post"]})')
             else:
-                comment = f'{comment} © {rest["from_channel"]}'
-        yield f"_{comment}_"
-    yield ""
+                comment_parts.append(rest["from_channel"])
+
+        comment = " © ".join(comment_parts)
+
+        comment = f"_{comment}_"
+        parts.append(comment)
+
+    parts.append("")
+
+    return "\n".join(parts)
