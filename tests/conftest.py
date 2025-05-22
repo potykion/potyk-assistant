@@ -3,7 +3,8 @@ import sqlite3
 
 import pytest
 
-from kys_in_rest.applications.ioc import MainFactory
+from kys_in_rest.applications.ioc import MainFactory, make_ioc
+from kys_in_rest.restaurants.features.ports import RestRepo
 from tests.cfg import tests_dir
 
 
@@ -69,15 +70,15 @@ def db(db_path):
 
 
 @pytest.fixture()
-def main_factory(db):
-    factory = MainFactory(db)
-    yield factory
-    factory.teardown()
+def ioc(db):
+    ioc_ = make_ioc(db)
+    yield ioc_
+    ioc_.teardown()
 
 
 @pytest.fixture()
-def rest_repo(main_factory):
-    return main_factory.make_rest_repo()
+def rest_repo(ioc):
+    return ioc.resolve(RestRepo)
 
 
 @pytest.fixture()

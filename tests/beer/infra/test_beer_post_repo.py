@@ -1,10 +1,11 @@
 from datetime import datetime
 
 from kys_in_rest.beer.entities.beer_post import BeerLine, BeerStyle, BeerStyleName
+from kys_in_rest.beer.features.beer_post_repo import BeerPostRepo
 
 
-def test_SqliteBeerPostRepo(main_factory):
-    repo = main_factory.make_beer_post_repo()
+def test_SqliteBeerPostRepo(ioc):
+    repo = ioc.resolve(BeerPostRepo)
 
     repo.start_new_post()
     post = repo.get_last_post()

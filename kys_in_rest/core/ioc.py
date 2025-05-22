@@ -3,6 +3,7 @@ from typing import NamedTuple, Any, Type, Callable, overload, TypeVar
 import inspect
 
 T = TypeVar("T")
+NameOrType = str | Type
 
 
 class RegistryEntryType(enum.StrEnum):
@@ -11,24 +12,46 @@ class RegistryEntryType(enum.StrEnum):
 
 
 class RegistryEntry(NamedTuple):
-    name: str
+    name: NameOrType
     type: RegistryEntryType
     val: Any
     cache: bool = False
+    teardown: Callable | None = None
 
 
 class IOC:
     def __init__(self):
-        self.registry: dict[str | Type, RegistryEntry] = {}
-        self.cache: dict[str | Type, Any] = {}
 
-    def register_constant(self, name: str, val: str):
-        self.registry[name] = RegistryEntry(name, RegistryEntryType.constant, val)
+        self.registry: dict[NameOrType, RegistryEntry] = {}
+        self.cache: dict[NameOrType, Any] = {}
 
-    def register_callable(self, name_or_type, callable_: Callable, *, cache=False):
+    def register(
+        self,
+        name_or_type,
+        val: Any,
+        *,
+        cache=False,
+        teardown: Callable | None = None,
+    ):
+        if callable(val):
+            type_ = RegistryEntryType.callable
+        else:
+            type_ = RegistryEntryType.constant
+
         self.registry[name_or_type] = RegistryEntry(
-            name_or_type, RegistryEntryType.callable, callable_, cache
+            name_or_type,
+            type_,
+            val,
+            cache,
+            teardown,
         )
+
+    def teardown(self):
+        for entry in self.registry.values():
+            if entry.teardown:
+                resolved = self.resolve(entry.name)
+                entry.teardown(resolved)
+
 
     @overload
     def resolve(self, name_or_type: Type[T]) -> T: ...
@@ -60,4 +83,3 @@ class IOC:
             return resolved
         else:
             raise Exception(f"resolve don't support {entry.type=}")
-
