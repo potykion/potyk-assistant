@@ -21,7 +21,6 @@ class RegistryEntry(NamedTuple):
 
 class IOC:
     def __init__(self):
-
         self.registry: dict[NameOrType, RegistryEntry] = {}
         self.cache: dict[NameOrType, Any] = {}
 
@@ -51,7 +50,6 @@ class IOC:
             if entry.teardown:
                 resolved = self.resolve(entry.name)
                 entry.teardown(resolved)
-
 
     @overload
     def resolve(self, name_or_type: Type[T]) -> T: ...
