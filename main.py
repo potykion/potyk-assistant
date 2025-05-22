@@ -1,6 +1,6 @@
 import dataclasses
 import os
-from typing import Callable
+from typing import Type
 
 import dotenv
 from telegram import Update, CallbackQuery
@@ -39,7 +39,7 @@ ioc = make_ioc(root_dir / os.environ["DB"])
 @dataclasses.dataclass
 class TgCommandSetup:
     command: TgCommand
-    feature: Callable[[], TgFeature]
+    feature: Type[TgFeature]
 
     def make_handler(self):
         async def _handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -47,12 +47,15 @@ class TgCommandSetup:
 
         return CommandHandler(self.command, _handler)
 
+    def make_feature(self):
+        return ioc.resolve(self.feature)
+
 
 tg_commands = [
-    TgCommandSetup(TgCommand.category, lambda: ioc.resolve(FindCategoryRestaurants)),
-    TgCommandSetup(TgCommand.near, lambda: ioc.resolve(GetNearRestaurants)),
-    TgCommandSetup(TgCommand.new, lambda: ioc.resolve(AddNewRestaurant)),
-    TgCommandSetup(TgCommand.new_beer, lambda: ioc.resolve(AddNewBeer)),
+    TgCommandSetup(TgCommand.category, FindCategoryRestaurants),
+    TgCommandSetup(TgCommand.near, GetNearRestaurants),
+    TgCommandSetup(TgCommand.new, AddNewRestaurant),
+    TgCommandSetup(TgCommand.new_beer, AddNewBeer),
 ]
 
 
@@ -96,7 +99,7 @@ async def _start_flow_handler(update: Update, command: TgCommand) -> None:
     flow_repo: FlowRepo = ioc.resolve(FlowRepo)
     flow = flow_repo.start_or_continue_flow(command, tg_user_id)
 
-    feature: TgFeature = find_command_setup(flow.command).feature()
+    feature: TgFeature = find_command_setup(flow.command).make_feature()
 
     msg = InputTgMsg(
         text=text,
@@ -122,7 +125,7 @@ async def _continue_flow_handler(
 
     flow_repo = ioc.resolve(FlowRepo)
     flow = flow_repo.get_current_flow(msg.tg_user_id)
-    feature = find_command_setup(flow.command).feature()
+    feature = find_command_setup(flow.command).make_feature()
 
     try:
         message = feature.do(msg)

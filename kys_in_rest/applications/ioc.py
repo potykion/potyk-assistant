@@ -38,36 +38,3 @@ def make_ioc(db_path: str) -> IOC:
     ioc.register(FindCategoryRestaurants, FindCategoryRestaurants)
 
     return ioc
-
-
-class MainFactory:
-    def __init__(self, db_path: str):
-        self.db_path = db_path
-
-    @cached_property
-    def sqlite_cursor(self):
-        return make_sqlite_cursor(self.db_path)
-
-    def teardown(self):
-        self.sqlite_cursor.connection.close()
-
-    def make_rest_repo(self) -> RestRepo:
-        return SqliteRestRepo(self.sqlite_cursor)
-
-    def make_flow_repo(self) -> FlowRepo:
-        return SqliteFlowRepo(self.sqlite_cursor)
-
-    def make_beer_post_repo(self) -> BeerPostRepo:
-        return SqliteBeerPostRepo(self.sqlite_cursor)
-
-    def make_get_near_restaurants(self):
-        return GetNearRestaurants(self.make_rest_repo())
-
-    def make_add_new_restaurant(self):
-        return AddNewRestaurant(self.make_rest_repo())
-
-    def make_add_new_beer(self):
-        return AddNewBeer(self.make_beer_post_repo())
-
-    def make_find_category_restaurants(self):
-        return FindCategoryRestaurants(self.make_rest_repo())
