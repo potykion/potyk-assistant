@@ -3,16 +3,20 @@ import sqlite3
 
 import pytest
 
-from kys_in_rest.restaurants.prep.ioc import MainFactory
+from kys_in_rest.applications.ioc import MainFactory
 from tests.cfg import tests_dir
 
 
 @pytest.fixture()
-def db():
-    test_db = tests_dir / "db_test.sqlite"
-    if os.path.exists(test_db):
-        os.remove(test_db)
-    connection = sqlite3.connect(test_db)
+def db_path():
+    return tests_dir / "db_test.sqlite"
+
+
+@pytest.fixture()
+def db(db_path):
+    if os.path.exists(db_path):
+        os.remove(db_path)
+    connection = sqlite3.connect(db_path)
     cursor = connection.cursor()
     cursor.execute(
         """
@@ -59,7 +63,7 @@ def db():
     )
     connection.commit()
 
-    yield test_db
+    yield db_path
 
     connection.close()
 
@@ -69,7 +73,6 @@ def main_factory(db):
     factory = MainFactory(db)
     yield factory
     factory.teardown()
-
 
 
 @pytest.fixture()

@@ -1,7 +1,9 @@
+import sqlite3
 from functools import cached_property
 
 from kys_in_rest.beer.features.add_new_beer import AddNewBeer
 from kys_in_rest.beer.infra.beer_post_repo import SqliteBeerPostRepo
+from kys_in_rest.core.ioc import IOC
 from kys_in_rest.core.sqlite_utils import make_sqlite_cursor
 from kys_in_rest.restaurants.features.add_new import AddNewRestaurant
 from kys_in_rest.restaurants.features.find_near_category import (
@@ -12,6 +14,13 @@ from kys_in_rest.restaurants.features.ports import RestRepo
 from kys_in_rest.restaurants.infra.rest_repo import SqliteRestRepo
 from kys_in_rest.tg.features.flow_repo import FlowRepo
 from kys_in_rest.tg.infra.flow_repo import SqliteFlowRepo
+
+
+def make_ioc(db_path: str):
+    ioc = IOC()
+    ioc.register_constant("db_path", db_path)
+    ioc.register_callable(sqlite3.Cursor, make_sqlite_cursor)
+    return ioc
 
 
 class MainFactory:

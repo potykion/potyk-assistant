@@ -19,7 +19,7 @@ from kys_in_rest.core.tg_utils import (
     TgFeature,
     SendTgMessageInterrupt,
 )
-from kys_in_rest.restaurants.prep.ioc import MainFactory
+from kys_in_rest.applications.ioc import MainFactory
 from kys_in_rest.tg.entities.flow import TgCommand
 from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 from kys_in_rest.tg.features.flow_repo import FlowRepo
