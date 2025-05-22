@@ -3,7 +3,7 @@ import sqlite3
 
 import pytest
 
-from kys_in_rest.applications.ioc import MainFactory, make_ioc
+from kys_in_rest.applications.ioc import make_ioc
 from kys_in_rest.restaurants.features.ports import RestRepo
 from tests.cfg import tests_dir
 

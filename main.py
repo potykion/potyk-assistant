@@ -13,13 +13,19 @@ from telegram.ext import (
     MessageHandler,
 )
 
+from kys_in_rest.applications.ioc import make_ioc
+from kys_in_rest.beer.features.add_new_beer import AddNewBeer
 from kys_in_rest.core.cfg import root_dir
 from kys_in_rest.core.tg_utils import (
     build_keyboard,
     TgFeature,
     SendTgMessageInterrupt,
 )
-from kys_in_rest.applications.ioc import MainFactory
+from kys_in_rest.restaurants.features.add_new import AddNewRestaurant
+from kys_in_rest.restaurants.features.find_near_category import (
+    FindCategoryRestaurants,
+    GetNearRestaurants,
+)
 from kys_in_rest.tg.entities.flow import TgCommand
 from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 from kys_in_rest.tg.features.flow_repo import FlowRepo
@@ -27,7 +33,7 @@ from kys_in_rest.tg.features.flow_repo import FlowRepo
 dotenv.load_dotenv()
 TG_TOKEN = os.environ["TG_TOKEN"]
 
-fact = MainFactory(root_dir / os.environ["DB"])
+ioc = make_ioc(root_dir / os.environ["DB"])
 
 
 @dataclasses.dataclass
@@ -43,10 +49,10 @@ class TgCommandSetup:
 
 
 tg_commands = [
-    TgCommandSetup(TgCommand.category, fact.make_find_category_restaurants),
-    TgCommandSetup(TgCommand.near, fact.make_get_near_restaurants),
-    TgCommandSetup(TgCommand.new, fact.make_add_new_restaurant),
-    TgCommandSetup(TgCommand.new_beer, fact.make_add_new_beer),
+    TgCommandSetup(TgCommand.category, lambda: ioc.resolve(FindCategoryRestaurants)),
+    TgCommandSetup(TgCommand.near, lambda: ioc.resolve(GetNearRestaurants)),
+    TgCommandSetup(TgCommand.new, lambda: ioc.resolve(AddNewRestaurant)),
+    TgCommandSetup(TgCommand.new_beer, lambda: ioc.resolve(AddNewBeer)),
 ]
 
 
@@ -55,6 +61,7 @@ def find_command_setup(command) -> TgCommandSetup:
         if setup.command == command:
             return setup
     raise ValueError(f"No {command=} found")
+
 
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
@@ -86,7 +93,7 @@ async def _start_flow_handler(update: Update, command: TgCommand) -> None:
         except IndexError:
             text = None
 
-    flow_repo: FlowRepo = fact.make_flow_repo()
+    flow_repo: FlowRepo = ioc.resolve(FlowRepo)
     flow = flow_repo.start_or_continue_flow(command, tg_user_id)
 
     feature: TgFeature = find_command_setup(flow.command).feature()
@@ -113,7 +120,7 @@ async def _continue_flow_handler(
     msg: InputTgMsg,
 ):
 
-    flow_repo = fact.make_flow_repo()
+    flow_repo = ioc.resolve(FlowRepo)
     flow = flow_repo.get_current_flow(msg.tg_user_id)
     feature = find_command_setup(flow.command).feature()
 
