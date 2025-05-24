@@ -1,4 +1,5 @@
 import os
+from typing import cast
 
 from kys_in_rest.beer.entities.beer_post import BeerPost, BeerLine
 from kys_in_rest.beer.features.beer_post_repo import BeerPostRepo
@@ -13,7 +14,7 @@ from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 
 
 class AddNewBeer(TgFeature):
-    def __init__(self, beer_post_repo: BeerPostRepo):
+    def __init__(self, beer_post_repo: BeerPostRepo) -> None:
         self.beer_post_repo = beer_post_repo
 
     def do(self, msg: InputTgMsg) -> str:
@@ -32,14 +33,14 @@ class AddNewBeer(TgFeature):
             beer_post: BeerPost = self.beer_post_repo.get_last_post()
 
         if msg.forward_link:
-            style = parse_style(msg.text)
+            style = parse_style(cast(str, msg.text))
             if not style:
                 raise AskForData(TgMsgToSend("Не удалось распарсить стиль((("))
 
             beer_post.beers.append(
                 BeerLine(
                     name="",
-                    brewery=msg.forward_channel_name,
+                    brewery=cast(str, msg.forward_channel_name),
                     style=style,
                     link=msg.forward_link,
                 )
@@ -47,6 +48,6 @@ class AddNewBeer(TgFeature):
             self.beer_post_repo.update_post(beer_post)
             raise AskForData(TgMsgToSend("Как называется пив?"))
         else:
-            beer_post.beers[-1].name = msg.text
+            beer_post.beers[-1].name = cast(str, msg.text)
             self.beer_post_repo.update_post(beer_post)
             return beer_post.make_post_text()

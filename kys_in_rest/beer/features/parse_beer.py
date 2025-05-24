@@ -38,15 +38,16 @@ style_parsers = [
 ]
 
 
-def parse_name(text: str) -> str: ...
+def parse_name(text: str) -> str:
+    return text
 
 
 def parse_style(text: str) -> BeerStyle | None:
     text = _stem_text(text)
 
     style = ""
-    style_hops = []
-    style_fruits = []
+    style_hops: list[str] = []
+    style_fruits: list[str] = []
 
     for parser in style_parsers:
         # Проверка наличия паттерна
@@ -67,7 +68,6 @@ def parse_style(text: str) -> BeerStyle | None:
     if not style:
         return None
 
-
     return BeerStyle(
         name=style,
         hops=style_hops,
@@ -75,7 +75,7 @@ def parse_style(text: str) -> BeerStyle | None:
     )
 
 
-def _stem_text(text):
+def _stem_text(text: str) -> str:
     stemmer = SnowballStemmer("russian")
     tokens = word_tokenize(text.lower())
     stemmed_words = [stemmer.stem(word) for word in tokens]
@@ -83,16 +83,16 @@ def _stem_text(text):
     return text
 
 
-def _parse_hops(lower):
-    style_hops = []
+def _parse_hops(text: str) -> list[str]:
+    style_hops: list[str] = []
     for hop in hops:
-        if hop.lower() in lower:
+        if hop.lower() in text.lower():
             style_hops.append(hop)
     return style_hops
 
 
-def _parse_fruits(text):
-    style_fruits = []
+def _parse_fruits(text: str) -> list[str]:
+    style_fruits: list[str] = []
     for fruit_case, fruit in fruits:
         if fruit_case.lower() in text.lower():
             style_fruits.append(fruit)

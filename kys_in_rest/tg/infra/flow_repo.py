@@ -1,6 +1,6 @@
 import sqlite3
 
-from kys_in_rest.tg.entities.flow import TgFlow
+from kys_in_rest.tg.entities.flow import TgFlow, TgCommand
 from kys_in_rest.tg.features.flow_repo import FlowRepo
 
 
@@ -9,7 +9,7 @@ class SqliteFlowRepo(FlowRepo):
     def __init__(self, cursor: sqlite3.Cursor):
         self.cursor = cursor
 
-    def get_current_flow(self, tg_user_id) -> TgFlow:
+    def get_current_flow(self, tg_user_id: int) -> TgFlow:
         row = self.cursor.execute(
             "select * from flow where tg_user_id = ?",
             (tg_user_id,),
@@ -20,7 +20,7 @@ class SqliteFlowRepo(FlowRepo):
 
     def start_or_continue_flow(
         self,
-        command,
+        command: TgCommand,
         tg_user_id: int,
     ) -> TgFlow:
         row = self.cursor.execute(

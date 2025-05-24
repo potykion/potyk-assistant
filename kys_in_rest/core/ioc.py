@@ -1,9 +1,18 @@
 import enum
-from typing import NamedTuple, Any, Type, Callable, overload, TypeVar
+from typing import (
+    NamedTuple,
+    Any,
+    Type,
+    Callable,
+    overload,
+    TypeVar,
+    TypeAlias,
+    Generic,
+)
 import inspect
 
 T = TypeVar("T")
-NameOrType = str | Type
+NameOrType: TypeAlias = str | Type[Any]
 
 
 class RegistryEntryType(enum.StrEnum):
@@ -11,27 +20,27 @@ class RegistryEntryType(enum.StrEnum):
     callable = enum.auto()
 
 
-class RegistryEntry(NamedTuple):
+class RegistryEntry(Generic[T], NamedTuple):
     name: NameOrType
     type: RegistryEntryType
     val: Any
     cache: bool = False
-    teardown: Callable | None = None
+    teardown: Callable[[T], None] | None = None
 
 
 class IOC:
-    def __init__(self):
-        self.registry: dict[NameOrType, RegistryEntry] = {}
+    def __init__(self) -> None:
+        self.registry: dict[NameOrType, RegistryEntry[Any]] = {}
         self.cache: dict[NameOrType, Any] = {}
 
     def register(
         self,
-        name_or_type,
+        name_or_type: NameOrType,
         val: Any,
         *,
-        cache=False,
-        teardown: Callable | None = None,
-    ):
+        cache: bool = False,
+        teardown: Callable[[Any], None] | None = None,
+    ) -> None:
         if callable(val):
             type_ = RegistryEntryType.callable
         else:
@@ -45,7 +54,7 @@ class IOC:
             teardown,
         )
 
-    def teardown(self):
+    def teardown(self) -> None:
         for entry in self.registry.values():
             if entry.teardown:
                 resolved = self.resolve(entry.name)
@@ -56,7 +65,7 @@ class IOC:
     @overload
     def resolve(self, name_or_type: str) -> Any: ...
 
-    def resolve(self, name_or_type):
+    def resolve(self, name_or_type: NameOrType) -> Any:
         entry = self.registry[name_or_type]
         if entry.type == RegistryEntryType.constant:
             return entry.val
@@ -65,7 +74,7 @@ class IOC:
                 if cached := self.cache.get(name_or_type):
                     return cached
 
-            resolved_params = {}
+            resolved_params: dict[str, Any] = {}
 
             params = inspect.signature(entry.val).parameters
             for param_key, param_type in params.items():

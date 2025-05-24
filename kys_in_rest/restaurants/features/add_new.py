@@ -1,5 +1,5 @@
 import os
-from typing import NamedTuple, Callable
+from typing import NamedTuple, Callable, cast
 
 from kys_in_rest.core.str_utils import parse_link
 from kys_in_rest.core.tg_utils import (
@@ -13,6 +13,7 @@ from kys_in_rest.restaurants.entries.restaurant import Restaurant
 from kys_in_rest.restaurants.features.list_metro import list_metro_items
 from kys_in_rest.restaurants.features.list_tags import list_tag_items
 from kys_in_rest.restaurants.features.ports import RestRepo
+from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 
 
 class RestParam(NamedTuple):
@@ -36,14 +37,13 @@ class AddNewRestaurant(TgFeature):
     def __init__(self, rest_repo: RestRepo) -> None:
         self.rest_repo = rest_repo
 
-    def do(self, msg):
+    def do(self, msg: InputTgMsg) -> str:
         if int(msg.tg_user_id) != int(os.environ["TG_ADMIN"]):
             raise SendTgMessageInterrupt(TgMsgToSend("Тебе нельзя"))
 
         text = msg.text
 
         rest, _ = self.rest_repo.get_or_create_draft()
-        rest: Restaurant
 
         for param in rest_params:
             if param.name == "from_":
@@ -64,7 +64,7 @@ class AddNewRestaurant(TgFeature):
                     self.rest_repo.update_draft(rest)
                     text = None
                 elif msg.forward_link:
-                    rest["from_channel"] = msg.forward_channel_name
+                    rest["from_channel"] = cast(str, msg.forward_channel_name)
                     rest["from_post"] = msg.forward_link
                     self.rest_repo.update_draft(rest)
                     text = None
@@ -88,7 +88,7 @@ class AddNewRestaurant(TgFeature):
                                 TgMsgToSend("Такой рестик уже был, введи другой")
                             )
 
-                    rest[param.name] = text
+                    rest[param.name] = text  # type: ignore
                     self.rest_repo.update_draft(rest)
                     text = None
 

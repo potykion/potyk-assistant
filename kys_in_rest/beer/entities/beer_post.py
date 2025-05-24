@@ -1,5 +1,6 @@
 import enum
 from datetime import datetime
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -70,8 +71,8 @@ class BeerStyle(BaseModel):
     hops: list[str] = Field(default_factory=list)
     fruits: list[str] = Field(default_factory=list)
 
-    def make_style_line(self):
-        name = escape(self.name)
+    def make_style_line(self) -> str:
+        name = escape(str(self.name))
         if self.hops:
             return f"{name} w/ {', '.join(self.hops)}"
         elif self.fruits:
@@ -87,13 +88,13 @@ class BeerLine(BaseModel):
     link: str
 
     @property
-    def style_icon(self):
+    def style_icon(self) -> str:
         if self.style.name == BeerStyleName.MEAD:
             return "🍯"
         else:
             return "🍺"
 
-    def make_beer_line(self):
+    def make_beer_line(self) -> str:
         brewery_w_name = escape(f"{self.brewery} — {self.name}")
         return f"{self.style_icon} [{brewery_w_name}]({self.link}) • _{self.style.make_style_line()}_"
 

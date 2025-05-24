@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import Generator
+from typing import Generator, Sequence
 
 from kys_in_rest.core.str_utils import split_strip
 from kys_in_rest.core.tg_utils import escape, TgFeature, AskForData, TgMsgToSend
@@ -28,7 +28,7 @@ class GetNearRestaurants(TgFeature):
             metro=metro, rating=7
         )
 
-        def _gen():
+        def _gen() -> Generator[str, None, None]:
             yield f"*{metro_colors[metro]} {metro.upper()}*"
             yield ""
 
@@ -63,9 +63,9 @@ class FindCategoryRestaurants(TgFeature):
 
         tags = tag_groups[tag_group]
 
-        rests: list[Restaurant] = self.rest_repo.list_restaurants(tags=tags, rating=7)
+        rests: list[Restaurant] = self.rest_repo.list_restaurants(tags=list(tags), rating=7)
 
-        def _gen():
+        def _gen() -> Generator[str, None, None]:
             yield f"*{tag_group}*"
             yield ""
 
@@ -79,7 +79,7 @@ class FindCategoryRestaurants(TgFeature):
 def _rest_to_tg_string(
     rest: Restaurant,
     *,
-    with_metro=False,
+    with_metro: bool = False,
 ) -> str:
     """
     >>> _rest_to_tg_string(Restaurant(name='Muu', yandex_maps='https://yandex.ru/maps/org/steyk_khaus_muu/132781764150?si=potyk-io', tags=['Американская 🍖'], comment='-', from_channel='-', from_post='-')).strip()
@@ -88,7 +88,7 @@ def _rest_to_tg_string(
 
     parts = []
 
-    rest_line = f'• [{escape(rest["name"])}]({rest["yandex_maps"]})'
+    rest_line = f'• [{escape(str(rest["name"]))}]({rest["yandex_maps"]})'
     if with_metro:
         rest_line = f"{rest_line} @ {rest['metro']}"
     parts.append(rest_line)
@@ -99,7 +99,7 @@ def _rest_to_tg_string(
         comment_parts = []
 
         if rest.get("comment") and rest.get("comment") != "-":
-            comment_parts.append(escape(rest["comment"]))
+            comment_parts.append(escape(str(rest["comment"])))
 
         if rest.get("from_channel") and rest.get("from_channel") != "-":
             if rest["from_post"]:

@@ -1,6 +1,6 @@
-# `kys_in_rest`
+# `potyk_assistant` ex `kys_in_rest`
 
-> Телеграм бот, показывающий где поесть в Москве
+> Телеграм бот, показывающий где поесть в Москве, а также пивко заносить, и вес вводить, и вообще все, что мне в голову взбредет 
 
 - [Бот](https://t.me/kys_in_rest_bot)
 - [Github](https://github.com/potykion/kys_in_rest)

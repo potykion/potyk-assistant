@@ -1,7 +1,7 @@
 import re
 
 
-def split_strip(str_, sep=","):
+def split_strip(str_: str, sep: str = ",") -> list[str]:
     """
     >>> split_strip("a, b")
     ['a', 'b']

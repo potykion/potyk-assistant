@@ -1,13 +1,13 @@
 import abc
 import itertools
-from typing import NamedTuple
+from typing import NamedTuple, Sequence
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 
 
-def escape(text):
+def escape(text: str) -> str:
     to_escape = ".()-!+|"
     for ch in to_escape:
         text = text.replace(ch, rf"\{ch}")
@@ -21,7 +21,7 @@ class TgCbOption(NamedTuple):
 
 class TgMsgToSend(NamedTuple):
     message: str
-    options: list[TgCbOption] = None
+    options: list[TgCbOption] | None = None
 
 
 class SendTgMessageInterrupt(Exception):
@@ -32,7 +32,7 @@ class SendTgMessageInterrupt(Exception):
 class AskForData(SendTgMessageInterrupt): ...
 
 
-def build_keyboard(options: list[TgCbOption], buttons=3):
+def build_keyboard(options: list[TgCbOption], buttons: int = 3) -> InlineKeyboardMarkup:
     keyboard = [
         [
             InlineKeyboardButton(metro_str, callback_data=metro_cb)

@@ -1,3 +1,5 @@
+from typing import cast
+
 from kys_in_rest.core.tg_utils import TgFeature
 from kys_in_rest.health.entities.weight import WeightEntry
 from kys_in_rest.health.features.weight_repo import WeightRepo
@@ -9,6 +11,6 @@ class AddWeight(TgFeature):
         self.weight_repo = weight_repo
 
     def do(self, msg: InputTgMsg) -> str:
-        weight = float(msg.text)
+        weight = float(cast(str, msg.text))
         self.weight_repo.add_weight_entry(WeightEntry(weight=weight))
         return "Записал 👌"

@@ -1,16 +1,17 @@
 import dataclasses
 import os
-from typing import Type
+from typing import Type, cast, Any, Callable
 
 import dotenv
-from telegram import Update, CallbackQuery
+from telegram import Update, CallbackQuery, Message, User
 from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
     ContextTypes,
-    Application,
     CallbackQueryHandler,
     MessageHandler,
+    Application,
+    CallbackContext,
 )
 
 from kys_in_rest.applications.ioc import make_ioc
@@ -20,6 +21,7 @@ from kys_in_rest.core.tg_utils import (
     build_keyboard,
     TgFeature,
     SendTgMessageInterrupt,
+    TgMsgToSend,
 )
 from kys_in_rest.restaurants.features.add_new import AddNewRestaurant
 from kys_in_rest.restaurants.features.find_near_category import (
@@ -33,7 +35,7 @@ from kys_in_rest.tg.features.flow_repo import FlowRepo
 dotenv.load_dotenv()
 TG_TOKEN = os.environ["TG_TOKEN"]
 
-ioc = make_ioc(root_dir / os.environ["DB"])
+ioc = make_ioc(str(root_dir / os.environ["DB"]))
 
 
 @dataclasses.dataclass
@@ -41,13 +43,15 @@ class TgCommandSetup:
     command: TgCommand
     feature: Type[TgFeature]
 
-    def make_handler(self):
-        async def _handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    def make_handler(
+        self,
+    ) -> Any:
+        async def _handler(update: Update, context: Any) -> None:
             await _start_flow_handler(update, self.command)
 
         return CommandHandler(self.command, _handler)
 
-    def make_feature(self):
+    def make_feature(self) -> TgFeature:
         return ioc.resolve(self.feature)
 
 
@@ -59,7 +63,7 @@ tg_commands = [
 ]
 
 
-def find_command_setup(command) -> TgCommandSetup:
+def find_command_setup(command: TgCommand) -> TgCommandSetup:
     for setup in tg_commands:
         if setup.command == command:
             return setup
@@ -67,16 +71,17 @@ def find_command_setup(command) -> TgCommandSetup:
 
 
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    query = update.callback_query
-    await query.answer()
-    await _continue_flow_handler(query, InputTgMsg.parse(query))
+    query = cast(CallbackQuery, update.callback_query)
+    if query:
+        await query.answer()
+        await _continue_flow_handler(query, InputTgMsg.parse(query))
 
 
 async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await _continue_flow_handler(update, InputTgMsg.parse(update))
 
 
-async def post_init(application: Application) -> None:
+async def post_init(application: Any) -> None:
     await application.bot.set_my_commands(
         [
             (TgCommand.near, "Ищет рестики по метро"),
@@ -87,16 +92,22 @@ async def post_init(application: Application) -> None:
 
 
 async def _start_flow_handler(update: Update, command: TgCommand) -> None:
-    tg_user_id = update.effective_user.id
+    user = cast(User, update.effective_user)
+    if not user:
+        return
+    tg_user_id = user.id
 
-    text = update.message.text
-    if text.startswith(f"/{command}"):
+    message = cast(Message, update.message)
+    if not message:
+        return
+    text = message.text
+    if text and text.startswith(f"/{command}"):
         try:
             text = text.split(None, 1)[1]
         except IndexError:
             text = None
 
-    flow_repo: FlowRepo = ioc.resolve(FlowRepo)
+    flow_repo = ioc.resolve(FlowRepo)
     flow = flow_repo.start_or_continue_flow(command, tg_user_id)
 
     feature: TgFeature = find_command_setup(flow.command).make_feature()
@@ -107,22 +118,21 @@ async def _start_flow_handler(update: Update, command: TgCommand) -> None:
     )
 
     try:
-        message = feature.do(msg)
+        res = feature.do(msg)
     except SendTgMessageInterrupt as e:
-        for msg in e.messages:
-            await update.message.reply_text(
-                msg.message,
-                reply_markup=build_keyboard(msg.options) if msg.options else None,
+        for err_msg in e.messages:
+            await cast(Any, update.message).reply_text(
+                err_msg.message,
+                reply_markup=build_keyboard(err_msg.options) if err_msg.options else None,
             )
     else:
-        await update.message.reply_markdown_v2(message)
+        await cast(Any, update.message).reply_markdown_v2(res)
 
 
 async def _continue_flow_handler(
     update_or_query: Update | CallbackQuery,
     msg: InputTgMsg,
-):
-
+) -> None:
     flow_repo = ioc.resolve(FlowRepo)
     flow = flow_repo.get_current_flow(msg.tg_user_id)
     feature = find_command_setup(flow.command).make_feature()
@@ -130,16 +140,20 @@ async def _continue_flow_handler(
     try:
         message = feature.do(msg)
     except SendTgMessageInterrupt as e:
-        for msg in e.messages:
-            await update_or_query.message.reply_text(
-                msg.message,
-                reply_markup=build_keyboard(msg.options) if msg.options else None,
-            )
+        for err_msg in e.messages:
+            if update_or_query.message:
+                await cast(Any, update_or_query.message).reply_text(
+                    err_msg.message,
+                    reply_markup=(
+                        build_keyboard(err_msg.options) if err_msg.options else None
+                    ),
+                )
     else:
-        await update_or_query.message.reply_markdown_v2(message)
+        if update_or_query.message:
+            await cast(Any, update_or_query.message).reply_markdown_v2(message)
 
 
-def main():
+def main() -> None:
     app = ApplicationBuilder().token(TG_TOKEN).post_init(post_init).build()
 
     for command in tg_commands:

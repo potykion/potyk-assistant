@@ -1,4 +1,4 @@
-import sqlite3
+from typing import Any, TypedDict
 
 from kys_in_rest.core.sqlite_utils import SqliteRepo
 from kys_in_rest.restaurants.entries.restaurant import Restaurant
@@ -17,7 +17,7 @@ class SqliteRestRepo(RestRepo, SqliteRepo):
             rest = Restaurant(draft=True)
             created = True
         else:
-            rest = Restaurant(**row)
+            rest = Restaurant(**dict(row)) # type: ignore
             created = False
 
         return rest, created
@@ -25,12 +25,12 @@ class SqliteRestRepo(RestRepo, SqliteRepo):
     def list_restaurants(
         self,
         *,
-        tags=None,
-        metro=None,
-        rating=None,
+        tags: list[str] | None = None,
+        metro: str | None = None,
+        rating: float | None = None,
     ) -> list[Restaurant]:
         q = "select * from restaurants"
-        params = []
+        params: list[Any] = []
 
         where_parts = []
 
@@ -48,9 +48,9 @@ class SqliteRestRepo(RestRepo, SqliteRepo):
             q = f"{q} where {' AND '.join(where_parts)}"
 
         rows = self.cursor.execute(q, params).fetchall()
-        return [Restaurant(**row) for row in rows]
+        return [Restaurant(**dict(row)) for row in rows]  # type: ignore
 
-    def update_draft(self, rest):
+    def update_draft(self, rest: Restaurant) -> None:
         self.cursor.execute(
             """
             update restaurants
@@ -98,9 +98,9 @@ class SqliteRestRepo(RestRepo, SqliteRepo):
         row = self.cursor.execute(
             "select * from restaurants where name = ?", (name,)
         ).fetchone()
-        return Restaurant(**row)
+        return Restaurant(**row)  # type: ignore
 
-    def delete_by_name(self, name: str):
+    def delete_by_name(self, name: str) -> None:
         self.cursor.execute("delete from restaurants where name = ?", (name,))
         self.cursor.connection.commit()
 

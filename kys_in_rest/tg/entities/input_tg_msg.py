@@ -1,6 +1,5 @@
-from typing import NamedTuple
-
-from telegram import Update, CallbackQuery
+from typing import NamedTuple, cast, Self, Any
+from telegram import Update, CallbackQuery, Message, MessageOrigin, User
 
 channels = [
     (-1001074974864, "4BREWERS", "https://t.me/fourbrewers"),
@@ -18,25 +17,28 @@ class InputTgMsg(NamedTuple):
     def parse(
         cls,
         update_or_query: Update | CallbackQuery,
-    ):
-
+    ) -> Self:
         if isinstance(update_or_query, CallbackQuery):
             text = update_or_query.data
-            return cls(text=text, tg_user_id=update_or_query.from_user.id)
+            user = update_or_query.from_user
+            return cls(text=text, tg_user_id=user.id)
 
-        text = update_or_query.message.text or update_or_query.message.caption
+        message = cast(Message, update_or_query.message)
+        text = message.text or message.caption
 
         forward_link = None
         forward_channel_name = None
         forward_channel_id = None
-        if origin := update_or_query.message.forward_origin:
-            forward_link = f"{origin.chat.link}/{origin.message_id}"
-            forward_channel_name = origin.chat.effective_name
-            forward_channel_id = origin.chat.id
+        if origin := message.forward_origin:
+            if hasattr(origin, "chat") and hasattr(origin.chat, "link") and hasattr(origin.chat, "effective_name") and hasattr(origin.chat, "id"):
+                forward_link = f"{origin.chat.link}/{cast(Any, origin).message_id}"
+                forward_channel_name = origin.chat.effective_name
+                forward_channel_id = str(origin.chat.id)
 
+        user = cast(User, update_or_query.effective_user)
         return cls(
             text=text,
-            tg_user_id=update_or_query.effective_user.id,
+            tg_user_id=user.id,
             forward_link=forward_link,
             forward_channel_name=forward_channel_name,
             forward_channel_id=forward_channel_id,

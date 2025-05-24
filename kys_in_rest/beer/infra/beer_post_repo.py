@@ -6,10 +6,10 @@ from kys_in_rest.beer.features.beer_post_repo import BeerPostRepo
 
 
 class SqliteBeerPostRepo(BeerPostRepo):
-    def __init__(self, cursor: sqlite3.Cursor):
+    def __init__(self, cursor: sqlite3.Cursor) -> None:
         self.cursor = cursor
 
-    def start_new_post(self):
+    def start_new_post(self) -> None:
         post = BeerPost()
         self.cursor.execute(
             """
@@ -32,7 +32,7 @@ class SqliteBeerPostRepo(BeerPostRepo):
             beers=json.loads(row["beers"]),
         )
 
-    def update_post(self, post) -> None:
+    def update_post(self, post: BeerPost) -> None:
         post_json = post.model_dump(mode="json")
         self.cursor.execute(
             """
