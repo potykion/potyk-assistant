@@ -23,9 +23,10 @@ jobs:
           python -c "import nltk; nltk.download('punkt_tab')"
           pip install -r requirements-dev.txt
 
-      - name: Run tests
+      - name: Run tests & qa
         run: |
           pytest
+          mypy
 
       # deploy
       - name: Add SSH Private Key
