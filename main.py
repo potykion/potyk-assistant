@@ -1,6 +1,6 @@
 import dataclasses
 import os
-from typing import Type, cast, Any, Callable
+from typing import Type, cast, Any
 
 import dotenv
 from telegram import Update, CallbackQuery, Message, User
@@ -10,8 +10,6 @@ from telegram.ext import (
     ContextTypes,
     CallbackQueryHandler,
     MessageHandler,
-    Application,
-    CallbackContext,
 )
 
 from kys_in_rest.applications.ioc import make_ioc
@@ -21,7 +19,6 @@ from kys_in_rest.core.tg_utils import (
     build_keyboard,
     TgFeature,
     SendTgMessageInterrupt,
-    TgMsgToSend,
 )
 from kys_in_rest.restaurants.features.add_new import AddNewRestaurant
 from kys_in_rest.restaurants.features.find_near_category import (

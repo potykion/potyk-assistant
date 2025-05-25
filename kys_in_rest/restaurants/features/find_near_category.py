@@ -90,7 +90,8 @@ def _rest_to_tg_string(
 
     rest_line = f'• [{escape(str(rest["name"]))}]({rest["yandex_maps"]})'
     if with_metro:
-        rest_line = f"{rest_line} @ {rest['metro']}"
+        metro = escape(rest['metro'])
+        rest_line = f"{rest_line} @ {metro}"
     parts.append(rest_line)
 
     if (rest.get("comment") and rest.get("comment") != "-") or (
