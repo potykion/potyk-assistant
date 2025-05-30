@@ -20,6 +20,7 @@ from kys_in_rest.core.tg_utils import (
     TgFeature,
     SendTgMessageInterrupt,
 )
+from kys_in_rest.health.features.add_weight import AddOrShowWeight
 from kys_in_rest.restaurants.features.add_new import AddNewRestaurant
 from kys_in_rest.restaurants.features.find_near_category import (
     FindCategoryRestaurants,
@@ -57,6 +58,7 @@ tg_commands = [
     TgCommandSetup(TgCommand.near, GetNearRestaurants),
     TgCommandSetup(TgCommand.new, AddNewRestaurant),
     TgCommandSetup(TgCommand.new_beer, AddNewBeer),
+    TgCommandSetup(TgCommand.weight, AddOrShowWeight),
 ]
 
 

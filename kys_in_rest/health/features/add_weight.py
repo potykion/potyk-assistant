@@ -1,16 +1,27 @@
+import os
 from typing import cast
 
-from kys_in_rest.core.tg_utils import TgFeature
+from kys_in_rest.core.tg_utils import TgFeature, SendTgMessageInterrupt, TgMsgToSend
 from kys_in_rest.health.entities.weight import WeightEntry
 from kys_in_rest.health.features.weight_repo import WeightRepo
 from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 
 
-class AddWeight(TgFeature):
+class AddOrShowWeight(TgFeature):
     def __init__(self, weight_repo: WeightRepo):
         self.weight_repo = weight_repo
 
     def do(self, msg: InputTgMsg) -> str:
-        weight = float(cast(str, msg.text))
-        self.weight_repo.add_weight_entry(WeightEntry(weight=weight))
-        return "Записал 👌"
+        if int(msg.tg_user_id) != int(os.environ["TG_ADMIN"]):
+            raise SendTgMessageInterrupt(TgMsgToSend("Тебе нельзя"))
+
+        if msg.text:
+            weight = float(cast(str, msg.text))
+            self.weight_repo.add_weight_entry(WeightEntry(weight=weight))
+            return "Записал 👌"
+
+        entry = self.weight_repo.get_last()
+        if not entry:
+            return "Нет записей о весе. Добавь через /weight {вес}"
+
+        return f"Последний записанный вес: {entry.weight} кг от {entry.date}"

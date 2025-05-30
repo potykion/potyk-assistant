@@ -9,3 +9,6 @@ class WeightRepo:
 
     @abc.abstractmethod
     def list_weight_entries(self) -> list[WeightEntry]: ...
+
+    @abc.abstractmethod
+    def get_last(self) -> WeightEntry | None: ...

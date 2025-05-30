@@ -26,5 +26,12 @@
         </library>
       </libraries>
     </data-source>
+    <data-source source="LOCAL" name="zen.sqlite" uuid="5180c773-7adb-4637-9cd1-8f38512cc17e">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/zen.sqlite</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
