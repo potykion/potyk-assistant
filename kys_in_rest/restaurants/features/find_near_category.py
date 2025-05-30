@@ -2,7 +2,7 @@ from collections import defaultdict
 from typing import Generator, Sequence
 
 from kys_in_rest.core.str_utils import split_strip
-from kys_in_rest.core.tg_utils import escape, TgFeature, AskForData, TgMsgToSend
+from kys_in_rest.core.tg_utils import tg_escape, TgFeature, AskForData, TgMsgToSend
 from kys_in_rest.restaurants.entries.metro import metro_colors
 from kys_in_rest.restaurants.entries.restaurant import Restaurant
 from kys_in_rest.restaurants.entries.tag import tag_groups
@@ -88,9 +88,9 @@ def _rest_to_tg_string(
 
     parts = []
 
-    rest_line = f'• [{escape(str(rest["name"]))}]({rest["yandex_maps"]})'
+    rest_line = f'• [{tg_escape(str(rest["name"]))}]({rest["yandex_maps"]})'
     if with_metro:
-        metro = escape(rest['metro'])
+        metro = tg_escape(rest['metro'])
         rest_line = f"{rest_line} @ {metro}"
     parts.append(rest_line)
 
@@ -100,7 +100,7 @@ def _rest_to_tg_string(
         comment_parts = []
 
         if rest.get("comment") and rest.get("comment") != "-":
-            comment_parts.append(escape(str(rest["comment"])))
+            comment_parts.append(tg_escape(str(rest["comment"])))
 
         if rest.get("from_channel") and rest.get("from_channel") != "-":
             if rest["from_post"]:

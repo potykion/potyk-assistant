@@ -1,7 +1,12 @@
 import os
 from typing import cast
 
-from kys_in_rest.core.tg_utils import TgFeature, SendTgMessageInterrupt, TgMsgToSend
+from kys_in_rest.core.tg_utils import (
+    TgFeature,
+    SendTgMessageInterrupt,
+    TgMsgToSend,
+    tg_escape,
+)
 from kys_in_rest.health.entities.weight import WeightEntry
 from kys_in_rest.health.features.weight_repo import WeightRepo
 from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
@@ -22,6 +27,6 @@ class AddOrShowWeight(TgFeature):
 
         entry = self.weight_repo.get_last()
         if not entry:
-            return "Нет записей о весе. Добавь через /weight {вес}"
+            return tg_escape("Нет записей о весе. Добавь через /weight {вес}")
 
-        return f"Последний записанный вес: {entry.weight} кг от {entry.date}"
+        return tg_escape(f"Последний записанный вес: {entry.weight} кг от {entry.date}")

@@ -7,8 +7,8 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 
 
-def escape(text: str) -> str:
-    to_escape = ".()-!+|"
+def tg_escape(text: str) -> str:
+    to_escape = ".()-!+|{}"
     for ch in to_escape:
         text = text.replace(ch, rf"\{ch}")
     return text

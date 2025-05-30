@@ -4,7 +4,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
-from kys_in_rest.core.tg_utils import escape
+from kys_in_rest.core.tg_utils import tg_escape
 
 hops = [
     "Cascade NZ",
@@ -72,7 +72,7 @@ class BeerStyle(BaseModel):
     fruits: list[str] = Field(default_factory=list)
 
     def make_style_line(self) -> str:
-        name = escape(str(self.name))
+        name = tg_escape(str(self.name))
         if self.hops:
             return f"{name} w/ {', '.join(self.hops)}"
         elif self.fruits:
@@ -95,7 +95,7 @@ class BeerLine(BaseModel):
             return "🍺"
 
     def make_beer_line(self) -> str:
-        brewery_w_name = escape(f"{self.brewery} — {self.name}")
+        brewery_w_name = tg_escape(f"{self.brewery} — {self.name}")
         return f"{self.style_icon} [{brewery_w_name}]({self.link}) • _{self.style.make_style_line()}_"
 
 

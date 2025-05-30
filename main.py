@@ -86,6 +86,8 @@ async def post_init(application: Any) -> None:
             (TgCommand.near, "Ищет рестики по метро"),
             (TgCommand.category, "Ищет рестики по категории"),
             (TgCommand.new, "Добавить рест"),
+            (TgCommand.new_beer, "Добавить пивко"),
+            (TgCommand.weight, "Добавить вес"),
         ]
     )
 
