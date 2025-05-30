@@ -12,7 +12,7 @@ class SqliteWeightRepo(WeightRepo, SqliteRepo):
         self.cursor.connection.commit()
 
     def list_weight_entries(self) -> list[WeightEntry]:
-        rows = self.cursor.execute("select * from weight order by date desc").fetchall()
+        rows = self.cursor.execute("select * from weight order by date").fetchall()
         return [WeightEntry(**row) for row in rows]
 
     def get_last(self) -> WeightEntry | None:
