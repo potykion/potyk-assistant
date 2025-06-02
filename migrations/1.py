@@ -4,7 +4,7 @@ import sqlite3
 def migrate(cursor: sqlite3.Cursor):
     cursor.executescript(
         """
-    create table weight
+    create table if not exists weight
     (
         date   TEXT,
         weight REAL

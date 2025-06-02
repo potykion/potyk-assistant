@@ -2,9 +2,9 @@ import sqlite3
 
 
 def migrate(cursor: sqlite3.Cursor):
-    cursor.execute(
+    cursor.executescript(
         """
-        CREATE TABLE "beer_posts"
+        create table if not exists "beer_posts"
         (
             created TEXT,
             beers   text,
@@ -12,19 +12,13 @@ def migrate(cursor: sqlite3.Cursor):
                 constraint beer_posts_pk
                     primary key autoincrement
         );
-        """
-    )
-    cursor.execute(
-        """
-        CREATE TABLE flow
+        
+        create table if not exists flow
         (
             command TEXT
             , tg_user_id integer);
-        """
-    )
-    cursor.execute(
-        """
-        CREATE TABLE "restaurants"
+        
+        create table if not exists "restaurants"
         (
             name         TEXT,
             yandex_maps  TEXT,

@@ -18,6 +18,14 @@ class SqliteRepo:
 
 
 def apply_migrations(cursor: sqlite3.Cursor):
+    cursor.execute("""
+    create table if not exists migrations
+    (
+        migration TEXT
+    );
+    """)
+    cursor.connection.commit()
+
     migration_dir = root_dir / "migrations"
     for migration_file in sorted(os.listdir(migration_dir)):
         if not migration_file.endswith(".py"):
@@ -27,6 +35,10 @@ def apply_migrations(cursor: sqlite3.Cursor):
         migration_file_path = migration_dir / migration_file
 
         module_name = migration_file_path.stem
+        applied = cursor.execute("select 1 from migrations where migration = ?", (module_name,)).fetchone()
+        if applied:
+            print(f"Applying migration {migration_file}... Already applied")
+            continue
 
         spec = importlib.util.spec_from_file_location(module_name, migration_file_path)
         module = importlib.util.module_from_spec(spec)
@@ -35,3 +47,6 @@ def apply_migrations(cursor: sqlite3.Cursor):
         module.migrate(cursor)
 
         print(f"Applying migration {migration_file}... Done")
+
+        cursor.execute("insert into migrations (migration) values (?)", (module_name,))
+        cursor.connection.commit()
