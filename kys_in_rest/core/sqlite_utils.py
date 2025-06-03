@@ -17,7 +17,7 @@ class SqliteRepo:
         self.cursor = cursor
 
 
-def apply_migrations(cursor: sqlite3.Cursor):
+def apply_migrations(cursor: sqlite3.Cursor) -> None:
     cursor.execute("""
     create table if not exists migrations
     (
@@ -42,6 +42,8 @@ def apply_migrations(cursor: sqlite3.Cursor):
 
         spec = importlib.util.spec_from_file_location(module_name, migration_file_path)
         module = importlib.util.module_from_spec(spec)
+        if not module:
+            print(f"Applying migration {migration_file}... Migration is broken import")
         sys.modules[module_name] = module
         spec.loader.exec_module(module)
         module.migrate(cursor)
