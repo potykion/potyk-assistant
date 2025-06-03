@@ -38,11 +38,27 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -l leybovich-nikita 84.201.131.244 << 'EOF'
           cd kys_in_rest
+          
           git pull
+          
           source ./.venv/bin/activate
           pip install -r requirements.txt
           python -c "import nltk; nltk.download('punkt_tab')"
           python -m scripts.migrate
-          pkill -f "python main.py" || true  # Игнорируем ошибку, если процесс не найден
-          nohup python main.py > output.log 2>&1 &
+          
+          sudo cp ./ops/tgbot.service /etc/systemd/system/tgbot.service
+          sudo chmod 644 /etc/systemd/system/tgbot.service
+          sudo systemctl daemon-reload
+          
+          # Перезапускаем сервис (если он уже был включён)
+          if sudo systemctl is-enabled tgbot.service 2>/dev/null; then
+            sudo systemctl restart tgbot.service
+          else
+            # Первый запуск (если сервис ещё не зарегистрирован)
+            sudo systemctl enable --now tgbot.service
+          fi
+          
+          # Проверяем статус
+          sudo systemctl status tgbot.service --no-pager
           EOF
+

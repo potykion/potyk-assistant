@@ -1,0 +1,16 @@
+[Unit]
+Description=Telegram Bot Service
+After=network.target
+
+[Service]
+User=leybovich-nikita
+WorkingDirectory=/home/leybovich-nikita/kys_in_rest
+EnvironmentFile=/home/leybovich-nikita/kys_in_rest/.env
+ExecStart=/home/leybovich-nikita/kys_in_rest/.venv/bin/python ./main.py
+Restart=always
+RestartSec=10
+StandardOutput=file:/home/leybovich-nikita/kys_in_rest/logs/tgbot.log
+StandardError=file:/home/leybovich-nikita/kys_in_rest/logs/tgbot.error.log
+
+[Install]
+WantedBy=multi-user.target
