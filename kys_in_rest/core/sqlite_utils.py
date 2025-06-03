@@ -2,6 +2,8 @@ import importlib.util
 import os
 import sqlite3
 import sys
+from pathlib import Path
+from types import ModuleType
 
 from kys_in_rest.core.cfg import root_dir
 
@@ -18,12 +20,14 @@ class SqliteRepo:
 
 
 def apply_migrations(cursor: sqlite3.Cursor) -> None:
-    cursor.execute("""
+    cursor.execute(
+        """
     create table if not exists migrations
     (
         migration TEXT
     );
-    """)
+    """
+    )
     cursor.connection.commit()
 
     migration_dir = root_dir / "migrations"
@@ -35,20 +39,39 @@ def apply_migrations(cursor: sqlite3.Cursor) -> None:
         migration_file_path = migration_dir / migration_file
 
         module_name = migration_file_path.stem
-        applied = cursor.execute("select 1 from migrations where migration = ?", (module_name,)).fetchone()
+        applied = cursor.execute(
+            "select 1 from migrations where migration = ?", (module_name,)
+        ).fetchone()
         if applied:
             print(f"Applying migration {migration_file}... Already applied")
             continue
 
-        spec = importlib.util.spec_from_file_location(module_name, migration_file_path)
-        module = importlib.util.module_from_spec(spec)
+        module = _compile_migration(module_name, migration_file_path)
         if not module:
-            print(f"Applying migration {migration_file}... Migration is broken import")
-        sys.modules[module_name] = module
-        spec.loader.exec_module(module)
+            print(f"Applying migration {migration_file}... Migration is broken/invalid")
+            break
+
         module.migrate(cursor)
 
         print(f"Applying migration {migration_file}... Done")
 
         cursor.execute("insert into migrations (migration) values (?)", (module_name,))
         cursor.connection.commit()
+
+
+def _compile_migration(
+    module_name: str,
+    migration_file_path: Path | str,
+) -> ModuleType | None:
+    spec = importlib.util.spec_from_file_location(module_name, migration_file_path)
+    if not spec:
+        return None
+    module = importlib.util.module_from_spec(spec)
+    if not module:
+        return None
+    sys.modules[module_name] = module
+    loader = spec.loader
+    if not loader:
+        return None
+    loader.exec_module(module)
+    return module

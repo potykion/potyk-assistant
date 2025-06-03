@@ -9,7 +9,7 @@ from kys_in_rest.core.cfg import root_dir
 from kys_in_rest.health.features.weight_repo import WeightRepo
 
 
-def create_app():
+def create_app() -> Flask:
     dotenv.load_dotenv(root_dir / ".env")
 
     ioc = make_ioc(str(root_dir / os.environ["DB"]))
@@ -17,7 +17,7 @@ def create_app():
     app = Flask(__name__)
 
     @app.route("/weight")
-    def weight():
+    def weight() -> flask.Response:
         entries = ioc.resolve(WeightRepo).list_weight_entries()
         return flask.jsonify([e.model_dump() for e in entries])
 

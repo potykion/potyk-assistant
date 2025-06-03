@@ -21,7 +21,7 @@ class AddOrShowWeight(TgFeature):
             raise SendTgMessageInterrupt(TgMsgToSend("Тебе нельзя"))
 
         if msg.text:
-            weight = float(cast(str, msg.text))
+            weight = float(msg.text)
             self.weight_repo.add_weight_entry(WeightEntry(weight=weight))
             return "Записал 👌"
 
