@@ -39,6 +39,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -l leybovich-nikita 84.201.131.244 << 'EOF'
           cd kys_in_rest
           
+          # Обновляем код
           git pull
           
           source ./.venv/bin/activate
@@ -46,19 +47,43 @@ jobs:
           python -c "import nltk; nltk.download('punkt_tab')"
           python -m scripts.migrate
           
-          sudo cp ./ops/tgbot.service /etc/systemd/system/tgbot.service
-          sudo chmod 644 /etc/systemd/system/tgbot.service
+          # Копируем и настраиваем сервисы
+          
+          ## Telegram Bot Service
+          if [ -f "./ops/tgbot.service" ]; then
+            sudo cp ./ops/tgbot.service /etc/systemd/system/tgbot.service
+            sudo chmod 644 /etc/systemd/system/tgbot.service
+          fi
+          
+          ## Flask Service
+          if [ -f "./ops/flask.service" ]; then
+            sudo cp ./ops/flask.service /etc/systemd/system/flask.service
+            sudo chmod 644 /etc/systemd/system/flask.service
+          fi
+          
+          # Перезагружаем systemd
           sudo systemctl daemon-reload
           
-          # Перезапускаем сервис (если он уже был включён)
+          # Управляем сервисами
+          
+          ## Telegram Bot
           if sudo systemctl is-enabled tgbot.service 2>/dev/null; then
             sudo systemctl restart tgbot.service
           else
-            # Первый запуск (если сервис ещё не зарегистрирован)
             sudo systemctl enable --now tgbot.service
           fi
           
-          # Проверяем статус
+          ## Flask Server
+          if sudo systemctl is-enabled flask.service 2>/dev/null; then
+            sudo systemctl restart flask.service
+          else
+            sudo systemctl enable --now flask.service
+          fi
+          
+          # Проверяем статусы
+          echo "=== Telegram Bot Status ==="
           sudo systemctl status tgbot.service --no-pager
+          
+          echo "=== Flask Server Status ==="
+          sudo systemctl status flask.service --no-pager
           EOF
-

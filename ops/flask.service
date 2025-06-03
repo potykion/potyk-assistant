@@ -1,0 +1,16 @@
+[Unit]
+Description=Flask Web Service
+After=network.target
+
+[Service]
+User=leybovich-nikita
+WorkingDirectory=/home/leybovich-nikita/kys_in_rest
+EnvironmentFile=/home/leybovich-nikita/kys_in_rest/.env
+ExecStart=/home/leybovich-nikita/kys_in_rest/.venv/bin/flask run --host=0.0.0.0 --port=5000
+Restart=always
+RestartSec=10
+StandardOutput=file:/home/leybovich-nikita/kys_in_rest/logs/flask.log
+StandardError=file:/home/leybovich-nikita/kys_in_rest/logs/flask.error.log
+
+[Install]
+WantedBy=multi-user.target
