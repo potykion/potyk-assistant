@@ -30,7 +30,7 @@ from kys_in_rest.tg.entities.flow import TgCommand
 from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 from kys_in_rest.tg.features.flow_repo import FlowRepo
 
-dotenv.load_dotenv()
+dotenv.load_dotenv(root_dir / ".env")
 TG_TOKEN = os.environ["TG_TOKEN"]
 
 ioc = make_ioc(str(root_dir / os.environ["DB"]))
@@ -124,7 +124,9 @@ async def _start_flow_handler(update: Update, command: TgCommand) -> None:
         for err_msg in e.messages:
             await cast(Any, update.message).reply_text(
                 err_msg.message,
-                reply_markup=build_keyboard(err_msg.options) if err_msg.options else None,
+                reply_markup=(
+                    build_keyboard(err_msg.options) if err_msg.options else None
+                ),
             )
     else:
         await cast(Any, update.message).reply_markdown_v2(res)
