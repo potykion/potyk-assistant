@@ -31,6 +31,7 @@ from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 from kys_in_rest.tg.features.flow_repo import FlowRepo
 from kys_in_rest.tg.features.help import Help
 from kys_in_rest.tg.features.id import ShowTgId
+from kys_in_rest.wishlist.features.wishlist import Wishlist
 
 dotenv.load_dotenv(root_dir / ".env")
 TG_TOKEN = os.environ["TG_TOKEN"]
@@ -39,20 +40,19 @@ TG_TOKEN = os.environ["TG_TOKEN"]
 ioc = make_ioc(
     db_path=str(root_dir / os.environ["DB"]),
     tg_admins=list(map(int, os.environ["TG_ADMINS"].split(","))),
+    # fmt: off
     tg_commands=[
-        TgCommandSetup(
-            TgCommand.rest_metro, "Найти ресты у метро", GetNearRestaurants
-        ),
-        TgCommandSetup(
-            TgCommand.rest_cat, "Найти ресты по категории", FindCategoryRestaurants
-        ),
+        TgCommandSetup(TgCommand.rest_metro, "Найти ресты у метро", GetNearRestaurants),
+        TgCommandSetup(TgCommand.rest_cat, "Найти ресты по категории", FindCategoryRestaurants),
         TgCommandSetup(TgCommand.new, "Добавить рест", AddNewRestaurant),
         TgCommandSetup(TgCommand.new_beer, "Добавить пивко", AddNewBeer),
         TgCommandSetup(TgCommand.weight, "Добавить вес", AddOrShowWeight),
         TgCommandSetup(TgCommand.id, "Узнать свой Телеграм ID", ShowTgId),
         TgCommandSetup(TgCommand.help, "Справка по всем командам", Help),
         TgCommandSetup(TgCommand.start, "Справка по всем командам", Help),
+        TgCommandSetup(TgCommand.wishlist, "Показать/добавить в вишлист", Wishlist),
     ],
+    # fmt: on
 )
 
 

@@ -21,6 +21,8 @@ from kys_in_rest.tg.features.flow_repo import FlowRepo
 from kys_in_rest.tg.features.id import ShowTgId
 from kys_in_rest.tg.infra.flow_repo import SqliteFlowRepo
 from kys_in_rest.users.features.check_admin import CheckTgAdmin
+from kys_in_rest.wishlist.features.wishlist import WishlistRepo
+from kys_in_rest.wishlist.infra.wishlist_repo import SqliteWishlistRepo
 
 
 def make_ioc(
@@ -47,6 +49,7 @@ def make_ioc(
     ioc.register(FlowRepo, SqliteFlowRepo)
     ioc.register(BeerPostRepo, SqliteBeerPostRepo)
     ioc.register(WeightRepo, SqliteWeightRepo)
+    ioc.register(WishlistRepo, SqliteWishlistRepo)
 
     # use-cases
     ioc.register(CheckTgAdmin, CheckTgAdmin)
