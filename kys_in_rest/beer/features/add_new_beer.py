@@ -11,15 +11,20 @@ from kys_in_rest.core.tg_utils import (
     TgMsgToSend,
 )
 from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
+from kys_in_rest.users.features.check_admin import CheckTgAdmin
 
 
 class AddNewBeer(TgFeature):
-    def __init__(self, beer_post_repo: BeerPostRepo) -> None:
+    def __init__(
+        self,
+        beer_post_repo: BeerPostRepo,
+        check_tg_admin: CheckTgAdmin,
+    ) -> None:
         self.beer_post_repo = beer_post_repo
+        self.check_tg_admin = check_tg_admin
 
     def do(self, msg: InputTgMsg) -> str:
-        if int(msg.tg_user_id) != int(os.environ["TG_ADMIN"]):
-            raise SendTgMessageInterrupt(TgMsgToSend("Тебе нельзя"))
+        self.check_tg_admin.do(msg.tg_user_id)
 
         if not msg.text and not msg.forward_link:
             self.beer_post_repo.start_new_post()

@@ -15,11 +15,19 @@ def db_path():
 
 
 @pytest.fixture()
-def ioc(db_path):
+def tg_admin_user_id():
+    return 1
+
+
+@pytest.fixture()
+def ioc(db_path, tg_admin_user_id):
     if os.path.exists(db_path):
         os.remove(db_path)
 
-    ioc_ = make_ioc(db_path)
+    ioc_ = make_ioc(
+        db_path=db_path,
+        tg_admins=[tg_admin_user_id],
+    )
 
     cursor = ioc_.resolve(sqlite3.Cursor)
     apply_migrations(cursor)
@@ -31,8 +39,3 @@ def ioc(db_path):
 @pytest.fixture()
 def rest_repo(ioc):
     return ioc.resolve(RestRepo)
-
-
-@pytest.fixture()
-def tg_admin_user_id():
-    return os.environ.setdefault("TG_ADMIN", "1")

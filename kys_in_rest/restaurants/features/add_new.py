@@ -1,4 +1,3 @@
-import os
 from typing import NamedTuple, Callable, cast
 
 from kys_in_rest.core.str_utils import parse_link
@@ -6,14 +5,13 @@ from kys_in_rest.core.tg_utils import (
     AskForData,
     TgCbOption,
     TgFeature,
-    SendTgMessageInterrupt,
     TgMsgToSend,
 )
-from kys_in_rest.restaurants.entries.restaurant import Restaurant
 from kys_in_rest.restaurants.features.list_metro import list_metro_items
 from kys_in_rest.restaurants.features.list_tags import list_tag_items
 from kys_in_rest.restaurants.features.ports import RestRepo
 from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
+from kys_in_rest.users.features.check_admin import CheckTgAdmin
 
 
 class RestParam(NamedTuple):
@@ -34,12 +32,16 @@ rest_params = [
 
 
 class AddNewRestaurant(TgFeature):
-    def __init__(self, rest_repo: RestRepo) -> None:
+    def __init__(
+        self,
+        rest_repo: RestRepo,
+        check_tg_admin: CheckTgAdmin,
+    ) -> None:
         self.rest_repo = rest_repo
+        self.check_tg_admin = check_tg_admin
 
     def do(self, msg: InputTgMsg) -> str:
-        if int(msg.tg_user_id) != int(os.environ["TG_ADMIN"]):
-            raise SendTgMessageInterrupt(TgMsgToSend("Тебе нельзя"))
+        self.check_tg_admin.do(msg.tg_user_id)
 
         text = msg.text
 

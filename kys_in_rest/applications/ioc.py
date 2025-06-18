@@ -17,12 +17,19 @@ from kys_in_rest.restaurants.features.ports import RestRepo
 from kys_in_rest.restaurants.infra.rest_repo import SqliteRestRepo
 from kys_in_rest.tg.features.flow_repo import FlowRepo
 from kys_in_rest.tg.infra.flow_repo import SqliteFlowRepo
+from kys_in_rest.users.features.check_admin import CheckTgAdmin
 
 
-def make_ioc(db_path: str) -> IOC:
+def make_ioc(
+    *,
+    db_path: str,
+    tg_admins: list[int],
+) -> IOC:
     ioc = IOC()
 
+    # deps
     ioc.register("db_path", db_path)
+    ioc.register("tg_admins", tg_admins)
     ioc.register(
         sqlite3.Cursor,
         make_sqlite_cursor,
@@ -30,11 +37,14 @@ def make_ioc(db_path: str) -> IOC:
         teardown=lambda cursor: cursor.connection.close(),
     )
 
+    # repos
     ioc.register(RestRepo, SqliteRestRepo)
     ioc.register(FlowRepo, SqliteFlowRepo)
     ioc.register(BeerPostRepo, SqliteBeerPostRepo)
     ioc.register(WeightRepo, SqliteWeightRepo)
 
+    # use-cases
+    ioc.register(CheckTgAdmin, CheckTgAdmin)
     ioc.register(GetNearRestaurants, GetNearRestaurants)
     ioc.register(AddNewRestaurant, AddNewRestaurant)
     ioc.register(AddNewBeer, AddNewBeer)
