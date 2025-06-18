@@ -1,6 +1,6 @@
 import abc
 import itertools
-from typing import NamedTuple, Sequence
+from typing import NamedTuple, Sequence, Any
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -46,7 +46,4 @@ def build_keyboard(options: list[TgCbOption], buttons: int = 2) -> InlineKeyboar
 
 class TgFeature:
     @abc.abstractmethod
-    def do(
-        self,
-        msg: InputTgMsg,
-) -> str | tuple[str, dict]: ...
+    def do(self, msg: InputTgMsg) -> str | tuple[str, dict[str, Any]]: ...

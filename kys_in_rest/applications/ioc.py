@@ -1,4 +1,5 @@
 import sqlite3
+from typing import Sequence
 
 from kys_in_rest.beer.features.add_new_beer import AddNewBeer
 from kys_in_rest.beer.features.beer_post_repo import BeerPostRepo
@@ -26,7 +27,7 @@ def make_ioc(
     *,
     db_path: str,
     tg_admins: list[int],
-    tg_commands: list[TgCommandSetup] = (),
+    tg_commands: Sequence[TgCommandSetup] = (),
 ) -> IOC:
     ioc = IOC()
 

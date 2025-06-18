@@ -57,7 +57,7 @@ ioc = make_ioc(
 
 
 def find_command_setup(command: TgCommand) -> TgCommandSetup:
-    for setup in ioc.tg_commands:
+    for setup in cast(list[TgCommandSetup], ioc.tg_commands):
         if setup.command == command:
             return setup
     raise ValueError(f"No {command=} found")
