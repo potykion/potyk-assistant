@@ -15,6 +15,7 @@ from kys_in_rest.restaurants.features.find_near_category import (
 )
 from kys_in_rest.restaurants.features.ports import RestRepo
 from kys_in_rest.restaurants.infra.rest_repo import SqliteRestRepo
+from kys_in_rest.tg.entities.command import TgCommandSetup
 from kys_in_rest.tg.features.flow_repo import FlowRepo
 from kys_in_rest.tg.features.id import ShowTgId
 from kys_in_rest.tg.infra.flow_repo import SqliteFlowRepo
@@ -25,12 +26,14 @@ def make_ioc(
     *,
     db_path: str,
     tg_admins: list[int],
+    tg_commands: list[TgCommandSetup] = (),
 ) -> IOC:
     ioc = IOC()
 
     # deps
     ioc.register("db_path", db_path)
     ioc.register("tg_admins", tg_admins)
+    ioc.register("tg_commands", tg_commands)
     ioc.register(
         sqlite3.Cursor,
         make_sqlite_cursor,

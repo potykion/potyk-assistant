@@ -34,6 +34,12 @@ class IOC:
         self.registry: dict[NameOrType, RegistryEntry[Any]] = {}
         self.cache: dict[NameOrType, Any] = {}
 
+    def __getattr__(self, item):
+        return self.resolve(item)
+
+    def __getitem__(self, item):
+        return self.resolve(item)
+
     def register(
         self,
         name_or_type: NameOrType,

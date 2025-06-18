@@ -3,12 +3,14 @@ from typing import NamedTuple
 
 
 class TgCommand(enum.StrEnum):
-    near = enum.auto()
-    category = enum.auto()
+    rest_cat = enum.auto()
+    rest_metro = enum.auto()
     new = enum.auto()
     new_beer = enum.auto()
     weight = enum.auto()
     id = enum.auto()
+    help = enum.auto()
+    start = enum.auto()
 
 
 class TgFlow(NamedTuple):

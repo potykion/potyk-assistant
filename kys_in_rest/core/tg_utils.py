@@ -32,7 +32,7 @@ class SendTgMessageInterrupt(Exception):
 class AskForData(SendTgMessageInterrupt): ...
 
 
-def build_keyboard(options: list[TgCbOption], buttons: int = 3) -> InlineKeyboardMarkup:
+def build_keyboard(options: list[TgCbOption], buttons: int = 2) -> InlineKeyboardMarkup:
     keyboard = [
         [
             InlineKeyboardButton(metro_str, callback_data=metro_cb)
@@ -49,4 +49,4 @@ class TgFeature:
     def do(
         self,
         msg: InputTgMsg,
-    ) -> str: ...
+) -> str | tuple[str, dict]: ...
