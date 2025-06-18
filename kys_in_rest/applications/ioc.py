@@ -16,6 +16,7 @@ from kys_in_rest.restaurants.features.find_near_category import (
 from kys_in_rest.restaurants.features.ports import RestRepo
 from kys_in_rest.restaurants.infra.rest_repo import SqliteRestRepo
 from kys_in_rest.tg.features.flow_repo import FlowRepo
+from kys_in_rest.tg.features.id import ShowTgId
 from kys_in_rest.tg.infra.flow_repo import SqliteFlowRepo
 from kys_in_rest.users.features.check_admin import CheckTgAdmin
 
@@ -50,5 +51,6 @@ def make_ioc(
     ioc.register(AddNewBeer, AddNewBeer)
     ioc.register(FindCategoryRestaurants, FindCategoryRestaurants)
     ioc.register(AddOrShowWeight, AddOrShowWeight)
+    ioc.register(ShowTgId, ShowTgId)
 
     return ioc

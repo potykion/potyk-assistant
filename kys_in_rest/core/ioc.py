@@ -1,4 +1,5 @@
 import enum
+import logging
 from typing import (
     NamedTuple,
     Any,
@@ -66,7 +67,14 @@ class IOC:
     def resolve(self, name_or_type: str) -> Any: ...
 
     def resolve(self, name_or_type: NameOrType) -> Any:
-        entry = self.registry[name_or_type]
+        try:
+            entry = self.registry[name_or_type]
+        except KeyError:
+            logging.warning(
+                f"{name_or_type=} is not registered; creating entry w val=name_or_type..."
+            )
+            entry = self.make_yolo_entry(name_or_type)
+
         if entry.type == RegistryEntryType.constant:
             return entry.val
         elif entry.type == RegistryEntryType.callable:
@@ -90,3 +98,12 @@ class IOC:
             return resolved
         else:
             raise Exception(f"resolve don't support {entry.type=}")
+
+    def make_yolo_entry(self, name_or_type):
+        val = name_or_type
+        if callable(val):
+            type_ = RegistryEntryType.callable
+        else:
+            type_ = RegistryEntryType.constant
+
+        return RegistryEntry(name_or_type, type_, val)

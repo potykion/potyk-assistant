@@ -29,6 +29,7 @@ from kys_in_rest.restaurants.features.find_near_category import (
 from kys_in_rest.tg.entities.flow import TgCommand
 from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 from kys_in_rest.tg.features.flow_repo import FlowRepo
+from kys_in_rest.tg.features.id import ShowTgId
 
 dotenv.load_dotenv(root_dir / ".env")
 TG_TOKEN = os.environ["TG_TOKEN"]
@@ -62,6 +63,7 @@ tg_commands = [
     TgCommandSetup(TgCommand.new, AddNewRestaurant),
     TgCommandSetup(TgCommand.new_beer, AddNewBeer),
     TgCommandSetup(TgCommand.weight, AddOrShowWeight),
+    TgCommandSetup(TgCommand.id, ShowTgId),
 ]
 
 

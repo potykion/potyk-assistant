@@ -8,6 +8,7 @@ class TgCommand(enum.StrEnum):
     new = enum.auto()
     new_beer = enum.auto()
     weight = enum.auto()
+    id = enum.auto()
 
 
 class TgFlow(NamedTuple):
