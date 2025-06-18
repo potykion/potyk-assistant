@@ -21,6 +21,6 @@ class CheckTgAdmin:
     def __init__(self, tg_admins: list[int]):
         self.tg_admins = tg_admins
 
-    def do(self, tg_user_id):
+    def do(self, tg_user_id: int) -> None:
         if int(tg_user_id) not in self.tg_admins:
             raise SendTgMessageInterrupt(TgMsgToSend("Тебе нельзя"))

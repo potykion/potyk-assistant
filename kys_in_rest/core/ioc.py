@@ -99,7 +99,7 @@ class IOC:
         else:
             raise Exception(f"resolve don't support {entry.type=}")
 
-    def make_yolo_entry(self, name_or_type):
+    def make_yolo_entry(self, name_or_type: NameOrType) -> RegistryEntry[Any]:
         val = name_or_type
         if callable(val):
             type_ = RegistryEntryType.callable
