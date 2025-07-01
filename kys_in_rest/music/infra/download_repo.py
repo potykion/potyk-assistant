@@ -1,5 +1,6 @@
 import glob
 import os
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -19,20 +20,22 @@ class YandexMusicDownloadRepo(DownloadRepo):
     def download_audio_from_url(self, url: str) -> TgAudio:
         with tempfile.TemporaryDirectory() as temp_dir:
             with do_in_dir(temp_dir):
-                command = [
-                    "yandex-music-downloader",
-                    "--token",
-                    self.token,
-                    "--quality",
-                    "1",
-                    "--skip-existing",
-                    "--url",
-                    url,
-                ]
+                command = " ".join(
+                    [
+                        "yandex-music-downloader",
+                        "--token",
+                        shlex.quote(self.token),
+                        "--quality",
+                        "1",
+                        "--skip-existing",
+                        "--url",
+                        shlex.quote(url),
+                    ]
+                )
                 subprocess.call(
                     command,
                     text=True,
-                    shell=sys.platform == "win32",
+                    shell=True,
                 )
                 mp3 = [
                     *glob.glob("./**/*.mp3", recursive=True),
