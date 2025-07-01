@@ -11,6 +11,7 @@ Restart=always
 RestartSec=10
 StandardOutput=file:/home/leybovich-nikita/kys_in_rest/logs/tgbot.log
 StandardError=file:/home/leybovich-nikita/kys_in_rest/logs/tgbot.error.log
+Environment=PATH=/home/leybovich-nikita/kys_in_rest/.venv/bin:/usr/bin:/bin
 
 [Install]
 WantedBy=multi-user.target
