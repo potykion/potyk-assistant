@@ -9,6 +9,11 @@ from kys_in_rest.core.sqlite_utils import make_sqlite_cursor
 from kys_in_rest.health.features.add_weight import AddOrShowWeight
 from kys_in_rest.health.features.weight_repo import WeightRepo
 from kys_in_rest.health.infra.weight_repo import SqliteWeightRepo
+from kys_in_rest.music.features.download_repo import DownloadRepo
+from kys_in_rest.music.infra.download_repo import (
+    UrlDownloadRepo,
+    YandexMusicDownloadRepo,
+)
 from kys_in_rest.restaurants.features.add_new import AddNewRestaurant
 from kys_in_rest.restaurants.features.find_near_category import (
     GetNearRestaurants,
@@ -30,6 +35,7 @@ def make_ioc(
     db_path: str,
     tg_admins: list[int],
     tg_commands: Sequence[TgCommandSetup] = (),
+    yandex_music_token: str,
 ) -> IOC:
     ioc = IOC()
 
@@ -50,6 +56,12 @@ def make_ioc(
     ioc.register(BeerPostRepo, SqliteBeerPostRepo)
     ioc.register(WeightRepo, SqliteWeightRepo)
     ioc.register(WishlistRepo, SqliteWishlistRepo)
+    ioc.register(
+        DownloadRepo,
+        lambda: UrlDownloadRepo(
+            YandexMusicDownloadRepo(yandex_music_token),
+        ),
+    )
 
     # use-cases
     ioc.register(CheckTgAdmin, CheckTgAdmin)

@@ -12,6 +12,7 @@ if __name__ == "__main__":
     ioc = make_ioc(
         db_path=str(root_dir / os.environ["DB"]),
         tg_admins=list(map(int, os.environ["TG_ADMINS"].split(","))),
+        yandex_music_token=os.environ["YANDEX_MUSIC_TOKEN"],
     )
     cursor = ioc.resolve(sqlite3.Cursor)
     apply_migrations(cursor)

@@ -20,6 +20,7 @@ from kys_in_rest.core.tg_utils import (
     SendTgMessageInterrupt,
 )
 from kys_in_rest.health.features.add_weight import AddOrShowWeight
+from kys_in_rest.music.features.download import DownloadMusic
 from kys_in_rest.restaurants.features.add_new import AddNewRestaurant
 from kys_in_rest.restaurants.features.find_near_category import (
     FindCategoryRestaurants,
@@ -28,9 +29,11 @@ from kys_in_rest.restaurants.features.find_near_category import (
 from kys_in_rest.tg.entities.command import TgCommandSetup
 from kys_in_rest.tg.entities.flow import TgCommand
 from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
+from kys_in_rest.tg.features.bot_msg_repo import BotMsgRepo
 from kys_in_rest.tg.features.flow_repo import FlowRepo
 from kys_in_rest.tg.features.help import Help
 from kys_in_rest.tg.features.id import ShowTgId
+from kys_in_rest.tg.infra.bot_msg_repo import TgUpdateBotMsgRepo
 from kys_in_rest.wishlist.features.wishlist import Wishlist
 
 dotenv.load_dotenv(root_dir / ".env")
@@ -40,6 +43,7 @@ TG_TOKEN = os.environ["TG_TOKEN"]
 ioc = make_ioc(
     db_path=str(root_dir / os.environ["DB"]),
     tg_admins=list(map(int, os.environ["TG_ADMINS"].split(","))),
+    yandex_music_token=os.environ["YANDEX_MUSIC_TOKEN"],
     # fmt: off
     tg_commands=[
         TgCommandSetup(TgCommand.rest_metro, "Найти ресты у метро", GetNearRestaurants),
@@ -52,6 +56,8 @@ ioc = make_ioc(
         TgCommandSetup(TgCommand.help, "Справка по всем командам", Help),
         TgCommandSetup(TgCommand.start, "Справка по всем командам", Help),
         TgCommandSetup(TgCommand.wishlist, "Показать/добавить в вишлист", Wishlist),
+        TgCommandSetup(TgCommand.download, "Скачать mp3 (ЯМузыка)", DownloadMusic),
+        TgCommandSetup(TgCommand.mu, "Скачать mp3 (ЯМузыка)", DownloadMusic),
     ],
     # fmt: on
 )
@@ -103,6 +109,8 @@ async def _start_flow_handler(update: Update, command: TgCommand) -> None:
     flow_repo = ioc.resolve(FlowRepo)
     flow = flow_repo.start_or_continue_flow(command, tg_user_id)
 
+    ioc.register(BotMsgRepo, TgUpdateBotMsgRepo(update.message))
+
     feature = cast(TgFeature, ioc[find_command_setup(flow.command).feature])
 
     msg = InputTgMsg(
@@ -111,7 +119,11 @@ async def _start_flow_handler(update: Update, command: TgCommand) -> None:
     )
 
     try:
-        res = feature.do(msg)
+        try:
+            await feature.do_async(msg)
+            result_msg = None
+        except NotImplementedError:
+            result_msg = feature.do(msg)
     except SendTgMessageInterrupt as e:
         for err_msg in e.messages:
             await cast(Any, update.message).reply_text(
@@ -120,9 +132,10 @@ async def _start_flow_handler(update: Update, command: TgCommand) -> None:
                     build_keyboard(err_msg.options) if err_msg.options else None
                 ),
             )
+        return
 
-    if isinstance(res, tuple):
-        reply, ops = res
+    if isinstance(result_msg, tuple):
+        reply, ops = result_msg
 
         if ops["parse_mode"] is None:
             await cast(Message, update.message).reply_text(reply)
@@ -131,8 +144,8 @@ async def _start_flow_handler(update: Update, command: TgCommand) -> None:
         else:
             await cast(Any, update.message).reply_markdown_v2(reply)
 
-    else:
-        reply = res
+    elif isinstance(result_msg, str) and result_msg:
+        reply = result_msg
         await cast(Any, update.message).reply_markdown_v2(reply)
 
 
@@ -145,7 +158,12 @@ async def _continue_flow_handler(
     feature = cast(TgFeature, ioc[find_command_setup(flow.command).feature])
 
     try:
-        message = feature.do(msg)
+        try:
+            await feature.do_async(msg)
+            message = None
+        except NotImplementedError:
+            message = feature.do(msg)
+
     except SendTgMessageInterrupt as e:
         for err_msg in e.messages:
             if update_or_query.message:
@@ -156,7 +174,7 @@ async def _continue_flow_handler(
                     ),
                 )
     else:
-        if update_or_query.message:
+        if update_or_query.message and message:
             await cast(Any, update_or_query.message).reply_markdown_v2(message)
 
 

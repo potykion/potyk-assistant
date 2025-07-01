@@ -27,6 +27,7 @@ def ioc(db_path, tg_admin_user_id):
     ioc_ = make_ioc(
         db_path=db_path,
         tg_admins=[tg_admin_user_id],
+        yandex_music_token="no",
     )
 
     cursor = ioc_.resolve(sqlite3.Cursor)

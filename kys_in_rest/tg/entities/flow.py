@@ -13,6 +13,8 @@ class TgCommand(enum.StrEnum):
     start = enum.auto()
     wishlist = enum.auto()
     w = enum.auto()
+    download = enum.auto()
+    mu = enum.auto()
 
 
 class TgFlow(NamedTuple):
