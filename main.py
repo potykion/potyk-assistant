@@ -51,6 +51,7 @@ ioc = make_ioc(
         TgCommandSetup(TgCommand.help, "Справка по всем командам", Help),
         TgCommandSetup(TgCommand.start, "Справка по всем командам", Help),
         TgCommandSetup(TgCommand.wishlist, "Показать/добавить в вишлист", Wishlist),
+        TgCommandSetup(TgCommand.w, "Показать/добавить в вишлист", Wishlist),
     ],
     # fmt: on
 )

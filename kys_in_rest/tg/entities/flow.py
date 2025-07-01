@@ -12,6 +12,7 @@ class TgCommand(enum.StrEnum):
     help = enum.auto()
     start = enum.auto()
     wishlist = enum.auto()
+    w = enum.auto()
 
 
 class TgFlow(NamedTuple):
