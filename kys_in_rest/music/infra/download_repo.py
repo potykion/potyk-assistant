@@ -1,6 +1,7 @@
 import glob
 import os
 import subprocess
+import sys
 import tempfile
 
 import mutagen
@@ -31,7 +32,7 @@ class YandexMusicDownloadRepo(DownloadRepo):
                 subprocess.call(
                     command,
                     text=True,
-                    shell=True,
+                    shell=sys.platform == "win32",
                 )
                 mp3 = [
                     *glob.glob("./**/*.mp3", recursive=True),
