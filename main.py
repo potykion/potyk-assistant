@@ -109,7 +109,7 @@ async def _start_flow_handler(update: Update, command: TgCommand) -> None:
     flow_repo = ioc.resolve(FlowRepo)
     flow = flow_repo.start_or_continue_flow(command, tg_user_id)
 
-    ioc.register(BotMsgRepo, TgUpdateBotMsgRepo(update.message))
+    ioc.register(BotMsgRepo, TgUpdateBotMsgRepo(message))
 
     feature = cast(TgFeature, ioc[find_command_setup(flow.command).feature])
 

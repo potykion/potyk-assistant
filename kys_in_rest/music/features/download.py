@@ -19,7 +19,7 @@ class DownloadMusic(TgFeature):
         self.check_tg_admin = check_tg_admin
         self.download_repo = download_repo
 
-    async def do_async(self, msg: InputTgMsg):
+    async def do_async(self, msg: InputTgMsg) -> None:
         self.check_tg_admin.do(msg.tg_user_id)
 
         url = msg.text

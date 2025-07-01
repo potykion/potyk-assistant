@@ -12,7 +12,7 @@ from kys_in_rest.tg.entities.audio import TgAudio
 
 
 class YandexMusicDownloadRepo(DownloadRepo):
-    def __init__(self, token):
+    def __init__(self, token: str) -> None:
         self.token = token
 
     def download_audio_from_url(self, url: str) -> TgAudio:
@@ -54,38 +54,30 @@ class YandexMusicDownloadRepo(DownloadRepo):
                         audio_file = mutagen.File(mp3)
 
                         title = (
-                            (
-                                audio_file.get("TIT2")
-                                or audio_file.get("\xa9nam")
-                                or audio_file.get("TITLE", [None])
-                            )[0]
-                            if audio_file
-                            else None
-                        )
+                            audio_file.get("TIT2")
+                            or audio_file.get("\xa9nam")
+                            or audio_file.get("TITLE", [None])
+                        )[0]
 
                         artist = (
-                            (
-                                audio_file.get("TPE1")
-                                or audio_file.get("\xa9ART")
-                                or audio_file.get("ARTIST", [None])
-                            )[0]
-                            if audio_file
-                            else None
-                        )
+                            audio_file.get("TPE1")
+                            or audio_file.get("\xa9ART")
+                            or audio_file.get("ARTIST", [None])
+                        )[0]
                         artist = artist.replace(";", ",")
 
                         duration = (
                             int(audio_file.info.length)
                             if hasattr(audio_file, "info")
-                            else None
+                            else 0
                         )
 
-                        cover = cover_f.read()
+                        cover_bytes = cover_f.read()
                         return TgAudio(
                             audio=audio,
                             artist=artist,
                             title=title,
-                            cover=cover,
+                            cover=cover_bytes,
                             duration=duration,
                         )
 
@@ -97,7 +89,7 @@ class UrlDownloadRepo(DownloadRepo):
     ):
         self.yandex_music_download_repo = yandex_music_download_repo
 
-    def download_audio_from_url(self, url: str) -> bytes:
+    def download_audio_from_url(self, url: str) -> TgAudio:
         if url.startswith("https://music.yandex.ru"):
             return self.yandex_music_download_repo.download_audio_from_url(url)
         else:
