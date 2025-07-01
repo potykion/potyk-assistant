@@ -38,8 +38,8 @@ class YandexMusicDownloadRepo(DownloadRepo):
                     shell=True,
                 )
                 mp3 = [
-                    *glob.glob("./**/*.mp3", recursive=True),
-                    *glob.glob("./**/*.m4a", recursive=True),
+                    *glob.glob("**/*.mp3", recursive=True),
+                    *glob.glob("**/*.m4a", recursive=True),
                 ][0]
                 cover = glob.glob("./**/cover.*", recursive=True)[0]
                 if cover.endswith(".png"):
