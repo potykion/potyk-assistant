@@ -18,7 +18,8 @@ class YandexMusicDownloadRepo(DownloadRepo):
         self.token = token
 
     def download_audio_from_url(self, url: str) -> TgAudio:
-        with tempfile.TemporaryDirectory() as temp_dir:
+        with tempfile.TemporaryDirectory(delete=False) as temp_dir:
+            print(f"{temp_dir=}")
             with do_in_dir(temp_dir):
                 command = " ".join(
                     [
@@ -38,8 +39,8 @@ class YandexMusicDownloadRepo(DownloadRepo):
                     shell=True,
                 )
                 mp3 = [
-                    *glob.glob("**/*.mp3", recursive=True),
-                    *glob.glob("**/*.m4a", recursive=True),
+                    *glob.glob("./**/*.mp3", recursive=True),
+                    *glob.glob("./**/*.m4a", recursive=True),
                 ][0]
                 cover = glob.glob("./**/cover.*", recursive=True)[0]
                 if cover.endswith(".png"):
