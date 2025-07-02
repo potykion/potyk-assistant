@@ -12,8 +12,17 @@ class AddSpending(TgFeature):
         self.spending_repo = spending_repo
 
     def do(self, msg: InputTgMsg) -> str | tuple[str, dict[str, Any]]:
+        text = cast(str, msg.text)
+        if not text:
+            spendings = self.spending_repo.list_today()
+            if not spendings:
+                return "Сегодня трат нет"
+
+            return "Траты за день:\n".join(
+                f"• {spending.comment} - {spending.amount}" for spending in spendings
+            )
+
         try:
-            text = cast(str, msg.text)
             amount, comment = text.split()
         except (ValueError, AttributeError):
             return "Нужно прислать в формате `/spend 100 пятерка`"

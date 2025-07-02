@@ -7,3 +7,7 @@ class SpendingRepo(abc.ABC):
     @abc.abstractmethod
     def add_spending(self, spending: Spending) -> None:
         raise NotImplementedError()
+
+    @abc.abstractmethod
+    def list_today(self, now=None):
+        raise NotImplementedError()

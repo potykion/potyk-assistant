@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from kys_in_rest.core.sqlite_utils import SqliteRepo
 from kys_in_rest.money.entities.spending import Spending
 from kys_in_rest.money.features.spending_repo import SpendingRepo
@@ -15,3 +17,12 @@ class SqliteSpendingRepo(SqliteRepo, SpendingRepo):
             ),
         )
         self.cursor.connection.commit()
+
+    def list_today(self, now=None):
+        now = now or datetime.now()
+        self.cursor.execute(
+            "select * from spendings where date(created_dt) = ?",
+            (now.date(),),
+        )
+        spendings = self.cursor.fetchall()
+        return [Spending(**spending) for spending in spendings]
