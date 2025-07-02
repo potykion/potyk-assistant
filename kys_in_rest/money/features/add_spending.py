@@ -26,9 +26,14 @@ class AddSpending(TgFeature):
             if not spendings:
                 return "Сегодня трат нет"
 
-            return "Траты за день:\n".join(
-                f"• {spending.comment} - {spending.amount}" for spending in spendings
-            ), {"parse_mode": "html"}
+            spendings_str = "\n".join(
+                f"• {spending.comment} - {spending.amount}₽" for spending in spendings
+            )
+            total = sum(spending.amount for spending in spendings)
+
+            return f"Траты за день:\n{spendings_str}\n\nИтого: {total}₽", {
+                "parse_mode": "html"
+            }
 
         try:
             amount, comment = text.split()
