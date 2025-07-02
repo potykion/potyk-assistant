@@ -28,7 +28,7 @@ class AddSpending(TgFeature):
 
             return "Траты за день:\n".join(
                 f"• {spending.comment} - {spending.amount}" for spending in spendings
-            )
+            ), {"parse_mode": "html"}
 
         try:
             amount, comment = text.split()
