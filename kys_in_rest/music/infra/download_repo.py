@@ -18,7 +18,7 @@ class YandexMusicDownloadRepo(DownloadRepo):
         self.token = token
 
     def download_audio_from_url(self, url: str) -> TgAudio:
-        with tempfile.TemporaryDirectory(delete=False) as temp_dir:
+        with tempfile.TemporaryDirectory() as temp_dir:
             with do_in_dir(temp_dir):
                 command = " ".join(
                     [
