@@ -4,7 +4,7 @@ from kys_in_rest.money.features.spending_repo import SpendingRepo
 
 
 class SqliteSpendingRepo(SqliteRepo, SpendingRepo):
-    def add_spending(self, spending: Spending):
+    def add_spending(self, spending: Spending) -> None:
         self.cursor.execute(
             "insert into spendings (created_dt, amount, comment) values (?, ?, ?)",
             (

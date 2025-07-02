@@ -1,4 +1,5 @@
-from typing import Any
+import decimal
+from typing import Any, cast
 
 from kys_in_rest.core.tg_utils import TgFeature
 from kys_in_rest.money.entities.spending import Spending
@@ -11,15 +12,14 @@ class AddSpending(TgFeature):
         self.spending_repo = spending_repo
 
     def do(self, msg: InputTgMsg) -> str | tuple[str, dict[str, Any]]:
-        text = msg.text
-
         try:
+            text = cast(str, msg.text)
             amount, comment = text.split()
-        except ValueError:
+        except (ValueError, AttributeError):
             return "Нужно прислать в формате `/spend 100 пятерка`"
 
         spending = Spending(
-            amount=amount,
+            amount=decimal.Decimal(amount),
             comment=comment,
         )
         self.spending_repo.add_spending(spending)
