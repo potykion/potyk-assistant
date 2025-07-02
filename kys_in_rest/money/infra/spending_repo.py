@@ -18,7 +18,7 @@ class SqliteSpendingRepo(SqliteRepo, SpendingRepo):
         )
         self.cursor.connection.commit()
 
-    def list_today(self, now=None):
+    def list_today(self, now: datetime | None = None) -> list[Spending]:
         now = now or datetime.now()
         self.cursor.execute(
             "select * from spendings where date(created_dt) = ?",
