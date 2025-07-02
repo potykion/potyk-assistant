@@ -6,7 +6,7 @@
 - [Бот](https://t.me/kys_in_rest_bot)
 - [Github](https://github.com/potykion/kys_in_rest)
 
-## Сетап
+## Операции
 
 ### Серв Первая установка
 
@@ -34,3 +34,9 @@ cp ./db.sqlite ./db_prod.sqlite
 [stop-tgbot.yml](.github/workflows/stop-tgbot.yml)
 
 [Сурс](https://chat.deepseek.com/a/chat/s/783c3446-773e-4482-80da-bf83c91a7b74)
+
+### Стянуть бд дамп
+
+```shell
+scp leybovich-nikita@84.201.131.244:./kys_in_rest/db_prod.sqlite .
+```
