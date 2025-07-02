@@ -15,6 +15,8 @@ class TgCommand(enum.StrEnum):
     w = enum.auto()
     download = enum.auto()
     mu = enum.auto()
+    spend = enum.auto()
+    mon = enum.auto()
 
 
 class TgFlow(NamedTuple):

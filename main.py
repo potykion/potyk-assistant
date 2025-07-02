@@ -20,6 +20,7 @@ from kys_in_rest.core.tg_utils import (
     SendTgMessageInterrupt,
 )
 from kys_in_rest.health.features.add_weight import AddOrShowWeight
+from kys_in_rest.money.features.add_spending import AddSpending
 from kys_in_rest.music.features.download import DownloadMusic
 from kys_in_rest.restaurants.features.add_new import AddNewRestaurant
 from kys_in_rest.restaurants.features.find_near_category import (
@@ -58,6 +59,8 @@ ioc = make_ioc(
         TgCommandSetup(TgCommand.wishlist, "Показать/добавить в вишлист", Wishlist),
         TgCommandSetup(TgCommand.download, "Скачать mp3 (ЯМузыка)", DownloadMusic),
         TgCommandSetup(TgCommand.mu, "Скачать mp3 (ЯМузыка)", DownloadMusic),
+        TgCommandSetup(TgCommand.spend, "Добавить расход", AddSpending),
+        TgCommandSetup(TgCommand.mon, "Добавить расход", AddSpending),
     ],
     # fmt: on
 )

@@ -9,6 +9,8 @@ from kys_in_rest.core.sqlite_utils import make_sqlite_cursor
 from kys_in_rest.health.features.add_weight import AddOrShowWeight
 from kys_in_rest.health.features.weight_repo import WeightRepo
 from kys_in_rest.health.infra.weight_repo import SqliteWeightRepo
+from kys_in_rest.money.features.spending_repo import SpendingRepo
+from kys_in_rest.money.infra.spending_repo import SqliteSpendingRepo
 from kys_in_rest.music.features.download_repo import DownloadRepo
 from kys_in_rest.music.infra.download_repo import (
     UrlDownloadRepo,
@@ -56,20 +58,12 @@ def make_ioc(
     ioc.register(BeerPostRepo, SqliteBeerPostRepo)
     ioc.register(WeightRepo, SqliteWeightRepo)
     ioc.register(WishlistRepo, SqliteWishlistRepo)
+    ioc.register(SpendingRepo, SqliteSpendingRepo)
     ioc.register(
         DownloadRepo,
         lambda: UrlDownloadRepo(
             YandexMusicDownloadRepo(yandex_music_token),
         ),
     )
-
-    # use-cases
-    ioc.register(CheckTgAdmin, CheckTgAdmin)
-    ioc.register(GetNearRestaurants, GetNearRestaurants)
-    ioc.register(AddNewRestaurant, AddNewRestaurant)
-    ioc.register(AddNewBeer, AddNewBeer)
-    ioc.register(FindCategoryRestaurants, FindCategoryRestaurants)
-    ioc.register(AddOrShowWeight, AddOrShowWeight)
-    ioc.register(ShowTgId, ShowTgId)
 
     return ioc
