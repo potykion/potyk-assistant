@@ -27,9 +27,10 @@ class AddSpending(TgFeature):
                 return "Сегодня трат нет"
 
             spendings_str = "\n".join(
-                f"• {spending.comment} - {spending.amount}₽" for spending in spendings
+                f"• {spending.comment} - {round(spending.amount)}₽"
+                for spending in spendings
             )
-            total = sum(spending.amount for spending in spendings)
+            total = round(sum(spending.amount for spending in spendings))
 
             return f"Траты за день:\n{spendings_str}\n\nИтого: {total}₽", {
                 "parse_mode": "html"
