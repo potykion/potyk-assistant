@@ -1,4 +1,5 @@
 import os
+import re
 from typing import cast, Any
 
 import dotenv
@@ -67,7 +68,7 @@ ioc = make_ioc(
 )
 
 
-def find_command_setup(command: TgCommand) -> TgCommandSetup:
+def find_command_setup(command: TgCommand | str) -> TgCommandSetup:
     for setup in cast(list[TgCommandSetup], ioc.tg_commands):
         if setup.command == command:
             return setup
@@ -82,7 +83,14 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
 
 async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await _continue_flow_handler(update, InputTgMsg.parse(update))
+    msg = InputTgMsg.parse(update)
+
+    is_command = msg.text.startswith("/")
+    if is_command:
+        # e.g. ru case command
+        await _start_flow_handler(update, msg.text[1:])
+    else:
+        await _continue_flow_handler(update, msg)
 
 
 async def post_init(application: Any) -> None:
@@ -106,7 +114,7 @@ async def _start_flow_handler(update: Update, command: TgCommand) -> None:
     text = message.text
     if text and text.startswith(f"/{command}"):
         try:
-            text = text.split(None, 1)[1]
+            text = text.split(None, 1)[1].strip()
         except IndexError:
             text = None
 
@@ -185,7 +193,12 @@ async def _continue_flow_handler(
 def main() -> None:
     app = ApplicationBuilder().token(TG_TOKEN).post_init(post_init).build()
 
-    for setup in cast(list[TgCommandSetup], ioc.tg_commands):
+    en_commands = [
+        c
+        for c in cast(list[TgCommandSetup], ioc.tg_commands)
+        if re.match(r"^[\da-z_]{1,32}$", c.command)
+    ]
+    for setup in cast(list[TgCommandSetup], en_commands):
         app.add_handler(CommandHandler(setup.command, make_handler(setup)))
 
     app.add_handler(CallbackQueryHandler(button_callback))
