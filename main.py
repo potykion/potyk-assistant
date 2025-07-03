@@ -85,10 +85,9 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     msg = InputTgMsg.parse(update)
 
-    is_command = msg.text.startswith("/")
-    if is_command:
+    if msg.text and msg.text.startswith("/"):
         # e.g. ru case command
-        await _start_flow_handler(update, msg.text[1:])
+        await _start_flow_handler(update, TgCommand(msg.text[1:]))
     else:
         await _continue_flow_handler(update, msg)
 
