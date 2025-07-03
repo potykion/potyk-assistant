@@ -60,6 +60,7 @@ ioc = make_ioc(
         TgCommandSetup(TgCommand.download, "Скачать mp3 (ЯМузыка)", DownloadMusic),
         TgCommandSetup(TgCommand.mu, "Скачать mp3 (ЯМузыка)", DownloadMusic),
         TgCommandSetup(TgCommand.spend, "Добавить расход", AddSpending),
+        TgCommandSetup(TgCommand.spend_ru, "Добавить расход", AddSpending),
         TgCommandSetup(TgCommand.mon, "Добавить расход", AddSpending),
     ],
     # fmt: on
