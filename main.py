@@ -92,15 +92,6 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         await _continue_flow_handler(update, msg)
 
 
-async def post_init(application: Any) -> None:
-    await application.bot.set_my_commands(
-        [
-            (setup.command, setup.desc)
-            for setup in cast(list[TgCommandSetup], ioc.tg_commands)
-        ]
-    )
-
-
 async def _start_flow_handler(update: Update, command: TgCommand) -> None:
     user = cast(User, update.effective_user)
     if not user:
@@ -189,15 +180,17 @@ async def _continue_flow_handler(
             await cast(Any, update_or_query.message).reply_markdown_v2(message)
 
 
+async def post_init(application: Any) -> None:
+    await application.bot.set_my_commands(
+        [(setup.command, setup.desc) for setup in filter_en_commands()]
+    )
+
+
 def main() -> None:
     app = ApplicationBuilder().token(TG_TOKEN).post_init(post_init).build()
 
-    en_commands = [
-        c
-        for c in cast(list[TgCommandSetup], ioc.tg_commands)
-        if re.match(r"^[\da-z_]{1,32}$", c.command)
-    ]
-    for setup in cast(list[TgCommandSetup], en_commands):
+    en_commands = filter_en_commands()
+    for setup in en_commands:
         app.add_handler(CommandHandler(setup.command, make_handler(setup)))
 
     app.add_handler(CallbackQueryHandler(button_callback))
@@ -206,6 +199,15 @@ def main() -> None:
 
     print("run_polling...")
     app.run_polling()
+
+
+def filter_en_commands() -> list[TgCommandSetup]:
+    en_commands = [
+        c
+        for c in cast(list[TgCommandSetup], ioc.tg_commands)
+        if re.match(r"^[\da-z_]{1,32}$", c.command)
+    ]
+    return en_commands
 
 
 def make_handler(setup: TgCommandSetup) -> Any:
