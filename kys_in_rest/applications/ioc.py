@@ -1,33 +1,26 @@
 import sqlite3
 from typing import Sequence
 
-from kys_in_rest.beer.features.add_new_beer import AddNewBeer
 from kys_in_rest.beer.features.beer_post_repo import BeerPostRepo
 from kys_in_rest.beer.infra.beer_post_repo import SqliteBeerPostRepo
 from kys_in_rest.core.ioc import IOC
 from kys_in_rest.core.sqlite_utils import make_sqlite_cursor
-from kys_in_rest.health.features.add_weight import AddOrShowWeight
 from kys_in_rest.health.features.weight_repo import WeightRepo
 from kys_in_rest.health.infra.weight_repo import SqliteWeightRepo
-from kys_in_rest.money.features.spending_repo import SpendingRepo
+from kys_in_rest.money.features.repos.goal_repo import MoneyGoalRepo
+from kys_in_rest.money.features.repos.spending_repo import SpendingRepo
+from kys_in_rest.money.infra.goal_repo import SqliteMoneyGoalRepo
 from kys_in_rest.money.infra.spending_repo import SqliteSpendingRepo
 from kys_in_rest.music.features.download_repo import DownloadRepo
 from kys_in_rest.music.infra.download_repo import (
     UrlDownloadRepo,
     YandexMusicDownloadRepo,
 )
-from kys_in_rest.restaurants.features.add_new import AddNewRestaurant
-from kys_in_rest.restaurants.features.find_near_category import (
-    GetNearRestaurants,
-    FindCategoryRestaurants,
-)
 from kys_in_rest.restaurants.features.ports import RestRepo
 from kys_in_rest.restaurants.infra.rest_repo import SqliteRestRepo
 from kys_in_rest.tg.entities.command import TgCommandSetup
 from kys_in_rest.tg.features.flow_repo import FlowRepo
-from kys_in_rest.tg.features.id import ShowTgId
 from kys_in_rest.tg.infra.flow_repo import SqliteFlowRepo
-from kys_in_rest.users.features.check_admin import CheckTgAdmin
 from kys_in_rest.wishlist.features.wishlist import WishlistRepo
 from kys_in_rest.wishlist.infra.wishlist_repo import SqliteWishlistRepo
 
@@ -59,6 +52,7 @@ def make_ioc(
     ioc.register(WeightRepo, SqliteWeightRepo)
     ioc.register(WishlistRepo, SqliteWishlistRepo)
     ioc.register(SpendingRepo, SqliteSpendingRepo)
+    ioc.register(MoneyGoalRepo, SqliteMoneyGoalRepo)
     ioc.register(
         DownloadRepo,
         lambda: UrlDownloadRepo(

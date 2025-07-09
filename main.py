@@ -22,6 +22,7 @@ from kys_in_rest.core.tg_utils import (
 )
 from kys_in_rest.health.features.add_weight import AddOrShowWeight
 from kys_in_rest.money.features.add_spending import AddSpending
+from kys_in_rest.money.features.goal_budget import PlanGoalBudgets
 from kys_in_rest.music.features.download import DownloadMusic
 from kys_in_rest.restaurants.features.add_new import AddNewRestaurant
 from kys_in_rest.restaurants.features.find_near_category import (
@@ -63,6 +64,7 @@ ioc = make_ioc(
         TgCommandSetup(TgCommand.spend, "Добавить расход", AddSpending),
         TgCommandSetup(TgCommand.spend_ru, "Добавить расход", AddSpending),
         TgCommandSetup(TgCommand.mon, "Добавить расход", AddSpending),
+        TgCommandSetup(TgCommand.mon_goal_budget, "Планирование бюджетов", PlanGoalBudgets),
     ],
     # fmt: on
 )

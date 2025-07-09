@@ -11,12 +11,12 @@ class MockSqliteCursor:
 class MockRepo: ...
 
 
-class SqliteRepo:
+class _SqliteRepo:
     def __init__(self, cursor: MockSqliteCursor):
         self.cursor = cursor
 
 
-class MockSqliteRepo(MockRepo, SqliteRepo): ...
+class MockSqliteRepo(MockRepo, _SqliteRepo): ...
 
 
 class MockFeature:

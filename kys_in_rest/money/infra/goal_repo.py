@@ -1,0 +1,15 @@
+import datetime
+
+from kys_in_rest.core.sqlite_utils import SqliteRepo
+from kys_in_rest.money.entities.goal import MoneyGoal
+from kys_in_rest.money.features.repos.goal_repo import MoneyGoalRepo
+
+
+class SqliteMoneyGoalRepo(SqliteRepo, MoneyGoalRepo):
+    def list_actual(self, now: datetime.date = None) -> list[MoneyGoal]:
+        now = now or datetime.date.today()
+        rows = self.cursor.execute(
+            "SELECT * FROM mon_goals where date(due_date) > ? ",
+            (now,),
+        )
+        return [MoneyGoal(**row) for row in rows]

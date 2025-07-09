@@ -1,6 +1,6 @@
 import abc
 import itertools
-from typing import NamedTuple, Sequence, Any
+from typing import NamedTuple, Any
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 

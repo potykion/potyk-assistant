@@ -3,7 +3,7 @@ from typing import Any, cast
 
 from kys_in_rest.core.tg_utils import TgFeature
 from kys_in_rest.money.entities.spending import Spending
-from kys_in_rest.money.features.spending_repo import SpendingRepo
+from kys_in_rest.money.features.repos.spending_repo import SpendingRepo
 from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 from kys_in_rest.users.features.check_admin import CheckTgAdmin
 

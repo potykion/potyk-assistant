@@ -2,7 +2,7 @@ from datetime import datetime
 
 from kys_in_rest.core.sqlite_utils import SqliteRepo
 from kys_in_rest.money.entities.spending import Spending
-from kys_in_rest.money.features.spending_repo import SpendingRepo
+from kys_in_rest.money.features.repos.spending_repo import SpendingRepo
 
 
 class SqliteSpendingRepo(SqliteRepo, SpendingRepo):
