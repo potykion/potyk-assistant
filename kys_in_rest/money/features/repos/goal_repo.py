@@ -8,3 +8,7 @@ class MoneyGoalRepo(abc.ABC):
     @abc.abstractmethod
     def list_actual(self, now: datetime.date = None) -> list[MoneyGoal]:
         raise NotImplementedError()
+
+    @abc.abstractmethod
+    def insert(self, goal):
+        raise NotImplementedError()

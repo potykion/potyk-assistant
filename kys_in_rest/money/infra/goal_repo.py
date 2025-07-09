@@ -13,3 +13,11 @@ class SqliteMoneyGoalRepo(SqliteRepo, MoneyGoalRepo):
             (now,),
         )
         return [MoneyGoal(**row) for row in rows]
+
+    def insert(self, goal: MoneyGoal):
+        goal_dict = goal.model_dump(mode="json")
+        self.cursor.execute(
+            "INSERT  INTO mon_goals (due_date, val, category) VALUES (?, ?, ?)",
+            (goal_dict["due_date"], goal_dict["val"], goal_dict["category"]),
+        )
+        self.cursor.connection.commit()

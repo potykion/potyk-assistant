@@ -21,13 +21,13 @@ class PlanGoalBudgets(TgFeature):
         messages = []
 
         for category, per_month in self._compute_per_month_by_category(goals):
-            messages.append(f"{category=}: {per_month=}")
+            messages.append(f"• {category=}: {per_month=}")
 
         return "\n".join(messages), {"parse_mode": "html"}
 
     @classmethod
     def _compute_per_month_by_category(
-        cls, goals: list[MoneyGoal], now: datetime.date=None
+        cls, goals: list[MoneyGoal], now: datetime.date = None
     ) -> Generator[tuple[str, int], None, None]:
         """
         >>> list(
@@ -45,7 +45,11 @@ class PlanGoalBudgets(TgFeature):
         all_cat_goals = groupby(goals, lambda g: g.category)
         for category, cat_goals in all_cat_goals:
             per_month = sum(
-                math.ceil(goal.val / relativedelta(goal.due_date, now).months)
+                math.ceil(
+                    goal.val
+                    # 10 days > 1 month
+                    / (months := math.ceil(relativedelta(goal.due_date, now).days / 30))
+                )
                 for goal in cat_goals
             )
             yield category, per_month

@@ -17,6 +17,7 @@ class TgCommand(enum.StrEnum):
     mu = enum.auto()
     spend = enum.auto()
     mon_goal_budget = enum.auto()
+    mon_goal = enum.auto()
     mon = enum.auto()
     spend_ru = "траты"
 

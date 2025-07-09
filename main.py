@@ -21,6 +21,7 @@ from kys_in_rest.core.tg_utils import (
     SendTgMessageInterrupt,
 )
 from kys_in_rest.health.features.add_weight import AddOrShowWeight
+from kys_in_rest.money.features.add_goal import AddMoneyGoal
 from kys_in_rest.money.features.add_spending import AddSpending
 from kys_in_rest.money.features.goal_budget import PlanGoalBudgets
 from kys_in_rest.music.features.download import DownloadMusic
@@ -65,6 +66,7 @@ ioc = make_ioc(
         TgCommandSetup(TgCommand.spend_ru, "Добавить расход", AddSpending),
         TgCommandSetup(TgCommand.mon, "Добавить расход", AddSpending),
         TgCommandSetup(TgCommand.mon_goal_budget, "Планирование бюджетов", PlanGoalBudgets),
+        TgCommandSetup(TgCommand.mon_goal, "Добавить цель", AddMoneyGoal),
     ],
     # fmt: on
 )
