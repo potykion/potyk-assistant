@@ -44,12 +44,9 @@ class PlanGoalBudgets(TgFeature):
         now = now or datetime.date.today()
         all_cat_goals = groupby(goals, lambda g: g.category)
         for category, cat_goals in all_cat_goals:
-            per_month = sum(
-                math.ceil(
-                    goal.val
-                    # 10 days > 1 month
-                    / (months := math.ceil(relativedelta(goal.due_date, now).days / 30))
-                )
-                for goal in cat_goals
-            )
+            per_month = 0
+            for goal in cat_goals:
+                months = max(relativedelta(goal.due_date, now).months, 1)
+                per_month += math.ceil(goal.val / months)
+
             yield category, per_month
