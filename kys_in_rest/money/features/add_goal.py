@@ -1,4 +1,6 @@
-from typing import Any
+import datetime
+import decimal
+from typing import Any, cast
 
 from kys_in_rest.core.tg_utils import TgFeature
 from kys_in_rest.money.entities.goal import MoneyGoal
@@ -18,19 +20,19 @@ class AddMoneyGoal(TgFeature):
 
     def do(self, msg: InputTgMsg) -> str | tuple[str, dict[str, Any]]:
         try:
-            category, val, date = msg.text.split()
+            category, val, date = cast(str, msg.text).split()
         except (ValueError, AttributeError):
             return "Нужно в формате `/mon_goal sport 90000 2025-11-10`"
 
         goal = MoneyGoal(
-            due_date=date,
-            val=val,
+            due_date=cast(datetime.date, date),
+            val=cast(decimal.Decimal, val),
             category=category,
         )
 
         self.money_goal_repo.insert(goal)
 
-        budget, *_ = self.plan_goal_budgets.do(msg)
+        budget, *_ = cast(tuple[str, dict[str, Any]], self.plan_goal_budgets.do(msg))
 
         return (
             f"Записал\n\nБюджеты такие:\n{budget}",

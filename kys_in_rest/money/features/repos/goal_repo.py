@@ -10,5 +10,5 @@ class MoneyGoalRepo(abc.ABC):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def insert(self, goal):
+    def insert(self, goal: MoneyGoal) -> None:
         raise NotImplementedError()
