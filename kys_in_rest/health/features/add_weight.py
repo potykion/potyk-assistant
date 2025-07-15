@@ -47,7 +47,9 @@ class AddOrShowWeight(TgFeature):
         
         # Форматирование оси X
         plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%d.%m'))
-        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=max(1, len(dates)//10)))
+        # Уменьшаем количество меток на оси X - максимум 4-5 меток
+        interval = max(1, len(dates) // 3)
+        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=interval))
         plt.xticks(rotation=45)
         
         # Добавляем сетку
