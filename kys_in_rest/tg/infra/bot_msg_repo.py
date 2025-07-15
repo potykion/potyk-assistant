@@ -21,3 +21,9 @@ class TgUpdateBotMsgRepo(BotMsgRepo):
 
     async def send_text(self, text: str) -> None:
         await self.update.reply_text(text)
+
+    async def send_photo(self, photo: bytes, caption: str = None) -> None:
+        await self.update.reply_photo(
+            photo=photo,
+            caption=caption,
+        )
