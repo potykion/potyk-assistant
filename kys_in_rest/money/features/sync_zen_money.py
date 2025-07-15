@@ -7,7 +7,7 @@ class SyncZenMoney:
     def __init__(self, load_config: LoadConfig):
         self.load_config = load_config
 
-    def do(self):
+    def do(self) -> None:
         config = self.load_config.do()
 
 

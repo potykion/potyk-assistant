@@ -1,4 +1,5 @@
 import io
+from typing import Any
 
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
@@ -25,7 +26,7 @@ class AddOrShowWeight(TgFeature):
         self.check_tg_admin = check_tg_admin
         self.bot_msg_repo = bot_msg_repo
 
-    def _create_weight_chart(self, entries: list[WeightEntry]) -> bytes:
+    def _create_weight_chart(self, entries: list[WeightEntry]) -> bytes | None:
         """Создает график веса и возвращает его как байты"""
         if not entries:
             return None
@@ -38,7 +39,7 @@ class AddOrShowWeight(TgFeature):
         
         # Создаем график
         plt.figure(figsize=(10, 6))
-        plt.plot(dates, weights, 'b-o', linewidth=2, markersize=6)
+        plt.plot(dates, weights, 'b-o', linewidth=2, markersize=6)  # type: ignore
         
         # Настройка осей
         plt.xlabel('Дата', fontsize=12)
@@ -46,10 +47,10 @@ class AddOrShowWeight(TgFeature):
         plt.title('График изменения веса', fontsize=14, fontweight='bold')
         
         # Форматирование оси X
-        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%d.%m'))
+        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%d.%m'))  # type: ignore
         # Уменьшаем количество меток на оси X - максимум 4-5 меток
         interval = max(1, len(dates) // 3)
-        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=interval))
+        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=interval))  # type: ignore
         plt.xticks(rotation=45)
         
         # Добавляем сетку
@@ -60,7 +61,7 @@ class AddOrShowWeight(TgFeature):
             last_entry = entries[-1]
             plt.annotate(
                 f'{last_entry.weight} кг',
-                xy=(last_entry.date, last_entry.weight),
+                xy=(last_entry.date, last_entry.weight),  # type: ignore
                 xytext=(10, 10),
                 textcoords='offset points',
                 bbox=dict(boxstyle='round,pad=0.3', facecolor='yellow', alpha=0.7),

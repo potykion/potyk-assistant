@@ -12,8 +12,8 @@ class SqliteWHttpZenMoneyRepo(SqliteRepo, ZenMoneyRepo):
         super().__init__(cursor)
         self.zen_money_client = zen_money_client
 
-    def sync(self, current_client_timestamp: int = None, server_timestamp=0):
-        current_client_timestamp = current_client_timestamp or time.time()
+    def sync(self, current_client_timestamp: int | None = None, server_timestamp: int = 0) -> int:
+        current_client_timestamp = current_client_timestamp or int(time.time())
         zen_money_diff = self.zen_money_client.diff(
             current_client_timestamp, server_timestamp
         )
@@ -21,7 +21,7 @@ class SqliteWHttpZenMoneyRepo(SqliteRepo, ZenMoneyRepo):
 
         return server_timestamp
 
-    def save(self, diff_raw: ZenMoneyDiffRaw):
+    def save(self, diff_raw: ZenMoneyDiffRaw) -> None:
         server_timestamp = diff_raw["serverTimestamp"]
         current_diff = self.get_current()
 
@@ -34,6 +34,6 @@ class SqliteWHttpZenMoneyRepo(SqliteRepo, ZenMoneyRepo):
                 (diff_json["server_timestamp"], diff_json["diff"]),
             )
 
-    def get_current(self):
+    def get_current(self) -> ZenMoneyDiff | None:
         row = self.cursor.execute("select * from zen_money_diff").fetchone()
         return ZenMoneyDiff(**row)

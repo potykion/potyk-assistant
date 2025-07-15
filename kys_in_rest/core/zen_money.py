@@ -93,7 +93,6 @@ class ZenMoneyUser(TypedDict, total=False):
     parent: str | None
     countryCode: str
     email: str
-    countryCode: str
     currency: int
     paidTill: int
     monthStartDay: int
@@ -430,10 +429,10 @@ class ZenMoneyClient:
     https://github.com/zenmoney/ZenPlugins/wiki/ZenMoney-API
     """
 
-    def __init__(self, zen_money_token):
+    def __init__(self, zen_money_token: str) -> None:
         self.zen_money_token = zen_money_token
 
-    def diff(self, current_client_timestamp=None, server_timestamp=0) -> ZenMoneyDiffRaw:
+    def diff(self, current_client_timestamp: int | None = None, server_timestamp: int = 0) -> ZenMoneyDiffRaw:
         current_client_timestamp = current_client_timestamp or int(time.time())
         resp = requests.post(
             "https://api.zenmoney.ru/v8/diff/",
@@ -447,4 +446,4 @@ class ZenMoneyClient:
         )
         resp.raise_for_status()
         resp_json = resp.json()
-        return resp_json
+        return resp_json  # type: ignore
