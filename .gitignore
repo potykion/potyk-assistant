@@ -245,3 +245,5 @@ db_prod.sqlite
 db.sqlite
 db_test.sqlite
 kill
+
+temp

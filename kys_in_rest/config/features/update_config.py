@@ -1,0 +1,3 @@
+class UpdateConfig:
+    def do(self):
+        ...
