@@ -46,10 +46,13 @@ class AddOrShowWeight(TgFeature):
         plt.ylabel('Вес (кг)', fontsize=12)
         plt.title('График изменения веса', fontsize=14, fontweight='bold')
         
+         # Устанавливаем фиксированные границы оси Y от 70 до 90 кг
+        plt.ylim(70, 90)
+        
         # Форматирование оси X
         plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%d.%m'))  # type: ignore
         # Уменьшаем количество меток на оси X - максимум 4-5 меток
-        interval = max(1, len(dates) // 3)
+        interval = max(1, len(dates) // 2)
         plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=interval))  # type: ignore
         plt.xticks(rotation=45)
         
