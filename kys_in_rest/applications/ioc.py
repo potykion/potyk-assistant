@@ -3,6 +3,8 @@ from typing import Sequence
 
 from kys_in_rest.beer.features.beer_post_repo import BeerPostRepo
 from kys_in_rest.beer.infra.beer_post_repo import SqliteBeerPostRepo
+from kys_in_rest.config.features.repos.config_repo import ConfigRepo
+from kys_in_rest.config.infra.config_repo import SqliteConfigRepo
 from kys_in_rest.core.ioc import IOC
 from kys_in_rest.core.sqlite_utils import make_sqlite_cursor
 from kys_in_rest.health.features.weight_repo import WeightRepo
@@ -53,6 +55,7 @@ def make_ioc(
     ioc.register(WishlistRepo, SqliteWishlistRepo)
     ioc.register(SpendingRepo, SqliteSpendingRepo)
     ioc.register(MoneyGoalRepo, SqliteMoneyGoalRepo)
+    ioc.register(ConfigRepo, SqliteConfigRepo)
     ioc.register(
         DownloadRepo,
         lambda: UrlDownloadRepo(

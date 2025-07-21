@@ -1,4 +1,5 @@
 import enum
+import inspect
 import logging
 from typing import (
     NamedTuple,
@@ -10,7 +11,6 @@ from typing import (
     TypeAlias,
     Generic,
 )
-import inspect
 
 T = TypeVar("T")
 NameOrType: TypeAlias = str | Type[Any]

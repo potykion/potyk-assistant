@@ -1,3 +1,5 @@
+import json
+
 from kys_in_rest.config.entities.config import Config
 from kys_in_rest.config.features.repos.config_repo import ConfigRepo
 from kys_in_rest.core.sqlite_utils import SqliteRepo
@@ -11,7 +13,7 @@ class SqliteConfigRepo(SqliteRepo, ConfigRepo):
             config_json = config.model_dump(mode="json")
             self.cursor.execute(
                 "insert into config (config_json) values (?)",
-                (config_json,),
+                (json.dumps(config_json),),
             )
             self.cursor.connection.commit()
             return config
