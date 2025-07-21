@@ -7,12 +7,15 @@ from kys_in_rest.config.features.repos.config_repo import ConfigRepo
 from kys_in_rest.config.infra.config_repo import SqliteConfigRepo
 from kys_in_rest.core.ioc import IOC
 from kys_in_rest.core.sqlite_utils import make_sqlite_cursor
+from kys_in_rest.core.zen_money import ZenMoneyClient
 from kys_in_rest.health.features.weight_repo import WeightRepo
 from kys_in_rest.health.infra.weight_repo import SqliteWeightRepo
 from kys_in_rest.money.features.repos.goal_repo import MoneyGoalRepo
 from kys_in_rest.money.features.repos.spending_repo import SpendingRepo
+from kys_in_rest.money.features.repos.zen_money_repo import ZenMoneyRepo
 from kys_in_rest.money.infra.goal_repo import SqliteMoneyGoalRepo
 from kys_in_rest.money.infra.spending_repo import SqliteSpendingRepo
+from kys_in_rest.money.infra.zen_money_repo import SqliteWHttpZenMoneyRepo
 from kys_in_rest.music.features.download_repo import DownloadRepo
 from kys_in_rest.music.infra.download_repo import (
     UrlDownloadRepo,
@@ -33,11 +36,13 @@ def make_ioc(
     tg_admins: list[int],
     tg_commands: Sequence[TgCommandSetup] = (),
     yandex_music_token: str,
+    zen_money_token: str,
 ) -> IOC:
     ioc = IOC()
 
     # deps
     ioc.register("db_path", db_path)
+    ioc.register("zen_money_token", zen_money_token)
     ioc.register("tg_admins", tg_admins)
     ioc.register("tg_commands", tg_commands)
     ioc.register(
@@ -62,5 +67,7 @@ def make_ioc(
             YandexMusicDownloadRepo(yandex_music_token),
         ),
     )
+    ioc.register(ZenMoneyRepo, SqliteWHttpZenMoneyRepo)
+    ioc.register(ZenMoneyRepo, SqliteWHttpZenMoneyRepo)
 
     return ioc

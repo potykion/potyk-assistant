@@ -1,3 +1,4 @@
+import json
 import sqlite3
 import time
 
@@ -12,7 +13,9 @@ class SqliteWHttpZenMoneyRepo(SqliteRepo, ZenMoneyRepo):
         super().__init__(cursor)
         self.zen_money_client = zen_money_client
 
-    def sync(self, current_client_timestamp: int | None = None, server_timestamp: int = 0) -> int:
+    def sync(
+        self, current_client_timestamp: int | None = None, server_timestamp: int = 0
+    ) -> int:
         current_client_timestamp = current_client_timestamp or int(time.time())
         zen_money_diff = self.zen_money_client.diff(
             current_client_timestamp, server_timestamp
@@ -31,9 +34,15 @@ class SqliteWHttpZenMoneyRepo(SqliteRepo, ZenMoneyRepo):
         if not current_diff:
             self.cursor.execute(
                 """insert into zen_money_diff (server_timestamp, diff) values (?, ?)""",
-                (diff_json["server_timestamp"], diff_json["diff"]),
+                (diff_json["server_timestamp"], json.dumps(diff_json["diff"])),
             )
+            self.cursor.connection.commit()
 
     def get_current(self) -> ZenMoneyDiff | None:
         row = self.cursor.execute("select * from zen_money_diff").fetchone()
-        return ZenMoneyDiff(**row)
+        if not row:
+            return None
+        return ZenMoneyDiff(
+            server_timestamp=row["server_timestamp"],
+            diff=json.loads(row["diff"]),
+        )

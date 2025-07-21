@@ -1,3 +1,4 @@
+import decimal
 import time
 from typing import TypedDict
 
@@ -22,7 +23,7 @@ class ZenMoneyInstrument(TypedDict, total=False):
     title: str
     shortTitle: str
     symbol: str
-    rate: int
+    rate: float
     changed: int
 
 
@@ -38,8 +39,8 @@ class ZenMoneyCountry(TypedDict, total=False):
 
     id: int
     title: str
-    currency: str
-    domain: str
+    currency: int
+    domain: str | None
 
 
 class ZenMoneyCompany(TypedDict, total=False):
@@ -58,12 +59,12 @@ class ZenMoneyCompany(TypedDict, total=False):
 
     id: int
     title: str
-    www: str
-    country: int
+    www: str | None
+    country: int | None
     fullTitle: str | None
     changed: int
     deleted: bool
-    countryCode: str
+    countryCode: str | None
 
 
 class ZenMoneyUser(TypedDict, total=False):
@@ -88,10 +89,10 @@ class ZenMoneyUser(TypedDict, total=False):
     """
 
     id: int
-    country: int
+    country: int | None
     login: str | None
     parent: str | None
-    countryCode: str
+    countryCode: str | None
     email: str
     currency: int
     paidTill: int
@@ -135,7 +136,7 @@ class ZenMoneyAccount(TypedDict, total=False):
         "payoffInterval": null
     },"""
 
-    id: int
+    id: str
     user: int
     instrument: int
     type: str
@@ -145,9 +146,9 @@ class ZenMoneyAccount(TypedDict, total=False):
     title: str
     inBalance: bool
     creditLimit: int
-    startBalance: int
-    balance: int
-    company: int
+    startBalance: decimal.Decimal
+    balance: decimal.Decimal
+    company: int | None
     archive: bool
     enableCorrection: bool
     balanceCorrectionType: str
@@ -155,7 +156,7 @@ class ZenMoneyAccount(TypedDict, total=False):
     capitalization: str | None
     percent: float | None
     changed: int
-    syncID: list[int]
+    syncID: list[str] | None
     enableSMS: bool
     endDateOffset: int | None
     endDateOffsetInterval: int | None
@@ -184,7 +185,7 @@ class ZenMoneyTag(TypedDict, total=False):
     },
     """
 
-    id: int
+    id: str
     user: int
     changed: int
     icon: str
@@ -194,10 +195,10 @@ class ZenMoneyTag(TypedDict, total=False):
     archive: bool
     showIncome: bool
     showOutcome: bool
-    color: int
+    color: int | None
     picture: str | None
     title: str
-    parent: int | None
+    parent: str | None
     staticId: str | None
 
 
@@ -220,9 +221,9 @@ class ZenMoneyBudget(TypedDict, total=False):
     user: int
     changed: int
     date: str
-    tag: str
-    income: int
-    outcome: int
+    tag: str | None
+    income: decimal.Decimal
+    outcome: decimal.Decimal
     incomeLock: bool
     outcomeLock: bool
     isIncomeForecast: bool
@@ -239,7 +240,7 @@ class ZenMoneyMerchant(TypedDict, total=False):
       },
     """
 
-    id: int
+    id: str
     user: int
     title: str
     changed: int
@@ -274,14 +275,14 @@ class ZenMoneyReminder(TypedDict, total=False):
 
     id: str
     user: int
-    income: int
-    outcome: int
-    changed: int
+    income: decimal.Decimal
+    outcome: decimal.Decimal
+    changed: decimal.Decimal
     incomeInstrument: int
     outcomeInstrument: int
     step: int
     points: list[int]
-    tag: str | None
+    tag: list[str] | None
     startDate: str | None
     endDate: str | None
     notify: bool
@@ -320,9 +321,9 @@ class ZenMoneyReminderMarker(TypedDict, total=False):
     id: str
     user: int
     date: str
-    income: int
-    outcome: int
-    changed: int
+    income: decimal.Decimal
+    outcome: decimal.Decimal
+    changed: decimal.Decimal
     incomeInstrument: int
     outcomeInstrument: int
     state: str
@@ -334,7 +335,7 @@ class ZenMoneyReminderMarker(TypedDict, total=False):
     payee: str | None
     merchant: str | None
     notify: bool
-    tag: str | None
+    tag: list[str] | None
 
 
 class ZenMoneyTransaction(TypedDict, total=False):
@@ -378,28 +379,28 @@ class ZenMoneyTransaction(TypedDict, total=False):
     id: str
     user: int
     date: str
-    income: int
-    outcome: int
-    changed: int
+    income: decimal.Decimal
+    outcome: decimal.Decimal
+    changed: decimal.Decimal
     incomeInstrument: int
     outcomeInstrument: int
-    originalPayee: str
+    originalPayee: str | None
     deleted: bool
     viewed: bool
-    hold: bool
+    hold: bool | None
     qrCode: str | None
-    source: str
+    source: str | None
     incomeAccount: str | None
     outcomeAccount: str | None
-    tag: list[str]
+    tag: list[str] | None
     comment: str | None
     payee: str | None
     opIncome: int | None
     opOutcome: int | None
     opIncomeInstrument: int | None
     opOutcomeInstrument: int | None
-    latitude: str | None
-    longitude: str | None
+    latitude: str | None | float
+    longitude: str | None | float
     merchant: str | None
     incomeBankID: str | None
     outcomeBankID: str | None
@@ -432,13 +433,15 @@ class ZenMoneyClient:
     def __init__(self, zen_money_token: str) -> None:
         self.zen_money_token = zen_money_token
 
-    def diff(self, current_client_timestamp: int | None = None, server_timestamp: int = 0) -> ZenMoneyDiffRaw:
+    def diff(
+        self, current_client_timestamp: int | None = None, server_timestamp: int = 0
+    ) -> ZenMoneyDiffRaw:
         current_client_timestamp = current_client_timestamp or int(time.time())
         resp = requests.post(
             "https://api.zenmoney.ru/v8/diff/",
             json={
                 "currentClientTimestamp": current_client_timestamp,
-                "server_timestamp": server_timestamp,
+                "serverTimestamp": server_timestamp,
             },
             headers={
                 "Authorization": f"Bearer {self.zen_money_token}",

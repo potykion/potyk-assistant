@@ -49,6 +49,7 @@ ioc = make_ioc(
     db_path=str(root_dir / os.environ["DB"]),
     tg_admins=list(map(int, os.environ["TG_ADMINS"].split(","))),
     yandex_music_token=os.environ["YANDEX_MUSIC_TOKEN"],
+    zen_money_token=os.environ["ZEN_MONEY_TOKEN"],
     # fmt: off
     tg_commands=[
         TgCommandSetup(TgCommand.rest_metro, "Найти ресты у метро", GetNearRestaurants),

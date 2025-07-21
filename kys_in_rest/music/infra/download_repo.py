@@ -14,8 +14,8 @@ from kys_in_rest.tg.entities.audio import TgAudio
 
 
 class YandexMusicDownloadRepo(DownloadRepo):
-    def __init__(self, token: str) -> None:
-        self.token = token
+    def __init__(self, yandex_music_token: str) -> None:
+        self.yandex_music_token = yandex_music_token
 
     def download_audio_from_url(self, url: str) -> TgAudio:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -24,7 +24,7 @@ class YandexMusicDownloadRepo(DownloadRepo):
                     [
                         "yandex-music-downloader",
                         "--token",
-                        shlex.quote(self.token),
+                        shlex.quote(self.yandex_music_token),
                         "--quality",
                         "1",
                         "--skip-existing",

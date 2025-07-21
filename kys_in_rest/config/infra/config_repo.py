@@ -18,7 +18,7 @@ class SqliteConfigRepo(SqliteRepo, ConfigRepo):
             self.cursor.connection.commit()
             return config
 
-        return Config(**row["config_json"])
+        return Config(**json.loads(row["config_json"]))
 
     def save(self, config: Config) -> None:
         config_json = config.model_dump(mode="json")
