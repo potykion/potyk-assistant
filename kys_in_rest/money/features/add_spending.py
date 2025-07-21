@@ -4,6 +4,7 @@ from typing import Any, cast
 from kys_in_rest.core.tg_utils import TgFeature
 from kys_in_rest.money.entities.spending import Spending
 from kys_in_rest.money.features.repos.spending_repo import SpendingRepo
+from kys_in_rest.money.features.repos.zen_money_repo import ZenMoneyRepo
 from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 from kys_in_rest.users.features.check_admin import CheckTgAdmin
 
@@ -13,15 +14,20 @@ class AddSpending(TgFeature):
         self,
         spending_repo: SpendingRepo,
         check_tg_admin: CheckTgAdmin,
+        zen_money_repo: ZenMoneyRepo,
     ):
         self.spending_repo = spending_repo
         self.check_tg_admin = check_tg_admin
+        self.zen_money_repo = zen_money_repo
 
     def do(self, msg: InputTgMsg) -> str | tuple[str, dict[str, Any]]:
         self.check_tg_admin.do(msg.tg_user_id)
 
         text = cast(str, msg.text)
         if not text:
+            spent = self.zen_money_repo.monthly_spent()
+            return f"Потрачено за июль: {spent}", {"parse_mode": "html"}
+
             spendings = self.spending_repo.list_today()
             if not spendings:
                 return "Сегодня трат нет"

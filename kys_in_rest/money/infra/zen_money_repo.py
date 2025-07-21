@@ -1,3 +1,4 @@
+import datetime
 import json
 import sqlite3
 import time
@@ -9,6 +10,7 @@ from kys_in_rest.money.features.repos.zen_money_repo import ZenMoneyRepo
 
 
 class SqliteWHttpZenMoneyRepo(SqliteRepo, ZenMoneyRepo):
+
     def __init__(self, zen_money_client: ZenMoneyClient, cursor: sqlite3.Cursor):
         super().__init__(cursor)
         self.zen_money_client = zen_money_client
@@ -37,6 +39,9 @@ class SqliteWHttpZenMoneyRepo(SqliteRepo, ZenMoneyRepo):
                 (diff_json["server_timestamp"], json.dumps(diff_json["diff"])),
             )
             self.cursor.connection.commit()
+        else:
+            # todo apply diff
+            ...
 
     def get_current(self) -> ZenMoneyDiff | None:
         row = self.cursor.execute("select * from zen_money_diff").fetchone()
@@ -46,3 +51,22 @@ class SqliteWHttpZenMoneyRepo(SqliteRepo, ZenMoneyRepo):
             server_timestamp=row["server_timestamp"],
             diff=json.loads(row["diff"]),
         )
+
+    def monthly_spent(self, current_date: datetime.date=None) -> float:
+        current_date = current_date or datetime.date.today()
+        current_date = datetime.date(current_date.year, current_date.month, 1)
+
+        sql = """
+              SELECT SUM(
+                             CAST(json_extract(value, '$.outcome') AS REAL)
+                     )
+
+              FROM zen_money_diff, json_each(json_extract(diff, '$.transaction'))
+              where json_extract(value, '$.deleted') is false
+                and date(json_extract(value, '$.date')) >= ?
+                and cast(json_extract(value, '$.outcome') AS REAL) != CAST(json_extract(value, '$.income') AS REAL)
+
+              order by json_extract(value, '$.date')
+              """
+        result = self.cursor.execute(sql, (current_date,)).fetchone()
+        return result[0] if result and result[0] is not None else 0.0
