@@ -1,6 +1,6 @@
-from typing import Coroutine, Any
+from typing import Coroutine, Any, List
 
-from telegram import Message
+from telegram import Message, InputMediaAudio
 
 from kys_in_rest.tg.entities.audio import TgAudio
 from kys_in_rest.tg.features.bot_msg_repo import BotMsgRepo
@@ -27,3 +27,49 @@ class TgUpdateBotMsgRepo(BotMsgRepo):
             photo=photo,
             caption=caption,
         )
+
+    async def send_multiple_audio(self, audios: List[TgAudio]) -> None:
+        """Отправляет несколько аудио файлов с прогрессом"""
+        if not audios:
+            return
+            
+        total = len(audios)
+        await self.send_text(f"Найдено {total} треков. Отправляю...")
+        
+        for i, audio in enumerate(audios, 1):
+            try:
+                await self.send_audio(audio)
+                if total > 1:
+                    await self.send_text(f"✅ {i}/{total}: {audio.title or 'Без названия'}")
+            except Exception as e:
+                await self.send_text(f"❌ Ошибка при отправке {i}/{total}: {str(e)}")
+        
+        await self.send_text(f"🎵 Отправлено {total} треков!")
+
+    async def send_audio_group(self, audios: List[TgAudio]) -> None:
+        """Пытается отправить аудио как медиагруппу (может не работать)"""
+        if not audios:
+            return
+            
+        try:
+            # Создаем медиагруппу из аудио файлов
+            media_group = []
+            for audio in audios:
+                media = InputMediaAudio(
+                    media=audio.audio,
+                    performer=audio.artist,
+                    title=audio.title,
+                    thumbnail=audio.cover,
+                    duration=audio.duration
+                )
+                media_group.append(media)
+            
+            # Отправляем медиагруппу
+            await self.update.reply_media_group(media=media_group)
+            await self.send_text(f"🎵 Отправлено {len(audios)} треков группой!")
+            
+        except Exception as e:
+            s=  "as"
+            # Если медиагруппа не работает, fallback на обычную отправку
+            await self.send_text("Медиагруппа не поддерживается, отправляю по одному...")
+            await self.send_multiple_audio(audios)

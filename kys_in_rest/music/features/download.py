@@ -31,8 +31,7 @@ class DownloadMusic(TgFeature):
 
         try:
             audios = self.download_repo.download_audio_from_url(url)
-            for audio in audios:
-                await self.bot_msg_repo.send_audio(audio)
+            await self.bot_msg_repo.send_audio_group(audios)
         except Exception as e:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             tr_lines = traceback.format_exception(exc_type, exc_value, exc_traceback)

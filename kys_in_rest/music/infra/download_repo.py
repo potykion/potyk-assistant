@@ -20,7 +20,9 @@ class YandexMusicDownloadRepo(DownloadRepo):
     def __init__(self, yandex_music_token: str) -> None:
         self.yandex_music_token = yandex_music_token
 
-    def download_audio_from_url(self, url: str, artist=None, album=None) -> list[TgAudio]:
+    def download_audio_from_url(
+        self, url: str, artist=None, album=None
+    ) -> list[TgAudio]:
         with tempfile.TemporaryDirectory() as temp_dir:
             with do_in_dir(temp_dir):
                 command = " ".join(
@@ -80,13 +82,15 @@ class YandexMusicDownloadRepo(DownloadRepo):
                         )
 
                         cover_bytes = cover_f.read()
-                        return TgAudio(
-                            audio=audio,
-                            artist=artist,
-                            title=title,
-                            cover=cover_bytes,
-                            duration=duration,
-                        )
+                        return [
+                            TgAudio(
+                                audio=audio,
+                                artist=artist,
+                                title=title,
+                                cover=cover_bytes,
+                                duration=duration,
+                            )
+                        ]
 
 
 class YouTubeDownloadRepo(DownloadRepo):
@@ -94,7 +98,9 @@ class YouTubeDownloadRepo(DownloadRepo):
     https://github.com/yt-dlp/yt-dlp/
     """
 
-    def download_audio_from_url(self, url: str, artist=None, album=None) -> list[TgAudio]:
+    def download_audio_from_url(
+        self, url: str, artist=None, album=None
+    ) -> list[TgAudio]:
         url = self.clean_url(url)
 
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -112,27 +118,32 @@ class YouTubeDownloadRepo(DownloadRepo):
                     text=True,
                     shell=True,
                 )
-                mp3 = [
+                mp3s = [
                     *glob.glob("./**/*.mp3", recursive=True),
                     *glob.glob("./**/*.m4a", recursive=True),
                     *glob.glob("./**/*.opus", recursive=True),
-                ][0]
+                ]
+                audios = []
+                for mp3 in mp3s:
 
-                with open(mp3, "rb") as mp3_file:
-                    audio = mp3_file.read()
+                    with open(mp3, "rb") as mp3_file:
+                        audio = mp3_file.read()
 
-                    audio_file = mutagen.File(mp3)
+                        audio_file = mutagen.File(mp3)
 
-                    duration = (
-                        int(audio_file.info.length)
-                        if hasattr(audio_file, "info")
-                        else 0
-                    )
+                        duration = (
+                            int(audio_file.info.length)
+                            if hasattr(audio_file, "info")
+                            else 0
+                        )
 
-                    return TgAudio(
-                        audio=audio,
-                        duration=duration,
-                    )
+                        audios.append(
+                            TgAudio(
+                                audio=audio,
+                                duration=duration,
+                            )
+                        )
+                return audios
 
     @classmethod
     def clean_url(cls, url):
@@ -141,27 +152,29 @@ class YouTubeDownloadRepo(DownloadRepo):
         'https://www.youtube.com/watch?v=QpcbCqSUkcM'
         """
         from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
-        
+
         parsed = urlparse(url)
         query_params = parse_qs(parsed.query)
-        
+
         # Удаляем параметр 't' (timestamp)
-        if 't' in query_params:
-            del query_params['t']
-        
+        if "t" in query_params:
+            del query_params["t"]
+
         # Перестраиваем query string
         new_query = urlencode(query_params, doseq=True)
-        
+
         # Создаем новый URL без параметра timestamp
-        cleaned_url = urlunparse((
-            parsed.scheme,
-            parsed.netloc,
-            parsed.path,
-            parsed.params,
-            new_query,
-            parsed.fragment
-        ))
-        
+        cleaned_url = urlunparse(
+            (
+                parsed.scheme,
+                parsed.netloc,
+                parsed.path,
+                parsed.params,
+                new_query,
+                parsed.fragment,
+            )
+        )
+
         return cleaned_url
 
 
@@ -174,7 +187,9 @@ class UrlDownloadRepo(DownloadRepo):
         self.yandex_music_download_repo = yandex_music_download_repo
         self.youtube_download_repo = youtube_download_repo
 
-    def download_audio_from_url(self, url: str, artist=None, album=None) -> list[TgAudio]:
+    def download_audio_from_url(
+        self, url: str, artist=None, album=None
+    ) -> list[TgAudio]:
         if url.startswith("https://music.yandex.ru"):
             return self.yandex_music_download_repo.download_audio_from_url(url)
         if url.startswith("https://www.youtube.com"):
