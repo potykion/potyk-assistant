@@ -140,6 +140,7 @@ class YouTubeDownloadRepo(DownloadRepo):
                     mp3s.remove(largest_file)
 
                 audios = []
+                cover_bytes = None
                 for mp3 in mp3s:
                     # Извлекаем artist и title из имени файла
                     artist, album, title = self.parse_meta(os.path.basename(mp3))
@@ -156,8 +157,11 @@ class YouTubeDownloadRepo(DownloadRepo):
                         )
 
                         # Получаем обложку через MusicBrainzClient
-                        cover_bytes = self.musicbrainz_client.get_cover_by_artist_album(
-                            artist, album
+                        cover_bytes = (
+                            cover_bytes
+                            or self.musicbrainz_client.get_cover_by_artist_album(
+                                artist, album
+                            )
                         )
 
                         audios.append(
