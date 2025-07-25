@@ -39,8 +39,6 @@ class TgUpdateBotMsgRepo(BotMsgRepo):
         for i, audio in enumerate(audios, 1):
             try:
                 await self.send_audio(audio)
-                if total > 1:
-                    await self.send_text(f"✅ {i}/{total}: {audio.title or 'Без названия'}")
             except Exception as e:
                 await self.send_text(f"❌ Ошибка при отправке {i}/{total}: {str(e)}")
         
@@ -66,10 +64,8 @@ class TgUpdateBotMsgRepo(BotMsgRepo):
             
             # Отправляем медиагруппу
             await self.update.reply_media_group(media=media_group)
-            await self.send_text(f"🎵 Отправлено {len(audios)} треков группой!")
-            
+
         except Exception as e:
-            s=  "as"
             # Если медиагруппа не работает, fallback на обычную отправку
             await self.send_text("Медиагруппа не поддерживается, отправляю по одному...")
             await self.send_multiple_audio(audios)

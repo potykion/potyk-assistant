@@ -109,7 +109,6 @@ class YouTubeDownloadRepo(DownloadRepo):
                     "yt-dlp",
                     "-x",
                     *("--audio-format", "mp3"),
-                    *("--audio-quality", "0"),
                     "--split-chapters",
                     url,
                 ]
@@ -123,6 +122,13 @@ class YouTubeDownloadRepo(DownloadRepo):
                     *glob.glob("./**/*.m4a", recursive=True),
                     *glob.glob("./**/*.opus", recursive=True),
                 ]
+                
+                # Удаляем самый большой файл
+                if mp3s:
+                    largest_file = max(mp3s, key=os.path.getsize)
+                    os.remove(largest_file)
+                    mp3s.remove(largest_file)
+                
                 audios = []
                 for mp3 in mp3s:
 
