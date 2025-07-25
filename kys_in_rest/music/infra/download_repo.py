@@ -20,7 +20,7 @@ class YandexMusicDownloadRepo(DownloadRepo):
     def __init__(self, yandex_music_token: str) -> None:
         self.yandex_music_token = yandex_music_token
 
-    def download_audio_from_url(self, url: str) -> TgAudio:
+    def download_audio_from_url(self, url: str, artist=None, album=None) -> TgAudio:
         with tempfile.TemporaryDirectory() as temp_dir:
             with do_in_dir(temp_dir):
                 command = " ".join(
@@ -94,7 +94,7 @@ class YouTubeDownloadRepo(DownloadRepo):
     https://github.com/yt-dlp/yt-dlp/
     """
 
-    def download_audio_from_url(self, url: str) -> TgAudio:
+    def download_audio_from_url(self, url: str, artist=None, album=None) -> TgAudio:
         url = self.clean_url(url)
 
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -174,7 +174,7 @@ class UrlDownloadRepo(DownloadRepo):
         self.yandex_music_download_repo = yandex_music_download_repo
         self.youtube_download_repo = youtube_download_repo
 
-    def download_audio_from_url(self, url: str) -> TgAudio:
+    def download_audio_from_url(self, url: str, artist=None, album=None) -> TgAudio:
         if url.startswith("https://music.yandex.ru"):
             return self.yandex_music_download_repo.download_audio_from_url(url)
         if url.startswith("https://www.youtube.com"):
