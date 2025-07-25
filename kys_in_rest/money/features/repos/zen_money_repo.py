@@ -19,5 +19,5 @@ class ZenMoneyRepo(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def monthly_spent(self, current_date: datetime.date = None) -> ZenMoneyDiffRaw:
+    def monthly_spent(self, current_date: datetime.date = None) -> float:
         raise NotImplementedError
