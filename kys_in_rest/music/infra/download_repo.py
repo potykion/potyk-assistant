@@ -2,7 +2,6 @@ import glob
 import os
 import shlex
 import subprocess
-import sys
 import tempfile
 
 import mutagen
@@ -96,6 +95,8 @@ class YouTubeDownloadRepo(DownloadRepo):
     """
 
     def download_audio_from_url(self, url: str) -> TgAudio:
+        url = self.clean_url(url)
+
         with tempfile.TemporaryDirectory() as temp_dir:
             with do_in_dir(temp_dir):
                 command = [
@@ -132,6 +133,36 @@ class YouTubeDownloadRepo(DownloadRepo):
                         audio=audio,
                         duration=duration,
                     )
+
+    @classmethod
+    def clean_url(cls, url):
+        """
+        >>> YouTubeDownloadRepo.clean_url("https://www.youtube.com/watch?v=QpcbCqSUkcM&t=889s")
+        'https://www.youtube.com/watch?v=QpcbCqSUkcM'
+        """
+        from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
+        
+        parsed = urlparse(url)
+        query_params = parse_qs(parsed.query)
+        
+        # Удаляем параметр 't' (timestamp)
+        if 't' in query_params:
+            del query_params['t']
+        
+        # Перестраиваем query string
+        new_query = urlencode(query_params, doseq=True)
+        
+        # Создаем новый URL без параметра timestamp
+        cleaned_url = urlunparse((
+            parsed.scheme,
+            parsed.netloc,
+            parsed.path,
+            parsed.params,
+            new_query,
+            parsed.fragment
+        ))
+        
+        return cleaned_url
 
 
 class UrlDownloadRepo(DownloadRepo):
