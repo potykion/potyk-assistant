@@ -138,7 +138,7 @@ class YouTubeDownloadRepo(DownloadRepo):
                 audios = []
                 for mp3 in mp3s:
                     # Извлекаем artist и title из имени файла
-                    artist, title = self._parse_filename(os.path.basename(mp3))
+                    artist, album, title = self.parse_meta(os.path.basename(mp3))
 
                     # Если не удалось распарсить, используем имя файла как title
                     if artist is None or title is None:
@@ -208,13 +208,15 @@ class YouTubeDownloadRepo(DownloadRepo):
         return cleaned_url
 
     @classmethod
-    def _parse_filename(cls, filename: str) -> tuple[str, str] | tuple[None, None]:
+    def parse_meta(
+        cls, filename: str
+    ) -> tuple[str, str, str] | tuple[None, None, None]:
         """
-        Парсит имя файла YouTube для извлечения artist и title.
+        Парсит имя файла YouTube для извлечения artist, album и title.
 
         Примеры:
-        >>> YouTubeDownloadRepo._parse_filename("KFC Murder Chicks - KFCMC (Full Album) - 001 Dune [QpcbCqSUkcM].mp3")
-        ('KFC Murder Chicks', 'Dune')
+        >>> YouTubeDownloadRepo.parse_meta("KFC Murder Chicks - KFCMC (Full Album) - 001 Dune [QpcbCqSUkcM].mp3")
+        ('KFC Murder Chicks', 'KFCMC', 'Dune')
         """
         import re
 
@@ -225,17 +227,29 @@ class YouTubeDownloadRepo(DownloadRepo):
         name_without_id = re.sub(r"\s*\[[^\]]+\]\s*$", "", name_without_ext)
 
         # Ищем паттерн "Artist - Album - Number Title"
-        # Паттерн: что-то - что-то - номер название
         match = re.match(r"^(.+?)\s*-\s*(.+?)\s*-\s*\d+\s+(.+)$", name_without_id)
 
         if match:
             artist = match.group(1).strip()
             album = match.group(2).strip()
             title = match.group(3).strip()
-            return artist, title
+            # Очищаем название альбома
+            album = clean_album(album)
+            return artist, album, title
 
         # Если не удалось распарсить, возвращаем None
-        return None, None
+        return None, None, None
+
+
+def clean_album(album: str) -> str:
+    """
+    >>> clean_album("KFCMC (Full Album)")
+    'KFCMC'
+    """
+    import re
+    # Удаляем все скобки и их содержимое
+    cleaned = re.sub(r"\s*\([^)]*\)", "", album)
+    return cleaned.strip()
 
 
 class UrlDownloadRepo(DownloadRepo):

@@ -1,0 +1,21 @@
+[youtube] Extracting URL: https://www.youtube.com/watch?v=QpcbCqSUkcM
+[youtube] QpcbCqSUkcM: Downloading webpage
+[youtube] QpcbCqSUkcM: Downloading tv client config
+[youtube] QpcbCqSUkcM: Downloading tv player API JSON
+[youtube] QpcbCqSUkcM: Downloading ios player API JSON
+[youtube] QpcbCqSUkcM: Downloading m3u8 information
+[info] QpcbCqSUkcM: Downloading 1 format(s): 251
+[download] Destination: KFC Murder Chicks - KFCMC (Full Album) [QpcbCqSUkcM].webm
+[download] 100% of   25.29MiB in 00:00:05 at 5.00MiB/s
+[ExtractAudio] Destination: KFC Murder Chicks - KFCMC (Full Album) [QpcbCqSUkcM].mp3
+Deleting original file KFC Murder Chicks - KFCMC (Full Album) [QpcbCqSUkcM].webm (pass -k to keep)
+[SplitChapters] Splitting video by chapters; 9 chapters found
+[SplitChapters] Chapter 001; Destination: KFC Murder Chicks - KFCMC (Full Album) - 001 Dune [QpcbCqSUkcM].mp3
+[SplitChapters] Chapter 002; Destination: KFC Murder Chicks - KFCMC (Full Album) - 002 Half Life [QpcbCqSUkcM].mp3
+[SplitChapters] Chapter 003; Destination: KFC Murder Chicks - KFCMC (Full Album) - 003 Id [QpcbCqSUkcM].mp3
+[SplitChapters] Chapter 004; Destination: KFC Murder Chicks - KFCMC (Full Album) - 004 Halo [QpcbCqSUkcM].mp3
+[SplitChapters] Chapter 005; Destination: KFC Murder Chicks - KFCMC (Full Album) - 005 KFC GOD [QpcbCqSUkcM].mp3
+[SplitChapters] Chapter 006; Destination: KFC Murder Chicks - KFCMC (Full Album) - 006 My Ballz [QpcbCqSUkcM].mp3
+[SplitChapters] Chapter 007; Destination: KFC Murder Chicks - KFCMC (Full Album) - 007 Soylent [QpcbCqSUkcM].mp3
+[SplitChapters] Chapter 008; Destination: KFC Murder Chicks - KFCMC (Full Album) - 008 Nuclear Age [QpcbCqSUkcM].mp3
+[SplitChapters] Chapter 009; Destination: KFC Murder Chicks - KFCMC (Full Album) - 009 Tsundere 2.0 [QpcbCqSUkcM].mp3
