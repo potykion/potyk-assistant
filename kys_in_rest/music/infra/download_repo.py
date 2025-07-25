@@ -131,6 +131,17 @@ class YouTubeDownloadRepo(DownloadRepo):
                 
                 audios = []
                 for mp3 in mp3s:
+                    # Извлекаем artist и title из имени файла
+                    artist, title = self._parse_filename(os.path.basename(mp3))
+                    
+                    # Если не удалось распарсить, используем имя файла как title
+                    if artist is None or title is None:
+                        filename_without_ext = os.path.splitext(os.path.basename(mp3))[0]
+                        # Убираем ID видео в квадратных скобках
+                        import re
+                        clean_name = re.sub(r'\s*\[[^\]]+\]\s*$', '', filename_without_ext)
+                        artist = None
+                        title = clean_name
 
                     with open(mp3, "rb") as mp3_file:
                         audio = mp3_file.read()
@@ -146,6 +157,8 @@ class YouTubeDownloadRepo(DownloadRepo):
                         audios.append(
                             TgAudio(
                                 audio=audio,
+                                artist=artist,
+                                title=title,
                                 duration=duration,
                             )
                         )
@@ -182,6 +195,36 @@ class YouTubeDownloadRepo(DownloadRepo):
         )
 
         return cleaned_url
+
+    @classmethod
+    def _parse_filename(cls, filename: str) -> tuple[str, str]:
+        """
+        Парсит имя файла YouTube для извлечения artist и title.
+        
+        Примеры:
+        >>> YouTubeDownloadRepo._parse_filename("KFC Murder Chicks - KFCMC (Full Album) - 001 Dune [QpcbCqSUkcM].mp3")
+        ('KFC Murder Chicks', 'Dune')
+        """
+        import re
+        
+        # Убираем расширение файла
+        name_without_ext = os.path.splitext(filename)[0]
+        
+        # Убираем ID видео в квадратных скобках
+        name_without_id = re.sub(r'\s*\[[^\]]+\]\s*$', '', name_without_ext)
+        
+        # Ищем паттерн "Artist - Album - Number Title"
+        # Паттерн: что-то - что-то - номер название
+        match = re.match(r'^(.+?)\s*-\s*(.+?)\s*-\s*\d+\s+(.+)$', name_without_id)
+        
+        if match:
+            artist = match.group(1).strip()
+            album = match.group(2).strip()
+            title = match.group(3).strip()
+            return artist, title
+        
+        # Если не удалось распарсить, возвращаем None
+        return None, None
 
 
 class UrlDownloadRepo(DownloadRepo):
