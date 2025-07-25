@@ -21,7 +21,10 @@ class YandexMusicDownloadRepo(DownloadRepo):
         self.yandex_music_token = yandex_music_token
 
     def download_audio_from_url(
-        self, url: str, artist=None, album=None
+        self,
+        url: str,
+        artist: str | None = None,
+        album: str | None = None,
     ) -> list[TgAudio]:
         with tempfile.TemporaryDirectory() as temp_dir:
             with do_in_dir(temp_dir):
@@ -99,7 +102,10 @@ class YouTubeDownloadRepo(DownloadRepo):
     """
 
     def download_audio_from_url(
-        self, url: str, artist=None, album=None
+        self,
+        url: str,
+        artist: str | None = None,
+        album: str | None = None,
     ) -> list[TgAudio]:
         url = self.clean_url(url)
 
@@ -122,24 +128,29 @@ class YouTubeDownloadRepo(DownloadRepo):
                     *glob.glob("./**/*.m4a", recursive=True),
                     *glob.glob("./**/*.opus", recursive=True),
                 ]
-                
+
                 # Удаляем самый большой файл
                 if mp3s:
                     largest_file = max(mp3s, key=os.path.getsize)
                     os.remove(largest_file)
                     mp3s.remove(largest_file)
-                
+
                 audios = []
                 for mp3 in mp3s:
                     # Извлекаем artist и title из имени файла
                     artist, title = self._parse_filename(os.path.basename(mp3))
-                    
+
                     # Если не удалось распарсить, используем имя файла как title
                     if artist is None or title is None:
-                        filename_without_ext = os.path.splitext(os.path.basename(mp3))[0]
+                        filename_without_ext = os.path.splitext(os.path.basename(mp3))[
+                            0
+                        ]
                         # Убираем ID видео в квадратных скобках
                         import re
-                        clean_name = re.sub(r'\s*\[[^\]]+\]\s*$', '', filename_without_ext)
+
+                        clean_name = re.sub(
+                            r"\s*\[[^\]]+\]\s*$", "", filename_without_ext
+                        )
                         artist = None
                         title = clean_name
 
@@ -165,7 +176,7 @@ class YouTubeDownloadRepo(DownloadRepo):
                 return audios
 
     @classmethod
-    def clean_url(cls, url):
+    def clean_url(cls, url: str) -> str:
         """
         >>> YouTubeDownloadRepo.clean_url("https://www.youtube.com/watch?v=QpcbCqSUkcM&t=889s")
         'https://www.youtube.com/watch?v=QpcbCqSUkcM'
@@ -197,32 +208,32 @@ class YouTubeDownloadRepo(DownloadRepo):
         return cleaned_url
 
     @classmethod
-    def _parse_filename(cls, filename: str) -> tuple[str, str]:
+    def _parse_filename(cls, filename: str) -> tuple[str, str] | tuple[None, None]:
         """
         Парсит имя файла YouTube для извлечения artist и title.
-        
+
         Примеры:
         >>> YouTubeDownloadRepo._parse_filename("KFC Murder Chicks - KFCMC (Full Album) - 001 Dune [QpcbCqSUkcM].mp3")
         ('KFC Murder Chicks', 'Dune')
         """
         import re
-        
+
         # Убираем расширение файла
         name_without_ext = os.path.splitext(filename)[0]
-        
+
         # Убираем ID видео в квадратных скобках
-        name_without_id = re.sub(r'\s*\[[^\]]+\]\s*$', '', name_without_ext)
-        
+        name_without_id = re.sub(r"\s*\[[^\]]+\]\s*$", "", name_without_ext)
+
         # Ищем паттерн "Artist - Album - Number Title"
         # Паттерн: что-то - что-то - номер название
-        match = re.match(r'^(.+?)\s*-\s*(.+?)\s*-\s*\d+\s+(.+)$', name_without_id)
-        
+        match = re.match(r"^(.+?)\s*-\s*(.+?)\s*-\s*\d+\s+(.+)$", name_without_id)
+
         if match:
             artist = match.group(1).strip()
             album = match.group(2).strip()
             title = match.group(3).strip()
             return artist, title
-        
+
         # Если не удалось распарсить, возвращаем None
         return None, None
 
@@ -237,7 +248,10 @@ class UrlDownloadRepo(DownloadRepo):
         self.youtube_download_repo = youtube_download_repo
 
     def download_audio_from_url(
-        self, url: str, artist=None, album=None
+        self,
+        url: str,
+        artist: str | None = None,
+        album: str | None = None,
     ) -> list[TgAudio]:
         if url.startswith("https://music.yandex.ru"):
             return self.yandex_music_download_repo.download_audio_from_url(url)
