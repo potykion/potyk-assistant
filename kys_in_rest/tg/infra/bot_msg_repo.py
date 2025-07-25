@@ -17,6 +17,7 @@ class TgUpdateBotMsgRepo(BotMsgRepo):
             title=audio.title,
             thumbnail=audio.cover,
             duration=audio.duration,
+            filename=audio.filename,
         )
 
     async def send_text(self, text: str) -> None:
@@ -58,7 +59,8 @@ class TgUpdateBotMsgRepo(BotMsgRepo):
                     performer=audio.artist,
                     title=audio.title,
                     thumbnail=audio.cover,
-                    duration=audio.duration
+                    duration=audio.duration,
+                    filename=audio.filename,
                 )
                 media_group.append(media)
             
