@@ -58,6 +58,12 @@ jobs:
           ssh -o StrictHostKeyChecking=no -l leybovich-nikita 84.201.131.244 << 'EOF'
           cd kys_in_rest
           
+          # Устанавливаем ffmpeg если не установлен
+          if ! command -v ffmpeg &> /dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+          
           # Обновляем код
           git pull
           

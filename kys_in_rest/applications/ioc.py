@@ -20,6 +20,7 @@ from kys_in_rest.music.features.download_repo import DownloadRepo
 from kys_in_rest.music.infra.download_repo import (
     UrlDownloadRepo,
     YandexMusicDownloadRepo,
+    YouTubeDownloadRepo,
 )
 from kys_in_rest.restaurants.features.ports import RestRepo
 from kys_in_rest.restaurants.infra.rest_repo import SqliteRestRepo
@@ -65,6 +66,7 @@ def make_ioc(
         DownloadRepo,
         lambda: UrlDownloadRepo(
             YandexMusicDownloadRepo(yandex_music_token),
+            YouTubeDownloadRepo(),
         ),
     )
     ioc.register(ZenMoneyRepo, SqliteWHttpZenMoneyRepo)

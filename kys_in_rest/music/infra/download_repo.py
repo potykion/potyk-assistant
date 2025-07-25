@@ -17,6 +17,7 @@ class YandexMusicDownloadRepo(DownloadRepo):
     """
     https://github.com/llistochek/yandex-music-downloader
     """
+
     def __init__(self, yandex_music_token: str) -> None:
         self.yandex_music_token = yandex_music_token
 
@@ -89,15 +90,63 @@ class YandexMusicDownloadRepo(DownloadRepo):
                         )
 
 
+class YouTubeDownloadRepo(DownloadRepo):
+    """
+    https://github.com/yt-dlp/yt-dlp/
+    """
+
+    def download_audio_from_url(self, url: str) -> TgAudio:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            with do_in_dir(temp_dir):
+                command = [
+                    "yt-dlp",
+                    "-x",
+                    *("--audio-format", "mp3"),
+                    *("--audio-quality", "0"),
+                    "--split-chapters",
+                    url,
+                ]
+                subprocess.call(
+                    command,
+                    text=True,
+                    shell=True,
+                )
+                mp3 = [
+                    *glob.glob("./**/*.mp3", recursive=True),
+                    *glob.glob("./**/*.m4a", recursive=True),
+                    *glob.glob("./**/*.opus", recursive=True),
+                ][0]
+
+                with open(mp3, "rb") as mp3_file:
+                    audio = mp3_file.read()
+
+                    audio_file = mutagen.File(mp3)
+
+                    duration = (
+                        int(audio_file.info.length)
+                        if hasattr(audio_file, "info")
+                        else 0
+                    )
+
+                    return TgAudio(
+                        audio=audio,
+                        duration=duration,
+                    )
+
+
 class UrlDownloadRepo(DownloadRepo):
     def __init__(
         self,
         yandex_music_download_repo: YandexMusicDownloadRepo,
+        youtube_download_repo: YouTubeDownloadRepo,
     ):
         self.yandex_music_download_repo = yandex_music_download_repo
+        self.youtube_download_repo = youtube_download_repo
 
     def download_audio_from_url(self, url: str) -> TgAudio:
         if url.startswith("https://music.yandex.ru"):
             return self.yandex_music_download_repo.download_audio_from_url(url)
+        if url.startswith("https://www.youtube.com"):
+            return self.youtube_download_repo.download_audio_from_url(url)
         else:
             raise Exception(f"Unsupported {url=}")
