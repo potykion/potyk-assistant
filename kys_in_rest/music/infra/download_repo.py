@@ -14,6 +14,9 @@ from kys_in_rest.tg.entities.audio import TgAudio
 
 
 class YandexMusicDownloadRepo(DownloadRepo):
+    """
+    https://github.com/llistochek/yandex-music-downloader
+    """
     def __init__(self, yandex_music_token: str) -> None:
         self.yandex_music_token = yandex_music_token
 
