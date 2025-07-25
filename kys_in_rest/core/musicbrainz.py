@@ -2,7 +2,7 @@ import musicbrainzngs
 import requests
 
 class MusicBrainzClient:
-    def __init__(self):
+    def __init__(self) -> None:
         musicbrainzngs.set_useragent("potyk-assistant", "1.0", "https://github.com/potykion/potyk-assistant")
 
     def get_cover_by_artist_album(self, artist: str | None, album: str | None) -> bytes | None:

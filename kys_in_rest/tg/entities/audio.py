@@ -10,7 +10,7 @@ class TgAudio:
     duration: int = 0
 
     @property
-    def filename(self):
+    def filename(self) -> str:
         if self.artist and self.title:
             return f"{self.artist} - {self.title}"
         else:
