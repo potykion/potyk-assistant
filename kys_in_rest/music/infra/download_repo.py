@@ -7,6 +7,7 @@ import tempfile
 import mutagen
 from PIL import Image
 
+from kys_in_rest.core.musicbrainz import MusicBrainzClient
 from kys_in_rest.core.path_utils import do_in_dir
 from kys_in_rest.music.features.download_repo import DownloadRepo
 from kys_in_rest.tg.entities.audio import TgAudio
@@ -101,6 +102,9 @@ class YouTubeDownloadRepo(DownloadRepo):
     https://github.com/yt-dlp/yt-dlp/
     """
 
+    def __init__(self, musicbrainz_client: MusicBrainzClient = None):
+        self.musicbrainz_client = musicbrainz_client or MusicBrainzClient()
+
     def download_audio_from_url(
         self,
         url: str,
@@ -140,20 +144,6 @@ class YouTubeDownloadRepo(DownloadRepo):
                     # Извлекаем artist и title из имени файла
                     artist, album, title = self.parse_meta(os.path.basename(mp3))
 
-                    # Если не удалось распарсить, используем имя файла как title
-                    if artist is None or title is None:
-                        filename_without_ext = os.path.splitext(os.path.basename(mp3))[
-                            0
-                        ]
-                        # Убираем ID видео в квадратных скобках
-                        import re
-
-                        clean_name = re.sub(
-                            r"\s*\[[^\]]+\]\s*$", "", filename_without_ext
-                        )
-                        artist = None
-                        title = clean_name
-
                     with open(mp3, "rb") as mp3_file:
                         audio = mp3_file.read()
 
@@ -165,12 +155,18 @@ class YouTubeDownloadRepo(DownloadRepo):
                             else 0
                         )
 
+                        # Получаем обложку через MusicBrainzClient
+                        cover_bytes = self.musicbrainz_client.get_cover_by_artist_album(
+                            artist, album
+                        )
+
                         audios.append(
                             TgAudio(
                                 audio=audio,
                                 artist=artist,
                                 title=title,
                                 duration=duration,
+                                cover=cover_bytes,
                             )
                         )
                 return audios
@@ -247,6 +243,7 @@ def clean_album(album: str) -> str:
     'KFCMC'
     """
     import re
+
     # Удаляем все скобки и их содержимое
     cleaned = re.sub(r"\s*\([^)]*\)", "", album)
     return cleaned.strip()
