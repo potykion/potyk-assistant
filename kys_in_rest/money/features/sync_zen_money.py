@@ -11,7 +11,7 @@ class SyncZenMoney(TgFeature):
         self,
         load_config: LoadConfig,
         bot_msg_repo: BotMsgRepo,
-            zen_money_repo: ZenMoneyRepo,
+        zen_money_repo: ZenMoneyRepo,
     ):
         self.load_config = load_config
         self.bot_msg_repo = bot_msg_repo

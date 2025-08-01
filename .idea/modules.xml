@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/kys_in_rest.iml" filepath="$PROJECT_DIR$/.idea/kys_in_rest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/potyk_assistant.iml" filepath="$PROJECT_DIR$/.idea/potyk_assistant.iml" />
     </modules>
   </component>
 </project>

@@ -21,6 +21,7 @@ class TgCommand(enum.StrEnum):
     mon = enum.auto()
     spend_ru = "траты"
     zen_money_sync = enum.auto()
+    my_tg_channels = enum.auto()
 
 
 class TgFlow(NamedTuple):

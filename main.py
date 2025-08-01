@@ -38,6 +38,7 @@ from kys_in_rest.tg.features.bot_msg_repo import BotMsgRepo
 from kys_in_rest.tg.features.flow_repo import FlowRepo
 from kys_in_rest.tg.features.help import Help
 from kys_in_rest.tg.features.id import ShowTgId
+from kys_in_rest.tg.features.my_tg_channels import ListMyTgChannels
 from kys_in_rest.tg.infra.bot_msg_repo import TgUpdateBotMsgRepo
 from kys_in_rest.wishlist.features.wishlist import Wishlist
 
@@ -70,6 +71,7 @@ ioc = make_ioc(
         TgCommandSetup(TgCommand.mon_goal_budget, "Планирование бюджетов", PlanGoalBudgets),
         TgCommandSetup(TgCommand.mon_goal, "Добавить цель", AddMoneyGoal),
         TgCommandSetup(TgCommand.zen_money_sync, "Синхрон Дзен-мани", SyncZenMoney),
+        TgCommandSetup(TgCommand.my_tg_channels, "Мои тг каналы", ListMyTgChannels),
     ],
     # fmt: on
 )
