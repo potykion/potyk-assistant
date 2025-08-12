@@ -95,7 +95,7 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     msg = InputTgMsg.parse(update)
 
-    ioc.register(BotMsgRepo, TgUpdateBotMsgRepo(update.message))
+    ioc.register(BotMsgRepo, TgUpdateBotMsgRepo(cast(Message, update.message)))
 
     command: TgCommand | None = None
     if msg.text:
