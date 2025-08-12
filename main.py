@@ -58,6 +58,7 @@ ioc = make_ioc(
         TgCommandSetup(TgCommand.new, "Добавить рест", AddNewRestaurant),
         TgCommandSetup(TgCommand.new_beer, "Добавить пивко", AddNewBeer),
         TgCommandSetup(TgCommand.weight, "Добавить вес", AddOrShowWeight),
+        TgCommandSetup(TgCommand.weight_ru, "Добавить вес", AddOrShowWeight),
         TgCommandSetup(TgCommand.w, "Добавить вес", AddOrShowWeight),
         TgCommandSetup(TgCommand.id, "Узнать свой Телеграм ID", ShowTgId),
         TgCommandSetup(TgCommand.help, "Справка по всем командам", Help),
@@ -94,9 +95,20 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     msg = InputTgMsg.parse(update)
 
-    if msg.text and msg.text.startswith("/"):
+    ioc.register(BotMsgRepo, TgUpdateBotMsgRepo(update.message))
+
+    command: TgCommand | None = None
+    if msg.text:
+        command_str = msg.text.split()[0]
+        try:
+            command = TgCommand(command_str)
+        except ValueError:
+            if msg.text.startswith("/"):
+                command = TgCommand(command_str[1:])
+
+    if command:
         # e.g. ru case command
-        await _start_flow_handler(update, TgCommand(msg.text[1:]))
+        await _start_flow_handler(update, command)
     else:
         await _continue_flow_handler(update, msg)
 
@@ -111,7 +123,7 @@ async def _start_flow_handler(update: Update, command: TgCommand) -> None:
     if not message:
         return
     text = message.text
-    if text and text.startswith(f"/{command}"):
+    if text and (text.startswith(f"/{command}") or text.startswith(f"{command}")) :
         try:
             text = text.split(None, 1)[1].strip()
         except IndexError:

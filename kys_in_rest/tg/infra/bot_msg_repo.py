@@ -1,6 +1,6 @@
 from typing import Coroutine, Any, List
 
-from telegram import Message, InputMediaAudio
+from telegram import Message, InputMediaAudio, Update
 
 from kys_in_rest.tg.entities.audio import TgAudio
 from kys_in_rest.tg.features.bot_msg_repo import BotMsgRepo
