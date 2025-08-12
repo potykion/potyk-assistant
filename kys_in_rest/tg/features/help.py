@@ -11,5 +11,5 @@ class Help(TgFeature):
 
     def do(self, msg: InputTgMsg) -> str | tuple[str, dict[str, Any]]:
         message = "\n".join(tg_escape(f"• /{tg_command.command} — {tg_command.desc}") for tg_command in self.tg_commands)
-        message = f"<b>Вот что умеет бот:</b>\n{message}"
+        message = f"<b>Вот что умеет бот:</b>\n{message}\n\nGithub: https://github.com/potykion/potyk-assistant"
         return message, {"parse_mode": "html"}
