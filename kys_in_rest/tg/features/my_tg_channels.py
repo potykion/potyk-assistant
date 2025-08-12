@@ -17,7 +17,7 @@ class ListMyTgChannels(TgFeature):
         channels = self.my_tg_channels_repo.list()
 
         channels_str = "\n".join(
-            f'• <a href="{channel.link}">{channel.name}</a>' for channel in channels
+            f'{channel.icon} <a href="{channel.link}">{channel.name}</a>' for channel in channels
         )
         channels_msg = f"""<b>КАНАЛЫ МОИ</b>\n\n{channels_str}"""
         await self.bot_msg_repo.send_text(channels_msg)
