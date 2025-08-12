@@ -5,3 +5,4 @@ class MyTgChannel(BaseModel):
     name: str
     link: str
     icon: str
+    description: str

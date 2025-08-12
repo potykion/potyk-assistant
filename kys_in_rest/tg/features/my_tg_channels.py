@@ -1,5 +1,6 @@
 from kys_in_rest.core.tg_utils import TgFeature
 from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
+from kys_in_rest.tg.entities.my_tg_channel import MyTgChannel
 from kys_in_rest.tg.features.bot_msg_repo import BotMsgRepo
 from kys_in_rest.tg.features.repos.my_tg_channels_repo import MyTgChannelsRepo
 
@@ -14,10 +15,10 @@ class ListMyTgChannels(TgFeature):
         self.bot_msg_repo = bot_msg_repo
 
     async def do_async(self, msg: InputTgMsg) -> None:
-        channels = self.my_tg_channels_repo.list()
+        channels: list[MyTgChannel] = self.my_tg_channels_repo.list()
 
-        channels_str = "\n".join(
-            f'{channel.icon} <a href="{channel.link}">{channel.name}</a>' for channel in channels
+        channels_str = "\n\n".join(
+            f'{channel.icon} <b><a href="{channel.link}">{channel.name}</a></b>\n       <i>{channel.description}</i>' for channel in channels
         )
         channels_msg = f"""<b>КАНАЛЫ МОИ</b>\n\n{channels_str}"""
         await self.bot_msg_repo.send_text(channels_msg)
