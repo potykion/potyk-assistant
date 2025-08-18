@@ -52,8 +52,17 @@ class Wishlist(TgFeature):
                     return
 
             # Добавляем новый предмет
-            self.wishlist_repo.add(msg.text)
-            await self.bot_msg_repo.send_text("Записал 👌")
+            # Сначала проверяем, есть ли предмет в полученных
+            received_items = self.wishlist_repo.list_received()
+            was_in_received = any(wi.name == msg.text for wi in received_items)
+            
+            item = self.wishlist_repo.add(msg.text)
+            
+            if was_in_received:
+                await self.bot_msg_repo.send_text(f"🔄 Восстановил из полученных: {msg.text}")
+            else:
+                await self.bot_msg_repo.send_text("Записал 👌")
+                
             await self._show_active_wishlist()
             return
 

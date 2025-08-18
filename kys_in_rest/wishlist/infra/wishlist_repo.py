@@ -18,6 +18,22 @@ class SqliteWishlistRepo(SqliteRepo, WishlistRepo):
         return [WishlistItem(**row) for row in rows]
 
     def add(self, name: str) -> WishlistItem:
+        # Проверяем, есть ли уже такой предмет в полученных
+        existing_received = self.cursor.execute(
+            "SELECT * FROM wishlist WHERE name = ? AND received IS NOT NULL",
+            (name,)
+        ).fetchone()
+        
+        if existing_received:
+            # Если предмет уже получен, сбрасываем флаг received
+            self.cursor.execute(
+                "UPDATE wishlist SET received = NULL WHERE name = ?",
+                (name,)
+            )
+            self.cursor.connection.commit()
+            return WishlistItem(name=name)
+        
+        # Если предмета нет или он активный, добавляем новый
         item = WishlistItem(name=name)
         self.cursor.execute(
             f"INSERT INTO wishlist(name, received) VALUES (?, ?)",
