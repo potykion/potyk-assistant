@@ -53,7 +53,7 @@ ioc = make_ioc(
     zen_money_token=os.environ["ZEN_MONEY_TOKEN"],
     # fmt: off
     tg_commands=[
-        TgCommandSetup(TgCommand.wishlist, "Показать/добавить в вишлист", Wishlist),
+        TgCommandSetup(TgCommand.wishlist, "Вишлист (показать/добавить предмет)", Wishlist),
         TgCommandSetup(TgCommand.weight_ru, "Добавить вес", AddOrShowWeight),
         TgCommandSetup(TgCommand.weight, "Добавить вес", AddOrShowWeight),
         TgCommandSetup(TgCommand.start, "Справка по всем командам", Help),

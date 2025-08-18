@@ -7,7 +7,6 @@ from kys_in_rest.config.features.repos.config_repo import ConfigRepo
 from kys_in_rest.config.infra.config_repo import SqliteConfigRepo
 from kys_in_rest.core.ioc import IOC
 from kys_in_rest.core.sqlite_utils import make_sqlite_cursor
-from kys_in_rest.core.zen_money import ZenMoneyClient
 from kys_in_rest.health.features.weight_repo import WeightRepo
 from kys_in_rest.health.infra.weight_repo import SqliteWeightRepo
 from kys_in_rest.money.features.repos.goal_repo import MoneyGoalRepo
