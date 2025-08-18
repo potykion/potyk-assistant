@@ -85,6 +85,68 @@ def find_command_setup(command: TgCommand | str) -> TgCommandSetup:
     raise ValueError(f"No {command=} found")
 
 
+def command_parser(text: str) -> tuple[TgCommand | None, str | None]:
+    """
+    Парсит команду из текста и возвращает (команда, аргументы).
+    Поддерживает case-insensitive поиск команд.
+    
+    Args:
+        text: Текст сообщения для парсинга
+        
+    Returns:
+        Кортеж (команда, аргументы) или (None, None) если команда не найдена
+        
+    Examples:
+    >>> from kys_in_rest.tg.entities.flow import TgCommand
+    >>> command_parser("/вес 75.5")
+    (<TgCommand.weight_ru: 'вес'>, '75.5')
+    >>> command_parser("/Вес 80")
+    (<TgCommand.weight_ru: 'вес'>, '80')
+    >>> command_parser("вес 70")
+    (<TgCommand.weight_ru: 'вес'>, '70')
+    >>> command_parser("Вес 70")
+    (<TgCommand.weight_ru: 'вес'>, '70')
+    >>> command_parser("/weight 65")
+    (<TgCommand.weight: 'weight'>, '65')
+    >>> command_parser("/вес")
+    (<TgCommand.weight_ru: 'вес'>, None)
+    >>> command_parser("/unknown")
+    (None, None)
+    >>> command_parser("")
+    (None, None)
+    >>> command_parser("/вес   75.5  кг")
+    (<TgCommand.weight_ru: 'вес'>, '75.5  кг')
+    """
+    if not text:
+        return None, None
+    
+    # Разбиваем на команду и аргументы
+    parts = text.strip().split(None, 1)
+    command_str = parts[0]
+    args = parts[1] if len(parts) > 1 else None
+    
+    # Убираем слэш если есть
+    if command_str.startswith("/"):
+        command_str = command_str[1:]
+    
+    # Поиск команды (case-insensitive)
+    command_str_lower = command_str.lower()
+    
+    # Сначала пробуем точное совпадение
+    try:
+        command = TgCommand(command_str)
+        return command, args
+    except ValueError:
+        pass
+    
+    # Затем пробуем case-insensitive поиск
+    for command in TgCommand:
+        if command.value.lower() == command_str_lower:
+            return command, args
+    
+    return None, None
+
+
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = cast(CallbackQuery, update.callback_query)
     if query:
@@ -97,23 +159,15 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
     ioc.register(BotMsgRepo, TgUpdateBotMsgRepo(cast(Message, update.message)))
 
-    command: TgCommand | None = None
-    if msg.text:
-        command_str = msg.text.split()[0]
-        try:
-            command = TgCommand(command_str)
-        except ValueError:
-            if msg.text.startswith("/"):
-                command = TgCommand(command_str[1:])
+    command, args = command_parser(msg.text or "")
 
     if command:
-        # e.g. ru case command
-        await _start_flow_handler(update, command)
+        await _start_flow_handler(update, command, args)
     else:
         await _continue_flow_handler(update, msg)
 
 
-async def _start_flow_handler(update: Update, command: TgCommand) -> None:
+async def _start_flow_handler(update: Update, command: TgCommand, args: str | None = None) -> None:
     user = cast(User, update.effective_user)
     if not user:
         return
@@ -122,12 +176,6 @@ async def _start_flow_handler(update: Update, command: TgCommand) -> None:
     message = cast(Message, update.message)
     if not message:
         return
-    text = message.text
-    if text and (text.startswith(f"/{command}") or text.startswith(f"{command}")) :
-        try:
-            text = text.split(None, 1)[1].strip()
-        except IndexError:
-            text = None
 
     flow_repo = ioc.resolve(FlowRepo)
     flow = flow_repo.start_or_continue_flow(command, tg_user_id)
@@ -137,7 +185,7 @@ async def _start_flow_handler(update: Update, command: TgCommand) -> None:
     feature = cast(TgFeature, ioc[find_command_setup(flow.command).feature])
 
     msg = InputTgMsg(
-        text=text,
+        text=args,
         tg_user_id=tg_user_id,
     )
 
@@ -233,7 +281,11 @@ def filter_en_commands() -> list[TgCommandSetup]:
 
 def make_handler(setup: TgCommandSetup) -> Any:
     async def _handler(update: Update, context: Any) -> None:
-        await _start_flow_handler(update, setup.command)
+        # Извлекаем аргументы из текста сообщения
+        message = cast(Message, update.message)
+        text = message.text if message else ""
+        _, args = command_parser(text)
+        await _start_flow_handler(update, setup.command, args)
 
     return _handler
 
