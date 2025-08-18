@@ -53,7 +53,7 @@ ioc = make_ioc(
     zen_money_token=os.environ["ZEN_MONEY_TOKEN"],
     # fmt: off
     tg_commands=[
-        TgCommandSetup(TgCommand.wishlist, "Вишлист (показать/добавить предмет)", Wishlist),
+        TgCommandSetup(TgCommand.wishlist, "Вишлист (добавить/отметить полученное)", Wishlist),
         TgCommandSetup(TgCommand.weight_ru, "Добавить вес", AddOrShowWeight),
         TgCommandSetup(TgCommand.weight, "Добавить вес", AddOrShowWeight),
         TgCommandSetup(TgCommand.start, "Справка по всем командам", Help),
@@ -266,7 +266,7 @@ def main() -> None:
 
     app.add_handler(MessageHandler(None, message_handler))
 
-    print("run_polling...")
+    print("Starting bot...")
     app.run_polling()
 
 
