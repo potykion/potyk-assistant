@@ -27,21 +27,25 @@ class SqliteWishlistRepo(SqliteRepo, WishlistRepo):
         return item
 
     def mark_as_received(self, name: str) -> WishlistItem | None:
-        # Сначала найдем предмет
-        row = self.cursor.execute(
-            "SELECT * FROM wishlist WHERE name = ? AND received IS NULL",
-            (name,)
-        ).fetchone()
+        # Ищем предмет по началу названия (LIKE)
+        rows = self.cursor.execute(
+            "SELECT * FROM wishlist WHERE name LIKE ? AND received IS NULL",
+            (f"{name}%",)
+        ).fetchall()
         
-        if not row:
+        if not rows:
             return None
+        
+        # Если найдено несколько предметов, берем первый
+        row = rows[0]
+        item_name = row['name']
         
         # Отмечаем как полученное
         received_date = datetime.datetime.now()
         self.cursor.execute(
             "UPDATE wishlist SET received = ? WHERE name = ? AND received IS NULL",
-            (received_date, name)
+            (received_date, item_name)
         )
         self.cursor.connection.commit()
         
-        return WishlistItem(name=name, received=received_date)
+        return WishlistItem(name=item_name, received=received_date)

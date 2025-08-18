@@ -50,10 +50,11 @@ class Wishlist(TgFeature):
                 else:
                     await self.bot_msg_repo.send_text("❌ Укажите название предмета после минуса")
                     return
-            
+
             # Добавляем новый предмет
             self.wishlist_repo.add(msg.text)
             await self.bot_msg_repo.send_text("Записал 👌")
+            await self._show_active_wishlist()
             return
 
         # Показываем справку и текущий вишлист
@@ -62,6 +63,16 @@ class Wishlist(TgFeature):
             "Чтобы отметить как полученное пиши <code>/wishlist -предмет</code>"
         )
 
+        await self._show_active_wishlist()
+
+        # Показываем полученные предметы
+        received_items = self.wishlist_repo.list_received()
+        if received_items:
+            received_items_str = "\n".join(f"✅ {wi.name}" for wi in received_items)
+            received_items_str = "<b>Полученные:</b>\n" + received_items_str
+            await self.bot_msg_repo.send_text(received_items_str)
+
+    async def _show_active_wishlist(self):
         # Показываем активный вишлист
         wishlist_items = self.wishlist_repo.list_not_received()
         if wishlist_items:
@@ -70,10 +81,3 @@ class Wishlist(TgFeature):
             await self.bot_msg_repo.send_text(wishlist_items_str)
         else:
             await self.bot_msg_repo.send_text("Активный вишлист пуст")
-
-        # Показываем полученные предметы
-        received_items = self.wishlist_repo.list_received()
-        if received_items:
-            received_items_str = "\n".join(f"✅ {wi.name}" for wi in received_items)
-            received_items_str = "<b>Полученные:</b>\n" + received_items_str
-            await self.bot_msg_repo.send_text(received_items_str)
