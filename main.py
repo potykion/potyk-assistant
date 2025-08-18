@@ -54,6 +54,7 @@ ioc = make_ioc(
     # fmt: off
     tg_commands=[
         TgCommandSetup(TgCommand.wishlist, "Вишлист (добавить/отметить полученное)", Wishlist),
+        TgCommandSetup(TgCommand.wishlist_ru, "Вишлист (добавить/отметить полученное)", Wishlist),
         TgCommandSetup(TgCommand.weight_ru, "Добавить вес", AddOrShowWeight),
         TgCommandSetup(TgCommand.weight, "Добавить вес", AddOrShowWeight),
         TgCommandSetup(TgCommand.start, "Справка по всем командам", Help),

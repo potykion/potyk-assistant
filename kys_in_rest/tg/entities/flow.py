@@ -12,6 +12,7 @@ class TgCommand(enum.StrEnum):
     help = enum.auto()
     start = enum.auto()
     wishlist = enum.auto()
+    wishlist_ru = "вишлист"
     w = enum.auto()
     weight_ru = "вес"
     download = enum.auto()

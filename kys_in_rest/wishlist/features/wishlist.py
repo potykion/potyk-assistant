@@ -49,20 +49,23 @@ class Wishlist(TgFeature):
                     return
                 else:
                     await self.bot_msg_repo.send_text("❌ Укажите название предмета после минуса")
+
+                    await self._show_active_wishlist()
+                    await self._show_received()
                     return
 
             # Добавляем новый предмет
-            # Сначала проверяем, есть ли предмет в полученных
+            # Сначала проверяем, есть ли предмет в полученных (поиск по началу названия)
             received_items = self.wishlist_repo.list_received()
-            was_in_received = any(wi.name == msg.text for wi in received_items)
-            
+            was_in_received = any(wi.name.lower().startswith(msg.text.lower()) for wi in received_items)
+
             item = self.wishlist_repo.add(msg.text)
-            
+
             if was_in_received:
-                await self.bot_msg_repo.send_text(f"🔄 Восстановил из полученных: {msg.text}")
+                await self.bot_msg_repo.send_text(f"🔄 Восстановил из полученных: {item.name}")
             else:
                 await self.bot_msg_repo.send_text("Записал 👌")
-                
+
             await self._show_active_wishlist()
             return
 
@@ -73,8 +76,9 @@ class Wishlist(TgFeature):
         )
 
         await self._show_active_wishlist()
+        await self._show_received()
 
-        # Показываем полученные предметы
+    async def _show_received(self):
         received_items = self.wishlist_repo.list_received()
         if received_items:
             received_items_str = "\n".join(f"✅ {wi.name}" for wi in received_items)
