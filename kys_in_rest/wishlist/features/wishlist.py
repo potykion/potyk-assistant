@@ -46,9 +46,6 @@ class Wishlist(TgFeature):
                         await self.bot_msg_repo.send_text(f"✅ Отметил как полученное: {item.name}")
                     else:
                         await self.bot_msg_repo.send_text(f"❌ Предмет '{item_name}' не найден в вишлисте")
-                    return
-                else:
-                    await self.bot_msg_repo.send_text("❌ Укажите название предмета после минуса")
 
                     await self._show_active_wishlist()
                     await self._show_received()
@@ -71,8 +68,8 @@ class Wishlist(TgFeature):
 
         # Показываем справку и текущий вишлист
         await self.bot_msg_repo.send_text(
-            "Чтобы добавить пиши <code>/wishlist предмет</code>\n"
-            "Чтобы отметить как полученное пиши <code>/wishlist -предмет</code>"
+            "<i>Чтобы добавить пиши <code>/wishlist предмет</code>\n</i>"
+            "<i>Чтобы отметить как полученное пиши <code>/wishlist -предмет</code></i>"
         )
 
         await self._show_active_wishlist()
