@@ -1,25 +1,8 @@
-import abc
-from typing import Any
-
 from kys_in_rest.core.tg_utils import TgFeature
 from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 from kys_in_rest.tg.features.bot_msg_repo import BotMsgRepo
 from kys_in_rest.users.features.check_admin import CheckTgAdmin
-from kys_in_rest.wishlist.entities.wishlist_item import WishlistItem
-
-
-class WishlistRepo(abc.ABC):
-    @abc.abstractmethod
-    def list_not_received(self) -> list[WishlistItem]: ...
-
-    @abc.abstractmethod
-    def list_received(self) -> list[WishlistItem]: ...
-
-    @abc.abstractmethod
-    def add(self, name: str) -> WishlistItem: ...
-
-    @abc.abstractmethod
-    def mark_as_received(self, name: str) -> WishlistItem | None: ...
+from kys_in_rest.wishlist.features.ports.wishlist_repo import WishlistRepo
 
 
 class Wishlist(TgFeature):

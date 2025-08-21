@@ -28,7 +28,7 @@ from kys_in_rest.tg.features.flow_repo import FlowRepo
 from kys_in_rest.tg.features.repos.my_tg_channels_repo import MyTgChannelsRepo
 from kys_in_rest.tg.infra.flow_repo import SqliteFlowRepo
 from kys_in_rest.tg.infra.my_tg_channels_repo import SqliteMyTgChannelsRepo
-from kys_in_rest.wishlist.features.wishlist import WishlistRepo
+from kys_in_rest.wishlist.features.ports.wishlist_repo import WishlistRepo
 from kys_in_rest.wishlist.infra.wishlist_repo import SqliteWishlistRepo
 
 

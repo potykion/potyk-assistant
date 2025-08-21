@@ -1,7 +1,7 @@
 import datetime
 from kys_in_rest.core.sqlite_utils import SqliteRepo
 from kys_in_rest.wishlist.entities.wishlist_item import WishlistItem
-from kys_in_rest.wishlist.features.wishlist import WishlistRepo
+from kys_in_rest.wishlist.features.ports.wishlist_repo import WishlistRepo
 
 
 class SqliteWishlistRepo(SqliteRepo, WishlistRepo):
