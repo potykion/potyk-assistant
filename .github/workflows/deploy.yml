@@ -112,3 +112,11 @@ jobs:
           echo "=== Flask Server Status ==="
           sudo systemctl status flask.service --no-pager
           EOF
+
+      - name: Send Failure Notification
+        if: failure()
+        run: |
+          python scripts/send_tg_notification.py failure "💥 Деплой завершился с ошибкой! Необходимо проверить логи GitHub Actions и исправить проблему."
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_ADMINS: ${{ secrets.TG_ADMINS }}
