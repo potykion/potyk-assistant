@@ -21,9 +21,9 @@ class Wishlist(TgFeature):
 
         if msg.text:
             # Проверяем, не является ли это командой удаления или полного удаления
-            if msg.text.startswith('--'):
+            if msg.text.startswith('--') or msg.text.startswith('—'):
                 # Полное удаление из таблицы
-                item_name = msg.text[2:].strip()
+                item_name = msg.text[1:].strip() if msg.text.startswith('—') else msg.text[2:].strip()
                 if item_name:
                     item = self.wishlist_repo.delete(item_name)
                     if item:
@@ -67,7 +67,7 @@ class Wishlist(TgFeature):
         await self.bot_msg_repo.send_text(
             "<i>Чтобы добавить пиши <code>/wishlist предмет</code>\n</i>"
             "<i>Чтобы отметить как полученное пиши <code>/wishlist -предмет</code>\n</i>"
-            "<i>Чтобы полностью удалить пиши <code>/wishlist --предмет</code></i>"
+            "<i>Чтобы полностью удалить пиши <code>/wishlist —предмет</code> (или ——)</i>"
         )
 
         await self._show_active_wishlist()
