@@ -66,3 +66,27 @@ class SqliteWishlistRepo(SqliteRepo, WishlistRepo):
         self.cursor.connection.commit()
         
         return WishlistItem(name=item_name, received=received_date)
+
+    def delete(self, name: str) -> WishlistItem | None:
+        # Ищем предмет по началу названия (LIKE) среди всех записей
+        rows = self.cursor.execute(
+            "SELECT * FROM wishlist WHERE name LIKE ?",
+            (f"{name}%",)
+        ).fetchall()
+        
+        if not rows:
+            return None
+        
+        # Если найдено несколько предметов, берем первый
+        row = rows[0]
+        item_name = row['name']
+        item_received = row['received']
+        
+        # Удаляем запись из базы данных
+        self.cursor.execute(
+            "DELETE FROM wishlist WHERE name = ?",
+            (item_name,)
+        )
+        self.cursor.connection.commit()
+        
+        return WishlistItem(name=item_name, received=item_received)

@@ -20,8 +20,22 @@ class Wishlist(TgFeature):
         self.check_tg_admin.do(msg.tg_user_id)
 
         if msg.text:
-            # Проверяем, не является ли это командой удаления
-            if msg.text.startswith('-'):
+            # Проверяем, не является ли это командой удаления или полного удаления
+            if msg.text.startswith('--'):
+                # Полное удаление из таблицы
+                item_name = msg.text[2:].strip()
+                if item_name:
+                    item = self.wishlist_repo.delete(item_name)
+                    if item:
+                        await self.bot_msg_repo.send_text(f"🗑️ Полностью удалил: {item.name}")
+                    else:
+                        await self.bot_msg_repo.send_text(f"❌ Предмет '{item_name}' не найден в вишлисте")
+
+                    await self._show_active_wishlist()
+                    await self._show_received()
+                    return
+            elif msg.text.startswith('-'):
+                # Отметить как полученное
                 item_name = msg.text[1:].strip()
                 if item_name:
                     item = self.wishlist_repo.mark_as_received(item_name)
@@ -52,7 +66,8 @@ class Wishlist(TgFeature):
         # Показываем справку и текущий вишлист
         await self.bot_msg_repo.send_text(
             "<i>Чтобы добавить пиши <code>/wishlist предмет</code>\n</i>"
-            "<i>Чтобы отметить как полученное пиши <code>/wishlist -предмет</code></i>"
+            "<i>Чтобы отметить как полученное пиши <code>/wishlist -предмет</code>\n</i>"
+            "<i>Чтобы полностью удалить пиши <code>/wishlist --предмет</code></i>"
         )
 
         await self._show_active_wishlist()

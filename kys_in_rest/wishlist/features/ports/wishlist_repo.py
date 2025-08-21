@@ -15,3 +15,6 @@ class WishlistRepo(abc.ABC):
 
     @abc.abstractmethod
     def mark_as_received(self, name: str) -> WishlistItem | None: ...
+
+    @abc.abstractmethod
+    def delete(self, name: str) -> WishlistItem | None: ...
