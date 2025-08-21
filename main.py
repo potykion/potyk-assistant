@@ -86,7 +86,7 @@ def find_command_setup(command: TgCommand | str) -> TgCommandSetup:
     raise ValueError(f"No {command=} found")
 
 
-def command_parser(text: str) -> tuple[TgCommand | None, str | None]:
+def command_parser(text: str | None) -> tuple[TgCommand | None, str | None]:
     """
     Парсит команду из текста и возвращает (команда, аргументы).
     Поддерживает case-insensitive поиск команд.

@@ -75,14 +75,14 @@ class Wishlist(TgFeature):
         await self._show_active_wishlist()
         await self._show_received()
 
-    async def _show_received(self):
+    async def _show_received(self) -> None:
         received_items = self.wishlist_repo.list_received()
         if received_items:
             received_items_str = "\n".join(f"✅ {wi.name}" for wi in received_items)
             received_items_str = "<b>Полученные:</b>\n" + received_items_str
             await self.bot_msg_repo.send_text(received_items_str)
 
-    async def _show_active_wishlist(self):
+    async def _show_active_wishlist(self) -> None:
         # Показываем активный вишлист
         wishlist_items = self.wishlist_repo.list_not_received()
         if wishlist_items:
