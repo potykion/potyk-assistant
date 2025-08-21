@@ -40,6 +40,7 @@ from kys_in_rest.tg.features.help import Help
 from kys_in_rest.tg.features.id import ShowTgId
 from kys_in_rest.tg.features.my_tg_channels import ListMyTgChannels
 from kys_in_rest.tg.infra.bot_msg_repo import TgUpdateBotMsgRepo
+from kys_in_rest.wishlist.features.todo import ListTodo
 from kys_in_rest.wishlist.features.wishlist import Wishlist
 
 dotenv.load_dotenv(root_dir / ".env")
@@ -62,6 +63,7 @@ ioc = make_ioc(
         TgCommandSetup(TgCommand.mu, "Скачать mp3 (ЯМузыка)", DownloadMusic),
         TgCommandSetup(TgCommand.id, "Узнать свой Телеграм ID", ShowTgId),
         TgCommandSetup(TgCommand.help, "Справка по всем командам", Help),
+        TgCommandSetup(TgCommand.todo, "Чем заняться", ListTodo),
         # TgCommandSetup(TgCommand.zen_money_sync, "Синхрон Дзен-мани", SyncZenMoney),
         # TgCommandSetup(TgCommand.w, "Добавить вес", AddOrShowWeight),
         # TgCommandSetup(TgCommand.spend_ru, "Добавить расход", AddSpending),
