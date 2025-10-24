@@ -18,6 +18,7 @@ def create_app() -> Flask:
         tg_admins=list(map(int, os.environ["TG_ADMINS"].split(","))),
         yandex_music_token=os.environ["YANDEX_MUSIC_TOKEN"],
         zen_money_token=os.environ["ZEN_MONEY_TOKEN"],
+        untappd_cookie=os.environ["UNTAPPD_COOKIE"],
     )
 
     app = Flask(__name__)

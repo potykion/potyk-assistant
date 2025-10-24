@@ -1,9 +1,10 @@
+from kys_in_rest.beer.entities.untappd_checkin import UntappdCheckin
 from kys_in_rest.beer.features.ports.untappd_checkin_repo import UntappdCheckinRepo
 from kys_in_rest.core.sqlite_utils import SqliteRepo
 
 
 class SqliteUntappdCheckinRepo(SqliteRepo, UntappdCheckinRepo):
-    def insert_checkins(self, checkins: list) -> None:
+    def insert_checkins(self, checkins: list[UntappdCheckin]) -> None:
         self.cursor.executemany(
             """
                 INSERT INTO untappd_checkins (
@@ -24,15 +25,15 @@ class SqliteUntappdCheckinRepo(SqliteRepo, UntappdCheckinRepo):
                 (
                     checkin.id,
                     checkin.beer_url,
-                    checkin.beer_image_url,
+                    checkin.beer_img,
                     checkin.beer_name,
-                    checkin.brewery_name,
-                    checkin.brewery_url,
-                    checkin.brewery_location,
-                    checkin.brewery_location_url,
+                    checkin.beer_brewery,
+                    checkin.beer_brewery_url,
+                    checkin.checkin_location,
+                    checkin.checkin_location_url,
                     checkin.checkin_comment,
-                    checkin.rating_score,
-                    checkin.checkin_time,
+                    checkin.checkin_rating,
+                    checkin.checkin_date,
                 )
                 for checkin in checkins
             ],

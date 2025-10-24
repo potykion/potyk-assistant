@@ -115,22 +115,9 @@ class RequestsUntappdCheckinScraper(UntappdCheckinScraper):
 
 
 class RequestsUntappdCheckinHtmlLoader(UntappdCheckinHtmlLoader):
-    def __init__(self, cookie: str) -> None:
+    def __init__(self, cookie: str, profile="potykion") -> None:
         self.cookie = cookie
-
-    def scrape_profile_checkins(self, profile: str) -> str:
-        url = f"https://untappd.com/user/{profile}"
-        resp = requests.get(url)
-        resp.raise_for_status()
-        html = resp.text
-        return html
-
-    def scrape_checkins(self, profile: str, init_checkin_id: int) -> str:
-        url = (
-            f"https://untappd.com/profile/more_feed/{profile}/{init_checkin_id}?v2=true"
-        )
-
-        headers = {
+        self.headers = {
             "Accept": "*/*",
             "Accept-Encoding": "gzip, deflate, br, zstd",
             "Accept-Language": "ru,en;q=0.9",
@@ -149,7 +136,19 @@ class RequestsUntappdCheckinHtmlLoader(UntappdCheckinHtmlLoader):
             "X-Requested-With": "XMLHttpRequest",
         }
 
-        resp = requests.get(url, headers=headers)
+    def scrape_profile_checkins(self, profile: str) -> str:
+        url = f"https://untappd.com/user/{profile}"
+        resp = requests.get(url, headers=self.headers)
+        resp.raise_for_status()
+        html = resp.text
+        return html
+
+    def scrape_checkins(self, profile: str, init_checkin_id: int) -> str:
+        url = (
+            f"https://untappd.com/profile/more_feed/{profile}/{init_checkin_id}?v2=true"
+        )
+
+        resp = requests.get(url, headers=self.headers)
         resp.raise_for_status()
         html = resp.text
         return html
