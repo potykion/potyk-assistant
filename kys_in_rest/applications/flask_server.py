@@ -5,6 +5,7 @@ import flask
 from flask import Flask
 
 from kys_in_rest.applications.ioc import make_ioc
+from kys_in_rest.beer.features.beer_sync import BeerSync
 from kys_in_rest.core.cfg import root_dir
 from kys_in_rest.health.features.weight_repo import WeightRepo
 
@@ -25,5 +26,15 @@ def create_app() -> Flask:
     def weight() -> flask.Response:
         entries = ioc.resolve(WeightRepo).list_weight_entries()
         return flask.jsonify([e.model_dump() for e in entries])
+
+    # todo auth required
+    @app.route("/beer/sync", methods=["POST"])
+    def beer_sync() -> flask.Response: ...
+
+    @app.route("/beer/sync_first_time", methods=["POST"])
+    def beer_sync_first_time() -> flask.Response:
+        beer_sync = ioc.resolve(BeerSync)
+        checkins = beer_sync.first_time("potykion")
+        return flask.jsonify([c.model_dump() for c in checkins])
 
     return app

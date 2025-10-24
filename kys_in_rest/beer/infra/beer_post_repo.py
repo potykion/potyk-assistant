@@ -2,13 +2,11 @@ import json
 import sqlite3
 
 from kys_in_rest.beer.entities.beer_post import BeerPost
-from kys_in_rest.beer.features.beer_post_repo import BeerPostRepo
+from kys_in_rest.beer.features.ports.beer_post_repo import BeerPostRepo
+from kys_in_rest.core.sqlite_utils import SqliteRepo
 
 
-class SqliteBeerPostRepo(BeerPostRepo):
-    def __init__(self, cursor: sqlite3.Cursor) -> None:
-        self.cursor = cursor
-
+class SqliteBeerPostRepo(SqliteRepo, BeerPostRepo):
     def start_new_post(self) -> None:
         post = BeerPost()
         self.cursor.execute(

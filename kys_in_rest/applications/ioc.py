@@ -1,8 +1,11 @@
 import sqlite3
 from typing import Sequence
 
-from kys_in_rest.beer.features.beer_post_repo import BeerPostRepo
+from kys_in_rest.beer.features.ports.beer_post_repo import BeerPostRepo
+from kys_in_rest.beer.features.ports.untappd_checkin_repo import UntappdCheckinRepo
+from kys_in_rest.beer.features.ports.untappd_checkin_scraper import UntappdCheckinScraper
 from kys_in_rest.beer.infra.beer_post_repo import SqliteBeerPostRepo
+from kys_in_rest.beer.infra.untappd_checkin_repo import SqliteUntappdCheckinRepo
 from kys_in_rest.config.features.repos.config_repo import ConfigRepo
 from kys_in_rest.config.infra.config_repo import SqliteConfigRepo
 from kys_in_rest.core.ioc import IOC
@@ -54,7 +57,7 @@ def make_ioc(
         teardown=lambda cursor: cursor.connection.close(),
     )
 
-    # repos
+    # ports
     ioc.register(RestRepo, SqliteRestRepo)
     ioc.register(FlowRepo, SqliteFlowRepo)
     ioc.register(BeerPostRepo, SqliteBeerPostRepo)
@@ -72,5 +75,8 @@ def make_ioc(
     )
     ioc.register(ZenMoneyRepo, SqliteWHttpZenMoneyRepo)
     ioc.register(MyTgChannelsRepo, SqliteMyTgChannelsRepo)
+
+    ioc.register(UntappdCheckinRepo, SqliteUntappdCheckinRepo)
+    ioc.register(UntappdCheckinScraper, RequestsUntappdCheckinScraper)
 
     return ioc

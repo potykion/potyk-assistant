@@ -1,12 +1,10 @@
-import os
 from typing import cast
 
 from kys_in_rest.beer.entities.beer_post import BeerPost, BeerLine
-from kys_in_rest.beer.features.beer_post_repo import BeerPostRepo
+from kys_in_rest.beer.features.ports.beer_post_repo import BeerPostRepo
 from kys_in_rest.beer.features.parse_beer import parse_style
 from kys_in_rest.core.tg_utils import (
     TgFeature,
-    SendTgMessageInterrupt,
     AskForData,
     TgMsgToSend,
 )

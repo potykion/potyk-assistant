@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from kys_in_rest.beer.entities.beer_post import BeerLine, BeerStyle, BeerStyleName
-from kys_in_rest.beer.features.beer_post_repo import BeerPostRepo
+from kys_in_rest.beer.features.ports.beer_post_repo import BeerPostRepo
 
 
 def test_SqliteBeerPostRepo(ioc):
