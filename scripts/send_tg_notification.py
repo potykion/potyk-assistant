@@ -54,6 +54,11 @@ async def send_notification(status: str, message: str) -> bool:
         commit_sha = os.environ.get("GITHUB_SHA", "unknown")[:8]
         ref_name = os.environ.get("GITHUB_REF_NAME", "unknown")
         workflow_run_id = os.environ.get("GITHUB_RUN_ID", "unknown")
+        github_repository = os.environ.get("GITHUB_REPOSITORY", "unknown")
+        github_job = os.environ.get("GITHUB_JOB", "unknown")
+        
+        # Формируем ссылку на джобу
+        job_url = f"https://github.com/{github_repository}/actions/runs/{workflow_run_id}/job/{github_job}" if workflow_run_id != "unknown" else None
         
         # Формируем сообщение
         if status == "success":
@@ -66,15 +71,21 @@ async def send_notification(status: str, message: str) -> bool:
             emoji = "⚠️"
             status_text = status.upper()
         
+        # Формируем детали с ссылкой
+        details = f"""• Ветка: <code>{ref_name}</code>
+• Коммит: <code>{commit_sha}</code>
+• Run ID: <code>{workflow_run_id}</code>"""
+        
+        if job_url:
+            details += f"\n• <a href=\"{job_url}\">🔗 Ссылка на джобу</a>"
+        
         full_message = f"""
 {emoji} <b>Деплой {status_text}</b>
 
 {message}
 
 <b>Детали:</b>
-• Ветка: <code>{ref_name}</code>
-• Коммит: <code>{commit_sha}</code>
-• Run ID: <code>{workflow_run_id}</code>
+{details}
 
 <i>Отправлено автоматически из GitHub Actions</i>
 """.strip()
