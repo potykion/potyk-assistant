@@ -37,6 +37,7 @@ class SqliteUntappdCheckinRepo(SqliteRepo, UntappdCheckinRepo):
                 for checkin in checkins
             ],
         )
+        self.cursor.connection.commit()
 
     def checkin_exists(self, checkin_id: int) -> bool:
         self.cursor.execute(
