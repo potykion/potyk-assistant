@@ -2,9 +2,11 @@ import asyncio
 import os
 import time
 from functools import partial
+from typing import cast
 
 import dotenv
 import schedule
+from annotated_types.test_cases import cases
 from telegram import Bot
 
 from kys_in_rest.applications.ioc import make_ioc
@@ -17,12 +19,12 @@ class SendMedsAlert:
     def __init__(self, bot_msg_repo: BotMsgRepo):
         self.bot_msg_repo = bot_msg_repo
 
-    async def do(self):
+    async def do(self) -> None:
         print("lets gooo")
         await self.bot_msg_repo.send_text("test")
 
 
-def setup():
+def setup() -> None:
     dotenv.load_dotenv(root_dir / ".env")
 
     ioc = make_ioc(
@@ -32,8 +34,8 @@ def setup():
         zen_money_token=os.environ["ZEN_MONEY_TOKEN"],
     )
 
-    tg_token = os.environ.get("TG_TOKEN")
-    tg_admins_str = os.environ.get("TG_ADMINS")
+    tg_token = cast(str, os.environ.get("TG_TOKEN"))
+    tg_admins_str = cast(str, os.environ.get("TG_ADMINS"))
     tg_admins = [int(admin.strip()) for admin in tg_admins_str.split(",")]
 
     bot = Bot(token=tg_token)
@@ -44,7 +46,7 @@ def setup():
 
     send_meds_alert = ioc.resolve(SendMedsAlert)
 
-    def do_send_meds_alert():
+    def do_send_meds_alert() -> None:
         asyncio.run(send_meds_alert.do())
 
     schedule.every(1).seconds.do(do_send_meds_alert)

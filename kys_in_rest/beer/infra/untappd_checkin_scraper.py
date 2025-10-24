@@ -1,3 +1,5 @@
+from typing import cast
+
 import requests
 from bs4 import BeautifulSoup, Tag
 from urllib.parse import urljoin
@@ -46,14 +48,21 @@ class RequestsUntappdCheckinScraper(UntappdCheckinScraper):
     def _parse_checkin_item(self, item_div: BeautifulSoup | Tag) -> UntappdCheckin:
         """Парсит отдельный div.item и возвращает UntappdCheckin"""
         # ID из data-checkin-id
-        checkin_id = int(item_div.get("data-checkin-id"))
+        checkin_id = int(cast(str, item_div.get("data-checkin-id")))
 
         # Beer URL и изображение
         beer_link = item_div.select_one(".checkin > .top > a.label")
-        beer_url = (
-            urljoin("https://untappd.com", beer_link.get("href")) if beer_link else ""
+        beer_url = cast(
+            str,
+            (
+                urljoin("https://untappd.com", cast(str, beer_link.get("href")))
+                if beer_link
+                else ""
+            ),
         )
-        beer_img = beer_link.select_one("img").get("src") if beer_link else ""
+        beer_img = cast(
+            str, cast(Tag, beer_link.select_one("img")).get("src") if beer_link else ""
+        )
 
         # Парсим текст с информацией о пиве и пивоварне
         text_p = item_div.select_one(".checkin > .top > p.text")
@@ -76,7 +85,7 @@ class RequestsUntappdCheckinScraper(UntappdCheckinScraper):
             if brewery_link:
                 beer_brewery = brewery_link.get_text(strip=True)
                 beer_brewery_url = urljoin(
-                    "https://untappd.com", brewery_link.get("href")
+                    "https://untappd.com", cast(str, brewery_link.get("href"))
                 )
 
             # Извлекаем локацию
@@ -84,7 +93,7 @@ class RequestsUntappdCheckinScraper(UntappdCheckinScraper):
             if venue_link:
                 checkin_location = venue_link.get_text(strip=True)
                 checkin_location_url = urljoin(
-                    "https://untappd.com", venue_link.get("href")
+                    "https://untappd.com", cast(str, venue_link.get("href"))
                 )
 
         # Комментарий
@@ -93,7 +102,9 @@ class RequestsUntappdCheckinScraper(UntappdCheckinScraper):
 
         # Рейтинг
         rating_div = item_div.select_one(".caps")
-        checkin_rating = float(rating_div.get("data-rating", 0)) if rating_div else 0.0
+        checkin_rating = (
+            float(cast(str, rating_div.get("data-rating", "0"))) if rating_div else 0.0
+        )
 
         # Дата
         time_link = item_div.select_one(".bottom > a.time")
@@ -115,7 +126,7 @@ class RequestsUntappdCheckinScraper(UntappdCheckinScraper):
 
 
 class RequestsUntappdCheckinHtmlLoader(UntappdCheckinHtmlLoader):
-    def __init__(self, cookie: str, profile="potykion") -> None:
+    def __init__(self, cookie: str, profile: str = "potykion") -> None:
         self.cookie = cookie
         self.headers = {
             "Accept": "*/*",
