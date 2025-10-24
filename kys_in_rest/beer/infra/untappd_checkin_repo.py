@@ -4,6 +4,15 @@ from kys_in_rest.core.sqlite_utils import SqliteRepo
 
 
 class SqliteUntappdCheckinRepo(SqliteRepo, UntappdCheckinRepo):
+    def any_checkin_exists(self, checkins: list[UntappdCheckin]) -> set[int]:
+        rows = self.cursor.execute(
+            "select id from untappd_checkins where id in ({})".format(
+                ",".join("?" for _ in checkins)
+            ),
+            tuple(checkin.id for checkin in checkins),
+        ).fetchall()
+        return {row["id"] for row in rows}
+
     def insert_checkins(self, checkins: list[UntappdCheckin]) -> None:
         self.cursor.executemany(
             """

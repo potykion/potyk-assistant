@@ -30,7 +30,10 @@ def create_app() -> Flask:
 
     # todo auth required
     @app.route("/beer/sync", methods=["POST"])
-    def beer_sync() -> flask.Response: ...
+    def beer_sync() -> flask.Response:
+        beer_sync = ioc.resolve(BeerSync)
+        checkins = beer_sync.do("potykion")
+        return flask.jsonify([c.model_dump() for c in checkins])
 
     @app.route("/beer/sync_first_time", methods=["POST"])
     def beer_sync_first_time() -> flask.Response:
