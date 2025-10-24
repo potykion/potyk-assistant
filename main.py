@@ -14,6 +14,7 @@ from telegram.ext import (
 
 from kys_in_rest.applications.ioc import make_ioc
 from kys_in_rest.beer.features.add_new_beer import AddNewBeer
+from kys_in_rest.beer.features.beer_sync import BeerSyncTg
 from kys_in_rest.core.cfg import root_dir
 from kys_in_rest.core.tg_utils import (
     build_keyboard,
@@ -64,6 +65,7 @@ ioc = make_ioc(
         TgCommandSetup(TgCommand.id, "Узнать свой Телеграм ID", ShowTgId),
         TgCommandSetup(TgCommand.help, "Справка по всем командам", Help),
         TgCommandSetup(TgCommand.todo, "Чем заняться", ListTodo),
+        TgCommandSetup(TgCommand.sync_untappd, "Синхрон Untappd", BeerSyncTg),
         # TgCommandSetup(TgCommand.zen_money_sync, "Синхрон Дзен-мани", SyncZenMoney),
         # TgCommandSetup(TgCommand.w, "Добавить вес", AddOrShowWeight),
         # TgCommandSetup(TgCommand.spend_ru, "Добавить расход", AddSpending),

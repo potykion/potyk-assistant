@@ -47,6 +47,7 @@ def build_keyboard(options: list[TgCbOption], buttons: int = 2) -> InlineKeyboar
 class TgFeature:
     @abc.abstractmethod
     def do(self, msg: InputTgMsg) -> str | tuple[str, dict[str, Any]]:
+        """DEPRECATED: use do_async instead"""
         raise NotImplementedError()
 
     @abc.abstractmethod
