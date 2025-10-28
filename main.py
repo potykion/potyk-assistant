@@ -271,7 +271,23 @@ def main() -> None:
 
     app.add_handler(MessageHandler(None, message_handler))
 
-    print("Starting bot...")
+    # Получаем информацию о боте для отображения ссылки
+    try:
+        import requests
+        response = requests.get(f"https://api.telegram.org/bot{TG_TOKEN}/getMe", timeout=5)
+        if response.status_code == 200:
+            bot_data = response.json()
+            if bot_data.get("ok"):
+                username = bot_data["result"]["username"]
+                bot_link = f"https://t.me/{username}"
+                print(f"Starting bot {bot_link}...")
+            else:
+                print("Starting bot https://t.me/kys_in_rest_bot...")
+        else:
+            print("Starting bot https://t.me/kys_in_rest_bot...")
+    except Exception:
+        # Fallback к хардкоду из README
+        print("Starting bot https://t.me/kys_in_rest_bot...")
     app.run_polling()
 
 
