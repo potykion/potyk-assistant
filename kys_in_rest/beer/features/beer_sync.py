@@ -6,6 +6,7 @@ from kys_in_rest.beer.features.ports.untappd_checkin_scraper import (
 from kys_in_rest.core.tg_utils import TgFeature
 from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 from kys_in_rest.tg.features.bot_msg_repo import BotMsgRepo
+from kys_in_rest.users.features.check_admin import CheckTgAdmin
 
 
 class BeerSync:
@@ -49,14 +50,22 @@ class BeerSync:
 
 
 class BeerSyncTg(TgFeature):
-    def __init__(self, beer_sync: BeerSync, bot_msg_repo: BotMsgRepo):
+    def __init__(
+        self,
+        beer_sync: BeerSync,
+        bot_msg_repo: BotMsgRepo,
+        check_tg_admin: CheckTgAdmin,
+    ):
         self.beer_sync = beer_sync
         self.bot_msg_repo = bot_msg_repo
+        self.check_tg_admin = check_tg_admin
 
     async def do_async(self, msg: InputTgMsg) -> None:
+        self.check_tg_admin.do(msg.tg_user_id)
+
         await self.bot_msg_repo.send_text("Начинаю синхронизацию чекинов...")
 
-        new_checkins = self.beer_sync.first_time("potykion")
+        new_checkins = self.beer_sync.do("potykion")
         text = "Чекины синхронизированы"
 
         if not new_checkins:
