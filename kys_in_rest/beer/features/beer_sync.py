@@ -5,7 +5,7 @@ from kys_in_rest.beer.features.ports.untappd_checkin_scraper import (
 )
 from kys_in_rest.core.date_utils import (
     get_month_ago_moscow,
-    get_week_ago_moscow,
+    get_week_start_moscow,
     get_yesterday_moscow,
     is_checkin_in_period,
 )
@@ -61,7 +61,7 @@ class BeerSync:
         )
         
         yesterday_start = get_yesterday_moscow()
-        week_ago = get_week_ago_moscow()
+        week_start = get_week_start_moscow()
         month_ago = get_month_ago_moscow()
         
         yesterday_count = sum(
@@ -71,7 +71,7 @@ class BeerSync:
         
         week_count = sum(
             1 for checkin in all_checkins
-            if is_checkin_in_period(checkin.checkin_date, week_ago)
+            if is_checkin_in_period(checkin.checkin_date, week_start)
         )
         
         month_count = sum(

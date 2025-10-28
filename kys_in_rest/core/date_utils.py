@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from zoneinfo import ZoneInfo
+import pytz
 
 
 def parse_utc_date(date_str: str) -> datetime:
@@ -9,12 +9,14 @@ def parse_utc_date(date_str: str) -> datetime:
 
 def to_moscow_time(utc_dt: datetime) -> datetime:
     """Конвертирует UTC datetime в московское время."""
-    return utc_dt.astimezone(ZoneInfo("Europe/Moscow"))
+    moscow_tz = pytz.timezone('Europe/Moscow')
+    return utc_dt.astimezone(moscow_tz)
 
 
 def get_moscow_now() -> datetime:
     """Возвращает текущее время в московском часовом поясе."""
-    return datetime.now(ZoneInfo("Europe/Moscow"))
+    moscow_tz = pytz.timezone('Europe/Moscow')
+    return datetime.now(moscow_tz)
 
 
 def get_yesterday_moscow() -> datetime:
@@ -24,11 +26,13 @@ def get_yesterday_moscow() -> datetime:
     return yesterday.replace(hour=0, minute=0, second=0, microsecond=0)
 
 
-def get_week_ago_moscow() -> datetime:
-    """Возвращает дату неделю назад по московскому времени."""
+def get_week_start_moscow() -> datetime:
+    """Возвращает начало текущей недели (понедельник) по московскому времени."""
     now = get_moscow_now()
-    week_ago = now - timedelta(weeks=1)
-    return week_ago
+    # Получаем день недели (0=понедельник, 6=воскресенье)
+    days_since_monday = now.weekday()
+    week_start = now - timedelta(days=days_since_monday)
+    return week_start.replace(hour=0, minute=0, second=0, microsecond=0)
 
 
 def get_month_ago_moscow() -> datetime:
