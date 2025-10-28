@@ -56,7 +56,7 @@ class BeerSyncTg(TgFeature):
     async def do_async(self, msg: InputTgMsg) -> None:
         await self.bot_msg_repo.send_text("Начинаю синхронизацию чекинов...")
 
-        new_checkins = self.beer_sync.do("potykion")
+        new_checkins = self.beer_sync.first_time("potykion")
         text = "Чекины синхронизированы"
 
         if not new_checkins:
