@@ -1,4 +1,5 @@
 import abc
+from datetime import datetime
 
 from kys_in_rest.beer.entities.untappd_checkin import UntappdCheckin
 
@@ -12,3 +13,6 @@ class UntappdCheckinRepo:
 
     @abc.abstractmethod
     def any_checkin_exists(self, checkins: list[UntappdCheckin]) -> set[int]: ...
+
+    @abc.abstractmethod
+    def get_checkins_since(self, since: datetime) -> list[UntappdCheckin]: ...

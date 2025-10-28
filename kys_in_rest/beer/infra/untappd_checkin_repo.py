@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from kys_in_rest.beer.entities.untappd_checkin import UntappdCheckin
 from kys_in_rest.beer.features.ports.untappd_checkin_repo import UntappdCheckinRepo
 from kys_in_rest.core.sqlite_utils import SqliteRepo
@@ -55,3 +57,27 @@ class SqliteUntappdCheckinRepo(SqliteRepo, UntappdCheckinRepo):
             (checkin_id,),
         )
         return self.cursor.fetchone() is not None
+
+    def get_checkins_since(self, since: datetime) -> list[UntappdCheckin]:
+        since_str = since.strftime("%a, %d %b %Y %H:%M:%S %z")
+        rows = self.cursor.execute(
+            "SELECT * FROM untappd_checkins WHERE checkin_date >= ? ORDER BY checkin_date DESC",
+            (since_str,),
+        ).fetchall()
+        
+        return [
+            UntappdCheckin(
+                id=row["id"],
+                beer_url=row["beer_url"],
+                beer_img=row["beer_img"],
+                beer_name=row["beer_name"],
+                beer_brewery=row["beer_brewery"],
+                beer_brewery_url=row["beer_brewery_url"],
+                checkin_location=row["checkin_location"],
+                checkin_location_url=row["checkin_location_url"],
+                checkin_comment=row["checkin_comment"],
+                checkin_rating=row["checkin_rating"],
+                checkin_date=row["checkin_date"],
+            )
+            for row in rows
+        ]
