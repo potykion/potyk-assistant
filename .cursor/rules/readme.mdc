@@ -25,3 +25,56 @@ cd /c%3A/Users/admin/PycharmProjects/kys_in_rest && python -m pytest tests/ -v
 - Не надо "Давайте проверим синтаксис Python файлов:"
 - Не надо "Давайте проверим, что файл IoC компилируется корректно:"
 - Не надо "Давайте проверим, что main.py компилируется:"
+
+## Архитектура
+
+- Что-то типа DDD
+- `kys_in_rest` - основной пакет, внутри разбивка по доменам
+    - `applications` - приложения: ioc, flask, cron
+    - `beer` - пивко, интегр. с untappd
+    - `config` - конфиг
+    - `core` - утилиты
+    - `health` - вес
+    - `money` - zen-money интегр
+    - `music` - yandex-music интегр
+    - `restaurants` - рестики
+    - `tg` - интеграция с тг
+    - `users` - юзеры, админы
+    - `wishlist` - вишлист
+- Каждый пакет может состоять из ddd пакетов:
+    - `entries` - сущности
+    - `features` - юз-кейсы и порты
+        - `ports` - порты: абстрактные репо
+    - `infra` - имплементации: sql-репо/апи-клиенты/...
+
+### Телеграм фичи
+
+- Наследуемся от `kys_in_rest.core.tg_utils.TgFeature`
+- Реализуем `do_async`
+- Для отправки сообщений инжектим `BotMsgRepo`
+- Для sensitivity-стаффа (напр. когда пишем в бд), используем проверку на админа, через инжект `CheckTgAdmin`
+
+Пример всего описанного:
+
+```python
+from kys_in_rest.users.features.check_admin import CheckTgAdmin
+from kys_in_rest.core.tg_utils import TgFeature
+from kys_in_rest.tg.features.bot_msg_repo import BotMsgRepo
+
+
+class DownloadMusic(TgFeature):
+    def __init__(
+        self,
+        bot_msg_repo: BotMsgRepo,
+        check_tg_admin: CheckTgAdmin,
+        download_repo: DownloadRepo,
+    ):
+        self.bot_msg_repo = bot_msg_repo
+        self.check_tg_admin = check_tg_admin
+        self.download_repo = download_repo
+
+    async def do_async(self, msg: InputTgMsg) -> None:
+        self.check_tg_admin.do(msg.tg_user_id)
+
+        ...
+```
