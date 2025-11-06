@@ -26,3 +26,8 @@ class BotMsgRepo(abc.ABC):
     def send_audio_group(self, audios: List[TgAudio]) -> Coroutine[Any, Any, None]:
         """Пытается отправить аудио как медиагруппу (может не работать)"""
         raise NotImplementedError()
+
+    @abc.abstractmethod
+    def send_document(self, document: bytes, filename: str, caption: str = None) -> Coroutine[Any, Any, None]:
+        """Отправляет документ (файл)"""
+        raise NotImplementedError()

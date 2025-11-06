@@ -53,6 +53,7 @@ ioc = make_ioc(
     tg_admins=list(map(int, os.environ["TG_ADMINS"].split(","))),
     yandex_music_token=os.environ["YANDEX_MUSIC_TOKEN"],
     zen_money_token=os.environ["ZEN_MONEY_TOKEN"],
+    tinkoff_invest_token=os.environ.get("TINKOFF_INVEST_TOKEN", ""),
     # fmt: off
     tg_commands=[
         TgCommandSetup(TgCommand.wishlist, "Вишлист (добавить/отметить полученное)", Wishlist),

@@ -29,6 +29,13 @@ class TgUpdateBotMsgRepo(BotMsgRepo):
             caption=caption,
         )
 
+    async def send_document(self, document: bytes, filename: str, caption: str = None) -> None:
+        await self.update.reply_document(
+            document=document,
+            filename=filename,
+            caption=caption,
+        )
+
     async def send_multiple_audio(self, audios: List[TgAudio]) -> None:
         """Отправляет несколько аудио файлов с прогрессом"""
         if not audios:
@@ -123,6 +130,21 @@ class TgBotMsgRepo(BotMsgRepo):
                 )
             except Exception as e:
                 print(f"❌ Ошибка отправки фото в чат {chat_id}: {e}")
+                raise
+
+    async def send_document(self, document: bytes, filename: str, caption: str = None) -> None:
+        """Отправляет документ во все указанные чаты"""
+        for chat_id in self.chat_ids:
+            try:
+                await self.bot.send_document(
+                    chat_id=chat_id,
+                    document=document,
+                    filename=filename,
+                    caption=caption,
+                    parse_mode="HTML" if caption else None
+                )
+            except Exception as e:
+                print(f"❌ Ошибка отправки документа в чат {chat_id}: {e}")
                 raise
 
     async def send_multiple_audio(self, audios: List[TgAudio]) -> None:

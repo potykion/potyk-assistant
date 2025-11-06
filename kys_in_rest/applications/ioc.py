@@ -17,9 +17,11 @@ from kys_in_rest.health.features.weight_repo import WeightRepo
 from kys_in_rest.health.infra.weight_repo import SqliteWeightRepo
 from kys_in_rest.money.features.repos.goal_repo import MoneyGoalRepo
 from kys_in_rest.money.features.repos.spending_repo import SpendingRepo
+from kys_in_rest.money.features.repos.tinkoff_candles_repo import TinkoffCandlesRepo
 from kys_in_rest.money.features.repos.zen_money_repo import ZenMoneyRepo
 from kys_in_rest.money.infra.goal_repo import SqliteMoneyGoalRepo
 from kys_in_rest.money.infra.spending_repo import SqliteSpendingRepo
+from kys_in_rest.money.infra.tinkoff_candles_repo import TinkoffInvestCandlesRepo
 from kys_in_rest.money.infra.zen_money_repo import SqliteWHttpZenMoneyRepo
 from kys_in_rest.music.features.download_repo import DownloadRepo
 from kys_in_rest.music.infra.download_repo import (
@@ -34,6 +36,7 @@ from kys_in_rest.tg.features.flow_repo import FlowRepo
 from kys_in_rest.tg.features.repos.my_tg_channels_repo import MyTgChannelsRepo
 from kys_in_rest.tg.infra.flow_repo import SqliteFlowRepo
 from kys_in_rest.tg.infra.my_tg_channels_repo import SqliteMyTgChannelsRepo
+from kys_in_rest.users.features.check_admin import CheckTgAdmin
 from kys_in_rest.wishlist.features.ports.wishlist_repo import WishlistRepo
 from kys_in_rest.wishlist.infra.wishlist_repo import SqliteWishlistRepo
 
@@ -45,6 +48,7 @@ def make_ioc(
     tg_commands: Sequence[TgCommandSetup] = (),
     yandex_music_token: str,
     zen_money_token: str,
+    tinkoff_invest_token: str = "",
     untappd_cookie: str = "",
 ) -> IOC:
     ioc = IOC()
@@ -52,6 +56,7 @@ def make_ioc(
     # deps
     ioc.register("db_path", db_path)
     ioc.register("zen_money_token", zen_money_token)
+    ioc.register("tinkoff_invest_token", tinkoff_invest_token)
     ioc.register("tg_admins", tg_admins)
     ioc.register("tg_commands", tg_commands)
     ioc.register(
@@ -84,5 +89,14 @@ def make_ioc(
     ioc.register(
         UntappdCheckinScraper, lambda: RequestsUntappdCheckinScraper(untappd_cookie)
     )
+    
+    # Tinkoff Investments
+    ioc.register(
+        TinkoffCandlesRepo,
+        lambda: TinkoffInvestCandlesRepo(tinkoff_invest_token),
+    )
+    
+    # Users
+    ioc.register(CheckTgAdmin, lambda: CheckTgAdmin(tg_admins))
 
     return ioc
