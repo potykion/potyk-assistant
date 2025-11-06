@@ -81,11 +81,14 @@ class LoadCandlesTgFeature(TgFeature):
         ws["B1"].fill = header_fill
         ws["B1"].font = header_font
         
+        # Сортируем свечи по убыванию даты (от новых к старым)
+        sorted_candles = sorted(candles, key=lambda c: c.time, reverse=True)
+        
         # Заполняем данные
         green_fill = PatternFill(start_color="90EE90", end_color="90EE90", fill_type="solid")
         red_fill = PatternFill(start_color="FF6B6B", end_color="FF6B6B", fill_type="solid")
         
-        for idx, candle in enumerate(candles, start=2):
+        for idx, candle in enumerate(sorted_candles, start=2):
             # Месяц и год
             month_year = candle.time.strftime("%m.%Y")
             ws[f"A{idx}"] = month_year
@@ -174,10 +177,8 @@ class LoadCandlesTgFeature(TgFeature):
         
         lines.append("")
         
-        # Соотношение
-        lines.append(f"📈 Соотношение:")
-        lines.append(f"  Рост: {stats['growth_count']} мес")
-        lines.append(f"  Падение: {stats['fall_count']} мес")
-        lines.append(f"  Всего: {stats['total']} мес")
+        # Вероятность роста
+        growth_probability = round((stats['growth_count'] / stats['total']) * 100) if stats['total'] > 0 else 0
+        lines.append(f"📈 Вероятность роста: {growth_probability}% ({stats['growth_count']} мес роста из {stats['total']})")
         
         return "\n".join(lines)
