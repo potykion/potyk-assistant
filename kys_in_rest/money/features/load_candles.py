@@ -1,10 +1,11 @@
 import io
+from typing import Any
 
 from openpyxl import Workbook
 from openpyxl.styles import PatternFill, Font
 
 from kys_in_rest.core.tg_utils import TgFeature
-from kys_in_rest.money.features.repos.tinkoff_candles_repo import TinkoffCandlesRepo
+from kys_in_rest.money.features.repos.tinkoff_candles_repo import Candle, TinkoffCandlesRepo
 from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 from kys_in_rest.tg.features.bot_msg_repo import BotMsgRepo
 from kys_in_rest.users.features.check_admin import CheckTgAdmin
@@ -63,10 +64,12 @@ class LoadCandlesTgFeature(TgFeature):
         except Exception as e:
             await self.bot_msg_repo.send_text(f"Произошла ошибка: {str(e)}")
 
-    def _create_excel(self, candles: list, ticker: str) -> bytes:
+    def _create_excel(self, candles: list[Candle], ticker: str) -> bytes:
         """Создает Excel файл со свечами"""
         wb = Workbook()
         ws = wb.active
+        if ws is None:
+            raise RuntimeError("Не удалось создать лист в Excel")
         ws.title = "Свечи"
         
         # Заголовки
@@ -113,9 +116,9 @@ class LoadCandlesTgFeature(TgFeature):
         excel_buffer.seek(0)
         return excel_buffer.getvalue()
 
-    def _calculate_statistics(self, candles: list) -> dict:
+    def _calculate_statistics(self, candles: list[Candle]) -> dict[str, Any]:
         """Вычисляет статистику по свечам"""
-        changes = []
+        changes: list[float] = []
         for candle in candles:
             change_percent = ((candle.close - candle.open) / candle.open) * 100
             changes.append(change_percent)
@@ -124,7 +127,7 @@ class LoadCandlesTgFeature(TgFeature):
         growths = [c for c in changes if c >= 0]
         falls = [c for c in changes if c < 0]
         
-        stats = {
+        stats: dict[str, Any] = {
             "total": len(changes),
             "growth_count": len(growths),
             "fall_count": len(falls),
@@ -150,7 +153,7 @@ class LoadCandlesTgFeature(TgFeature):
         
         return stats
 
-    def _format_statistics(self, stats: dict, ticker: str) -> str:
+    def _format_statistics(self, stats: dict[str, Any], ticker: str) -> str:
         """Форматирует статистику для отправки"""
         lines = [f"📊 Статистика по {ticker}:"]
         lines.append("")
