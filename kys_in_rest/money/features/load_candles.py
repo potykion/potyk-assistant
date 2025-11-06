@@ -1,4 +1,5 @@
 import io
+from datetime import datetime
 from typing import Any
 
 from openpyxl import Workbook
@@ -41,11 +42,30 @@ class LoadCandlesTgFeature(TgFeature):
                 await self.bot_msg_repo.send_text(f"Не удалось получить свечи для {ticker}")
                 return
 
+            # Фильтруем свечи: исключаем текущий месяц (он еще неполный)
+            # Приводим к UTC и делаем timezone-aware для корректного сравнения
+            current_month_utc = datetime.utcnow().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            # Если candle.time имеет timezone, делаем current_month тоже aware
+            if candles and candles[0].time.tzinfo is not None:
+                from datetime import timezone
+                current_month = current_month_utc.replace(tzinfo=timezone.utc)
+            else:
+                current_month = current_month_utc
+            
+            complete_candles = [
+                candle for candle in candles
+                if candle.time < current_month
+            ]
+            
+            if not complete_candles:
+                await self.bot_msg_repo.send_text(f"Нет полных свечей для {ticker}")
+                return
+
             # Создаем Excel файл
-            excel_bytes = self._create_excel(candles, ticker)
+            excel_bytes = self._create_excel(complete_candles, ticker)
             
             # Вычисляем статистику
-            stats = self._calculate_statistics(candles)
+            stats = self._calculate_statistics(complete_candles)
             
             # Отправляем файл
             filename = f"{ticker}_candles_36m.xlsx"
