@@ -25,6 +25,7 @@ from kys_in_rest.health.features.add_weight import AddOrShowWeight
 from kys_in_rest.money.features.add_goal import AddMoneyGoal
 from kys_in_rest.money.features.add_spending import AddSpending
 from kys_in_rest.money.features.goal_budget import PlanGoalBudgets
+from kys_in_rest.money.features.load_candles import LoadCandlesTgFeature
 from kys_in_rest.money.features.sync_zen_money import SyncZenMoney
 from kys_in_rest.music.features.download import DownloadMusic
 from kys_in_rest.restaurants.features.add_new import AddNewRestaurant
@@ -67,6 +68,7 @@ ioc = make_ioc(
         TgCommandSetup(TgCommand.help, "Справка по всем командам", Help),
         TgCommandSetup(TgCommand.todo, "Чем заняться", ListTodo),
         TgCommandSetup(TgCommand.sync_untappd, "Синхрон Untappd", BeerSyncTg),
+        TgCommandSetup(TgCommand.t_invest_candles, "Выгрузить свечи", LoadCandlesTgFeature),
         # TgCommandSetup(TgCommand.zen_money_sync, "Синхрон Дзен-мани", SyncZenMoney),
         # TgCommandSetup(TgCommand.w, "Добавить вес", AddOrShowWeight),
         # TgCommandSetup(TgCommand.spend_ru, "Добавить расход", AddSpending),

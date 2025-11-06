@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from tinkoff.invest import Client, CandleInterval
+from tinkoff.invest import Client, CandleInterval, InstrumentIdType
 
 from kys_in_rest.money.features.repos.tinkoff_candles_repo import (
     Candle,
@@ -26,23 +26,33 @@ class TinkoffInvestCandlesRepo(TinkoffCandlesRepo):
             Список свечей, отсортированный по времени (от старых к новым)
         """
         with Client(token=self.token) as client:
-            # Получаем инструмент по тикеру
-            instruments_response = client.instruments.find_instrument(query=ticker)
-            
-            # Ищем акцию на Московской бирже
-            instrument = None
-            if hasattr(instruments_response, 'instruments'):
-                for inst in instruments_response.instruments:
-                    if hasattr(inst, 'ticker') and hasattr(inst, 'exchange'):
-                        if inst.ticker == ticker.upper() and inst.exchange == "MOEX":
-                            instrument = inst
-                            break
-            
-            if not instrument or not hasattr(instrument, 'figi'):
-                raise ValueError(f"Инструмент {ticker} не найден на Московской бирже")
-            
-            # Получаем figi инструмента
-            figi = instrument.figi
+            # Получаем figi по тикеру для акций Московской биржи
+            # Для акций MOEX используем class_code "TQBR"
+            try:
+                # Пробуем получить акцию по тикеру и class_code
+                share_response = client.instruments.share_by(
+                    id_type=InstrumentIdType.INSTRUMENT_ID_TYPE_TICKER,
+                    class_code="TQBR",
+                    id=ticker.upper(),
+                )
+                figi = share_response.instrument.figi
+            except Exception:
+                # Если не получилось через share_by, пробуем через find_instrument
+                instruments_response = client.instruments.find_instrument(query=ticker)
+                
+                # Ищем акцию на Московской бирже
+                instrument = None
+                if hasattr(instruments_response, 'instruments'):
+                    for inst in instruments_response.instruments:
+                        if hasattr(inst, 'ticker') and hasattr(inst, 'exchange'):
+                            if inst.ticker == ticker.upper() and inst.exchange == "MOEX":
+                                instrument = inst
+                                break
+                
+                if not instrument or not hasattr(instrument, 'figi'):
+                    raise ValueError(f"Инструмент {ticker} не найден на Московской бирже")
+                
+                figi = instrument.figi
             
             # Вычисляем даты начала и конца
             end_date = datetime.utcnow()
