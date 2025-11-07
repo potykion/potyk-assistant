@@ -6,6 +6,7 @@ from typing import Any
 from openpyxl import Workbook
 from openpyxl.styles import PatternFill, Font
 from openpyxl.worksheet.worksheet import Worksheet
+from tabulate import tabulate  # type: ignore[import-untyped]
 
 from kys_in_rest.core.tg_utils import TgFeature
 from kys_in_rest.money.features.repos.tinkoff_candles_repo import Candle, TinkoffCandlesRepo
@@ -213,48 +214,39 @@ class LoadCandlesTgFeature(TgFeature):
         return "\n".join(lines)
 
     def _format_period_stats(self, label: str, stats: dict[str, Any]) -> str:
-        col_titles = ["avg", "med", "max", "min"]
-        col_width = 6
-
-        def fmt_row(name: str, values: list[float | None]) -> str:
-            cells = " ".join(
-                self._fmt_percent(value).rjust(col_width)
-                for value in values
-            )
-            return f"{name:<4} {cells}"
-
-        header = " " * 5 + " ".join(title.rjust(col_width) for title in col_titles)
-        growth_row = fmt_row(
-            "рост",
+        headers = ["", "avg", "med", "max", "min"]
+        rows = [
             [
-                stats["avg_growth"],
-                stats["median_growth"],
-                stats["max_growth"],
-                stats["min_growth"],
+                "рост",
+                self._fmt_percent(stats["avg_growth"]),
+                self._fmt_percent(stats["median_growth"]),
+                self._fmt_percent(stats["max_growth"]),
+                self._fmt_percent(stats["min_growth"]),
             ],
-        )
-        fall_row = fmt_row(
-            "пад",
             [
-                stats["avg_fall"],
-                stats["median_fall"],
-                stats["max_fall"],
-                stats["min_fall"],
+                "пад",
+                self._fmt_percent(stats["avg_fall"]),
+                self._fmt_percent(stats["median_fall"]),
+                self._fmt_percent(stats["max_fall"]),
+                self._fmt_percent(stats["min_fall"]),
             ],
+            [
+                "prob",
+                f"{stats['growth_probability']:.0f}%",
+                "",
+                "",
+                "",
+            ],
+        ]
+
+        table = tabulate(
+            rows,
+            headers=headers,
+            tablefmt="plain",
+            colalign=("left", "right", "right", "right", "right"),
         )
 
-        table = "\n".join([header, growth_row, fall_row])
-
-        probability = (
-            f"📈 рост: {stats['growth_probability']}% "
-            f"({stats['growth_count']}/{stats['total']})"
-        )
-
-        return (
-            f"{label} ({stats['total']}):\n"
-            f"<code>\n{table}\n</code>\n"
-            f"{probability}"
-        )
+        return f"{label} ({stats['total']}):<code>\n{table}\n</code>"
 
     @staticmethod
     def _fmt_percent(value: float | None) -> str:
