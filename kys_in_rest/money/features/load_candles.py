@@ -213,26 +213,48 @@ class LoadCandlesTgFeature(TgFeature):
         return "\n".join(lines)
 
     def _format_period_stats(self, label: str, stats: dict[str, Any]) -> str:
-        lines = [
-            f"{label} ({stats['total']}):",
-            "",
-            "🔴 Падения:",
-            f"  • min: {self._fmt_percent(stats['min_fall'])}",
-            f"  • max: {self._fmt_percent(stats['max_fall'])}",
-            f"  • avg: {self._fmt_percent(stats['avg_fall'])}",
-            f"  • med: {self._fmt_percent(stats['median_fall'])}",
-            "",
-            "🟢 Рост:",
-            f"  • min: {self._fmt_percent(stats['min_growth'])}",
-            f"  • max: {self._fmt_percent(stats['max_growth'])}",
-            f"  • avg: {self._fmt_percent(stats['avg_growth'])}",
-            f"  • med: {self._fmt_percent(stats['median_growth'])}",
-            "",
-            "📈 Вероятность роста:",
-            f"  • {stats['growth_probability']}% ({stats['growth_count']}/{stats['total']})",
-        ]
+        col_titles = ["avg", "med", "max", "min"]
+        col_width = 6
 
-        return "\n".join(lines)
+        def fmt_row(name: str, values: list[float | None]) -> str:
+            cells = " ".join(
+                self._fmt_percent(value).rjust(col_width)
+                for value in values
+            )
+            return f"{name:<4} {cells}"
+
+        header = " " * 5 + " ".join(title.rjust(col_width) for title in col_titles)
+        growth_row = fmt_row(
+            "рост",
+            [
+                stats["avg_growth"],
+                stats["median_growth"],
+                stats["max_growth"],
+                stats["min_growth"],
+            ],
+        )
+        fall_row = fmt_row(
+            "пад",
+            [
+                stats["avg_fall"],
+                stats["median_fall"],
+                stats["max_fall"],
+                stats["min_fall"],
+            ],
+        )
+
+        table = "\n".join([header, growth_row, fall_row])
+
+        probability = (
+            f"📈 рост: {stats['growth_probability']}% "
+            f"({stats['growth_count']}/{stats['total']})"
+        )
+
+        return (
+            f"{label} ({stats['total']}):\n"
+            f"<code>\n{table}\n</code>\n"
+            f"{probability}"
+        )
 
     @staticmethod
     def _fmt_percent(value: float | None) -> str:
