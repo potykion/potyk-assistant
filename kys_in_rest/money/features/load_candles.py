@@ -213,35 +213,32 @@ class LoadCandlesTgFeature(TgFeature):
         return "\n".join(lines)
 
     def _format_period_stats(self, label: str, stats: dict[str, Any]) -> str:
-        red_part = (
-            f"🔴 мин {self._fmt_percent(stats['min_fall'])}, "
-            f"макс {self._fmt_percent(stats['max_fall'])}, "
-            f"ср {self._fmt_percent(stats['avg_fall'])}, "
-            f"мед {self._fmt_percent(stats['median_fall'])}"
-        )
+        lines = [
+            f"{label} ({stats['total']}):",
+            "",
+            "🔴 Падения:",
+            f"  • min: {self._fmt_percent(stats['min_fall'])}",
+            f"  • max: {self._fmt_percent(stats['max_fall'])}",
+            f"  • avg: {self._fmt_percent(stats['avg_fall'])}",
+            f"  • med: {self._fmt_percent(stats['median_fall'])}",
+            "",
+            "🟢 Рост:",
+            f"  • min: {self._fmt_percent(stats['min_growth'])}",
+            f"  • max: {self._fmt_percent(stats['max_growth'])}",
+            f"  • avg: {self._fmt_percent(stats['avg_growth'])}",
+            f"  • med: {self._fmt_percent(stats['median_growth'])}",
+            "",
+            "📈 Вероятность роста:",
+            f"  • {stats['growth_probability']}% ({stats['growth_count']}/{stats['total']})",
+        ]
 
-        green_part = (
-            f"🟢 мин {self._fmt_percent(stats['min_growth'])}, "
-            f"макс {self._fmt_percent(stats['max_growth'])}, "
-            f"ср {self._fmt_percent(stats['avg_growth'])}, "
-            f"мед {self._fmt_percent(stats['median_growth'])}"
-        )
-
-        growth_part = (
-            f"📈 рост {stats['growth_probability']}% "
-            f"({stats['growth_count']}/{stats['total']})"
-        )
-
-        return (
-            f"{label} ({stats['total']}): {red_part} | "
-            f"{green_part} | {growth_part}"
-        )
+        return "\n".join(lines)
 
     @staticmethod
     def _fmt_percent(value: float | None) -> str:
         if value is None:
             return "—"
-        return f"{value:+.2f}%"
+        return f"{value:+.1f}%"
 
     def _filter_complete_months(self, candles: list[Candle]) -> list[Candle]:
         now = self._now_for_candles(candles).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
