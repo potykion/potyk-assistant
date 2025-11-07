@@ -31,3 +31,17 @@ class TinkoffCandlesRepo(abc.ABC):
         """
         raise NotImplementedError
 
+    @abc.abstractmethod
+    def get_weekly_candles(self, ticker: str, weeks: int = 156) -> list[Candle]:
+        """
+        Получает недельные свечи за указанное количество недель
+
+        Args:
+            ticker: Тикер акции (например, 'NLMK')
+            weeks: Количество недель (по умолчанию 156)
+
+        Returns:
+            Список свечей, отсортированный по времени (от старых к новым)
+        """
+        raise NotImplementedError
+

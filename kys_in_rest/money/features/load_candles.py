@@ -1,9 +1,11 @@
 import io
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
+from statistics import median
 from typing import Any
 
 from openpyxl import Workbook
 from openpyxl.styles import PatternFill, Font
+from openpyxl.worksheet.worksheet import Worksheet
 
 from kys_in_rest.core.tg_utils import TgFeature
 from kys_in_rest.money.features.repos.tinkoff_candles_repo import Candle, TinkoffCandlesRepo
@@ -34,49 +36,47 @@ class LoadCandlesTgFeature(TgFeature):
 
         try:
             await self.bot_msg_repo.send_text(f"Загружаю свечи для {ticker}...")
-            
+
             # Получаем свечи
-            candles = self.candles_repo.get_monthly_candles(ticker, months=36)
-            
-            if not candles:
-                await self.bot_msg_repo.send_text(f"Не удалось получить свечи для {ticker}")
+            monthly_candles = self.candles_repo.get_monthly_candles(ticker, months=36)
+            weekly_candles = self.candles_repo.get_weekly_candles(ticker)
+
+            if not monthly_candles:
+                await self.bot_msg_repo.send_text(f"Не удалось получить месячные свечи для {ticker}")
                 return
 
-            # Фильтруем свечи: исключаем текущий месяц (он еще неполный)
-            # Приводим к UTC и делаем timezone-aware для корректного сравнения
-            current_month_utc = datetime.utcnow().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-            # Если candle.time имеет timezone, делаем current_month тоже aware
-            if candles and candles[0].time.tzinfo is not None:
-                from datetime import timezone
-                current_month = current_month_utc.replace(tzinfo=timezone.utc)
-            else:
-                current_month = current_month_utc
-            
-            complete_candles = [
-                candle for candle in candles
-                if candle.time < current_month
-            ]
-            
-            if not complete_candles:
-                await self.bot_msg_repo.send_text(f"Нет полных свечей для {ticker}")
+            if not weekly_candles:
+                await self.bot_msg_repo.send_text(f"Не удалось получить недельные свечи для {ticker}")
+                return
+
+            complete_monthly = self._filter_complete_months(monthly_candles)
+            complete_weekly = self._filter_complete_weeks(weekly_candles)
+
+            if not complete_monthly:
+                await self.bot_msg_repo.send_text(f"Нет полных месячных свечей для {ticker}")
+                return
+
+            if not complete_weekly:
+                await self.bot_msg_repo.send_text(f"Нет полных недельных свечей для {ticker}")
                 return
 
             # Создаем Excel файл
-            excel_bytes = self._create_excel(complete_candles, ticker)
-            
+            excel_bytes = self._create_excel(complete_monthly, complete_weekly, ticker)
+
             # Вычисляем статистику
-            stats = self._calculate_statistics(complete_candles)
-            
+            monthly_stats = self._calculate_statistics(complete_monthly)
+            weekly_stats = self._calculate_statistics(complete_weekly)
+
             # Отправляем файл
-            filename = f"{ticker}_candles_36m.xlsx"
+            filename = f"{ticker}_candles.xlsx"
             await self.bot_msg_repo.send_document(
                 document=excel_bytes,
                 filename=filename,
-                caption=f"Месячные свечи {ticker} за 36 месяцев",
+                caption=f"Свечи {ticker}: месячные и недельные",
             )
             
             # Отправляем статистику
-            stats_text = self._format_statistics(stats, ticker)
+            stats_text = self._format_statistics(monthly_stats, weekly_stats, ticker)
             await self.bot_msg_repo.send_text(stats_text)
             
         except ValueError as e:
@@ -84,57 +84,71 @@ class LoadCandlesTgFeature(TgFeature):
         except Exception as e:
             await self.bot_msg_repo.send_text(f"Произошла ошибка: {str(e)}")
 
-    def _create_excel(self, candles: list[Candle], ticker: str) -> bytes:
+    def _create_excel(
+        self,
+        monthly_candles: list[Candle],
+        weekly_candles: list[Candle],
+        ticker: str,
+    ) -> bytes:
         """Создает Excel файл со свечами"""
         wb = Workbook()
-        ws = wb.active
-        if ws is None:
+        month_sheet = wb.active
+        if month_sheet is None:
             raise RuntimeError("Не удалось создать лист в Excel")
-        ws.title = "Свечи"
-        
-        # Заголовки
-        ws["A1"] = "Месяц Год"
-        ws["B1"] = "Изменение (%)"
-        
-        # Стили для заголовков
-        header_fill = PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
-        header_font = Font(bold=True)
-        ws["A1"].fill = header_fill
-        ws["A1"].font = header_font
-        ws["B1"].fill = header_fill
-        ws["B1"].font = header_font
-        
-        # Сортируем свечи по убыванию даты (от новых к старым)
-        sorted_candles = sorted(candles, key=lambda c: c.time, reverse=True)
-        
-        # Заполняем данные
-        green_fill = PatternFill(start_color="90EE90", end_color="90EE90", fill_type="solid")
-        red_fill = PatternFill(start_color="FF6B6B", end_color="FF6B6B", fill_type="solid")
-        
-        for idx, candle in enumerate(sorted_candles, start=2):
-            # Месяц и год
-            month_year = candle.time.strftime("%m.%Y")
-            ws[f"A{idx}"] = month_year
-            
-            # Процент изменения
-            change_percent = ((candle.close - candle.open) / candle.open) * 100
-            ws[f"B{idx}"] = round(change_percent, 2)
-            
-            # Цвет в зависимости от направления
-            if change_percent >= 0:
-                ws[f"B{idx}"].fill = green_fill
-            else:
-                ws[f"B{idx}"].fill = red_fill
-        
-        # Автоподбор ширины колонок
-        ws.column_dimensions["A"].width = 15
-        ws.column_dimensions["B"].width = 18
-        
+        self._fill_candles_sheet(
+            sheet=month_sheet,
+            title="Месяцы",
+            candles=monthly_candles,
+            date_format="%m.%Y",
+        )
+
+        week_sheet = wb.create_sheet(title="Недели")
+        self._fill_candles_sheet(
+            sheet=week_sheet,
+            title="Недели",
+            candles=weekly_candles,
+            date_format="%d.%m.%Y",
+        )
+
         # Сохраняем в байты
         excel_buffer = io.BytesIO()
         wb.save(excel_buffer)
         excel_buffer.seek(0)
         return excel_buffer.getvalue()
+
+    def _fill_candles_sheet(
+        self,
+        *,
+        sheet: Worksheet,
+        title: str,
+        candles: list[Candle],
+        date_format: str,
+    ) -> None:
+        sheet.title = title
+
+        # Заголовки
+        sheet["A1"] = "Дата"
+        sheet["B1"] = "Изменение (%)"
+
+        header_fill = PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
+        header_font = Font(bold=True)
+        sheet["A1"].fill = header_fill
+        sheet["A1"].font = header_font
+        sheet["B1"].fill = header_fill
+        sheet["B1"].font = header_font
+
+        green_fill = PatternFill(start_color="90EE90", end_color="90EE90", fill_type="solid")
+        red_fill = PatternFill(start_color="FF6B6B", end_color="FF6B6B", fill_type="solid")
+
+        for idx, candle in enumerate(sorted(candles, key=lambda c: c.time, reverse=True), start=2):
+            sheet[f"A{idx}"] = candle.time.strftime(date_format)
+            change_percent = ((candle.close - candle.open) / candle.open) * 100
+            sheet[f"B{idx}"] = round(change_percent, 2)
+
+            sheet[f"B{idx}"].fill = green_fill if change_percent >= 0 else red_fill
+
+        sheet.column_dimensions["A"].width = 18
+        sheet.column_dimensions["B"].width = 18
 
     def _calculate_statistics(self, candles: list[Candle]) -> dict[str, Any]:
         """Вычисляет статистику по свечам"""
@@ -154,54 +168,98 @@ class LoadCandlesTgFeature(TgFeature):
         }
         
         if falls:
-            stats["min_fall"] = round(min(falls), 2)
-            stats["max_fall"] = round(max(falls), 2)
+            stats["min_fall"] = round(max(falls), 2)
+            stats["max_fall"] = round(min(falls), 2)
             stats["avg_fall"] = round(sum(falls) / len(falls), 2)
+            stats["median_fall"] = round(median(falls), 2)
         else:
             stats["min_fall"] = None
             stats["max_fall"] = None
             stats["avg_fall"] = None
+            stats["median_fall"] = None
         
         if growths:
             stats["min_growth"] = round(min(growths), 2)
             stats["max_growth"] = round(max(growths), 2)
             stats["avg_growth"] = round(sum(growths) / len(growths), 2)
+            stats["median_growth"] = round(median(growths), 2)
         else:
             stats["min_growth"] = None
             stats["max_growth"] = None
             stats["avg_growth"] = None
-        
+            stats["median_growth"] = None
+
+        stats["growth_probability"] = (
+            round((stats["growth_count"] / stats["total"]) * 100)
+            if stats["total"] > 0
+            else 0
+        )
+
         return stats
 
-    def _format_statistics(self, stats: dict[str, Any], ticker: str) -> str:
+    def _format_statistics(
+        self,
+        monthly_stats: dict[str, Any],
+        weekly_stats: dict[str, Any],
+        ticker: str,
+    ) -> str:
         """Форматирует статистику для отправки"""
-        lines = [f"📊 Статистика по {ticker}:"]
+        lines = [f"📊 {ticker}"]
         lines.append("")
-        
-        # Падения
-        if stats["min_fall"] is not None:
-            lines.append("🔴 Падения:")
-            lines.append(f"  Мин падение: {stats['min_fall']}%")
-            lines.append(f"  Макс падение: {stats['max_fall']}%")
-            lines.append(f"  Среднее падение: {stats['avg_fall']}%")
-        else:
-            lines.append("🔴 Падения: нет")
-        
-        lines.append("")
-        
-        # Рост
-        if stats["min_growth"] is not None:
-            lines.append("🟢 Рост:")
-            lines.append(f"  Мин рост: {stats['min_growth']}%")
-            lines.append(f"  Макс рост: {stats['max_growth']}%")
-            lines.append(f"  Средний рост: {stats['avg_growth']}%")
-        else:
-            lines.append("🟢 Рост: нет")
-        
-        lines.append("")
-        
-        # Вероятность роста
-        growth_probability = round((stats['growth_count'] / stats['total']) * 100) if stats['total'] > 0 else 0
-        lines.append(f"📈 Вероятность роста: {growth_probability}% ({stats['growth_count']} мес роста из {stats['total']})")
-        
+
+        lines.append(self._format_period_stats("Месяцы", monthly_stats))
+        lines.append(self._format_period_stats("Недели", weekly_stats))
+
         return "\n".join(lines)
+
+    def _format_period_stats(self, label: str, stats: dict[str, Any]) -> str:
+        red_part = (
+            f"🔴 мин {self._fmt_percent(stats['min_fall'])}, "
+            f"макс {self._fmt_percent(stats['max_fall'])}, "
+            f"ср {self._fmt_percent(stats['avg_fall'])}, "
+            f"мед {self._fmt_percent(stats['median_fall'])}"
+        )
+
+        green_part = (
+            f"🟢 мин {self._fmt_percent(stats['min_growth'])}, "
+            f"макс {self._fmt_percent(stats['max_growth'])}, "
+            f"ср {self._fmt_percent(stats['avg_growth'])}, "
+            f"мед {self._fmt_percent(stats['median_growth'])}"
+        )
+
+        growth_part = (
+            f"📈 рост {stats['growth_probability']}% "
+            f"({stats['growth_count']}/{stats['total']})"
+        )
+
+        return (
+            f"{label} ({stats['total']}): {red_part} | "
+            f"{green_part} | {growth_part}"
+        )
+
+    @staticmethod
+    def _fmt_percent(value: float | None) -> str:
+        if value is None:
+            return "—"
+        return f"{value:+.2f}%"
+
+    def _filter_complete_months(self, candles: list[Candle]) -> list[Candle]:
+        now = self._now_for_candles(candles).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        return [candle for candle in candles if candle.time < now]
+
+    def _filter_complete_weeks(self, candles: list[Candle]) -> list[Candle]:
+        now = self._now_for_candles(candles)
+        week_start = (now - timedelta(days=now.weekday())).replace(
+            hour=0,
+            minute=0,
+            second=0,
+            microsecond=0,
+        )
+        return [candle for candle in candles if candle.time < week_start]
+
+    @staticmethod
+    def _now_for_candles(candles: list[Candle]) -> datetime:
+        now = datetime.utcnow()
+        if candles and candles[0].time.tzinfo is not None:
+            return now.replace(tzinfo=timezone.utc)
+        return now

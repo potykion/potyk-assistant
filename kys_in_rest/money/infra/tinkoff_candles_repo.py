@@ -1,11 +1,9 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+from typing import Any
 
-from tinkoff.invest import Client, CandleInterval, InstrumentIdType
+from tinkoff.invest import CandleInterval, Client, InstrumentIdType
 
-from kys_in_rest.money.features.repos.tinkoff_candles_repo import (
-    Candle,
-    TinkoffCandlesRepo,
-)
+from kys_in_rest.money.features.repos.tinkoff_candles_repo import Candle, TinkoffCandlesRepo
 
 
 class TinkoffInvestCandlesRepo(TinkoffCandlesRepo):
@@ -15,84 +13,95 @@ class TinkoffInvestCandlesRepo(TinkoffCandlesRepo):
         self.token = token
 
     def get_monthly_candles(self, ticker: str, months: int = 36) -> list[Candle]:
-        """
-        Получает месячные свечи за указанное количество месяцев
-        
-        Args:
-            ticker: Тикер акции (например, 'NLMK')
-            months: Количество месяцев (по умолчанию 36)
-            
-        Returns:
-            Список свечей, отсортированный по времени (от старых к новым)
-        """
         with Client(token=self.token) as client:
-            # Получаем figi по тикеру для акций Московской биржи
-            # Для акций MOEX используем class_code "TQBR"
-            try:
-                # Пробуем получить акцию по тикеру и class_code
-                share_response = client.instruments.share_by(
-                    id_type=InstrumentIdType.INSTRUMENT_ID_TYPE_TICKER,
-                    class_code="TQBR",
-                    id=ticker.upper(),
-                )
-                figi = share_response.instrument.figi
-            except Exception:
-                # Если не получилось через share_by, пробуем через find_instrument
-                instruments_response = client.instruments.find_instrument(query=ticker)
-                
-                # Ищем акцию на Московской бирже
-                instrument = None
-                if hasattr(instruments_response, 'instruments'):
-                    for inst in instruments_response.instruments:
-                        if hasattr(inst, 'ticker') and hasattr(inst, 'exchange'):
-                            if inst.ticker == ticker.upper() and inst.exchange == "MOEX":
-                                instrument = inst
-                                break
-                
-                if not instrument or not hasattr(instrument, 'figi'):
-                    raise ValueError(f"Инструмент {ticker} не найден на Московской бирже")
-                
-                figi = instrument.figi
-            
-            # Вычисляем даты начала и конца
-            end_date = datetime.utcnow()
-            start_date = end_date - timedelta(days=months * 31)  # Примерно months месяцев
-            
-            # Получаем свечи
-            candles_response = client.market_data.get_candles(
+            figi = self._resolve_figi(client, ticker)
+            end_date = datetime.utcnow().replace(tzinfo=timezone.utc)
+            start_date = end_date - timedelta(days=months * 31)
+            return self._fetch_candles(
+                client,
                 figi=figi,
                 from_=start_date,
                 to=end_date,
                 interval=CandleInterval.CANDLE_INTERVAL_MONTH,
             )
-            
-            # Преобразуем в наши Candle объекты
-            candles = []
-            if hasattr(candles_response, 'candles'):
-                for candle in candles_response.candles:
-                    if (hasattr(candle, 'open') and candle.open and 
-                        hasattr(candle, 'close') and candle.close and
-                        hasattr(candle, 'high') and candle.high and
-                        hasattr(candle, 'low') and candle.low):
-                        # Преобразуем Quotation в float
-                        open_price = float(candle.open.units) + float(candle.open.nano) / 1e9
-                        close_price = float(candle.close.units) + float(candle.close.nano) / 1e9
-                        high_price = float(candle.high.units) + float(candle.high.nano) / 1e9
-                        low_price = float(candle.low.units) + float(candle.low.nano) / 1e9
-                        
-                        candles.append(
-                            Candle(
-                                open=open_price,
-                                close=close_price,
-                                high=high_price,
-                                low=low_price,
-                                time=candle.time,
-                                volume=candle.volume if hasattr(candle, 'volume') else 0,
-                            )
-                        )
-            
-            # Сортируем по времени (от старых к новым)
-            candles.sort(key=lambda c: c.time)
-            
-            return candles
+
+    def get_weekly_candles(self, ticker: str, weeks: int = 156) -> list[Candle]:
+        with Client(token=self.token) as client:
+            figi = self._resolve_figi(client, ticker)
+            end_date = datetime.utcnow().replace(tzinfo=timezone.utc)
+            start_date = end_date - timedelta(weeks=weeks)
+            return self._fetch_candles(
+                client,
+                figi=figi,
+                from_=start_date,
+                to=end_date,
+                interval=CandleInterval.CANDLE_INTERVAL_WEEK,
+            )
+
+    def _resolve_figi(self, client: Any, ticker: str) -> str:
+        try:
+            share_response = client.instruments.share_by(
+                id_type=InstrumentIdType.INSTRUMENT_ID_TYPE_TICKER,
+                class_code="TQBR",
+                id=ticker.upper(),
+            )
+            figi = getattr(share_response.instrument, "figi", None)
+            if not figi:
+                raise ValueError
+            return str(figi)
+        except Exception:
+            instruments_response = client.instruments.find_instrument(query=ticker)
+            instrument = None
+            if hasattr(instruments_response, "instruments"):
+                for inst in instruments_response.instruments:
+                    if hasattr(inst, "ticker") and hasattr(inst, "exchange"):
+                        if inst.ticker == ticker.upper() and inst.exchange == "MOEX":
+                            instrument = inst
+                            break
+
+            figi = getattr(instrument, "figi", None) if instrument else None
+            if not figi:
+                raise ValueError(f"Инструмент {ticker} не найден на Московской бирже")
+
+            return str(figi)
+
+    def _fetch_candles(
+        self,
+        client: Any,
+        *,
+        figi: str,
+        from_: datetime,
+        to: datetime,
+        interval: CandleInterval,
+    ) -> list[Candle]:
+        candles_response = client.market_data.get_candles(
+            figi=figi,
+            from_=from_,
+            to=to,
+            interval=interval,
+        )
+
+        candles: list[Candle] = []
+        response_candles = getattr(candles_response, "candles", [])
+        for candle in response_candles:
+            if not (candle.open and candle.close and candle.high and candle.low):
+                continue
+
+            candles.append(
+                Candle(
+                    open=self._quotation_to_float(candle.open),
+                    close=self._quotation_to_float(candle.close),
+                    high=self._quotation_to_float(candle.high),
+                    low=self._quotation_to_float(candle.low),
+                    time=candle.time,
+                    volume=getattr(candle, "volume", 0),
+                )
+            )
+
+        candles.sort(key=lambda c: c.time)
+        return candles
+
+    @staticmethod
+    def _quotation_to_float(quotation: Any) -> float:
+        return float(quotation.units) + float(quotation.nano) / 1e9
 
