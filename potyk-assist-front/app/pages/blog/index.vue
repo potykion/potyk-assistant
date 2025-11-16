@@ -14,7 +14,7 @@ useSeoMeta({
     <h1>Блог</h1>
 
     <v-list>
-      <v-list-item v-for="post in articles" :key="post.id" :title="post.title" :to="post.path"/>
+      <v-list-item v-for="post in articles" :key="post.id" :title="post.title" :to="post.path" :subtitle="post.meta.date"/>
     </v-list>
 
   </v-container>
