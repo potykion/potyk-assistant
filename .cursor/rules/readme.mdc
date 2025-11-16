@@ -9,9 +9,10 @@ alwaysApply: true
 ## Stack
 ### Frontend
 
-- Nuxt
-- Vuetify
-
+- Nuxt 4.2
+    - Nuxt Content 3.8
+- Vuetify 3.9
+- Остальное тут: potyk-assist-front\package.json
 
 ## Нужно
 
