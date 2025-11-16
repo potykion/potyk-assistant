@@ -40,3 +40,7 @@ cp ./db.sqlite ./db_prod.sqlite
 ```shell
 scp leybovich-nikita@84.201.131.244:./kys_in_rest/db_prod.sqlite .
 ```
+
+## Frontend Refs
+
+- 

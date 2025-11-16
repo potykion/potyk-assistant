@@ -10,6 +10,7 @@
       <v-btn to="/img">img</v-btn>
       <v-btn to="/vid">vid</v-btn>
       <v-btn to="/mu">mu</v-btn>
+      <v-btn to="/feed">feed</v-btn>
 
     </v-app-bar-title>
 

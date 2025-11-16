@@ -1,3 +1,14 @@
+<!--
+Usage in content/**/*.md:
+
+::blog-beer-info{country-flag="🇩🇪" name="Пшеничка" :abv="4.9" tap-date="06.25" :price="220" place="ВкусВилл" :rating="4.25"}
+::
+
+Will render:
+
+🇩🇪 • Пшеничка • ABV: 4.9° • Розлив: 06.25 • Цена: 220₽ @ ВкусВилл • 4.25 / 5 ⭐
+-->
+
 <script setup lang="ts">
 const props = defineProps<{
   countryFlag: string
@@ -14,28 +25,22 @@ const maxRating = props.maxRating ?? 5
 </script>
 
 <template>
-  <div class="beer-info">
-    <span>{{ props.countryFlag }}</span>
-    <span>•</span>
-    <span>{{ props.name }}</span>
-    <span>•</span>
-    <span>ABV: {{ props.abv }}°</span>
-    <span>•</span>
-    <span>Розлив: {{ props.tapDate }}</span>
-    <span>•</span>
-    <span>Цена: {{ props.price }}₽</span>
-    <span>@</span>
-    <span>{{ props.place }}</span>
-    <span>•</span>
-    <span>{{ props.rating }} / {{ maxRating }} ⭐</span>
-  </div>
+  <p>
+    <i>
+      {{ props.countryFlag }}
+      •
+      {{ props.name }}
+      •
+      ABV: {{ props.abv }}°
+      •
+      Розлив: {{ props.tapDate }}
+      •
+      Цена: {{ props.price }}₽
+      @
+      {{ props.place }}
+      •
+      {{ props.rating }} / {{ maxRating }} ⭐
+    </i>
+  </p>
 </template>
 
-<style scoped lang="sass">
-.beer-info
-  display: flex
-  align-items: center
-  gap: 4px
-  flex-wrap: wrap
-  font-style: italic
-</style>
