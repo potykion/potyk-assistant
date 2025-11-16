@@ -50,6 +50,7 @@ const toggleTrack = (src: string) => {
           <audio
             ref="audioRef"
             :src="currentSrc ?? undefined"
+            controls
           ></audio>
 
           <mu-track

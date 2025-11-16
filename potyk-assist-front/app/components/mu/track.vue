@@ -16,14 +16,19 @@ const onToggleClick = () => {
 
 <template>
   <v-list-item>
-    <v-list-item-title>{{ props.title }}</v-list-item-title>
-    <v-list-item-subtitle>{{ props.artist }}</v-list-item-subtitle>
-
-    <template #append>
-      <v-btn size="small" variant="text" @click.stop="onToggleClick">
-        Play / Pause
+    <template #prepend>
+      <v-btn
+        icon
+        variant="text"
+        size="small"
+        @click.stop="onToggleClick"
+      >
+        <v-icon icon="mdi-play-pause" />
       </v-btn>
     </template>
+
+    <v-list-item-title>{{ props.title }}</v-list-item-title>
+    <v-list-item-subtitle>{{ props.artist }}</v-list-item-subtitle>
   </v-list-item>
 </template>
 
