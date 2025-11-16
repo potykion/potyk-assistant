@@ -38,7 +38,7 @@ const toggleTrack = (src: string) => {
 
     <v-row>
       <v-col cols="3">
-        <v-card>
+        <v-card href="https://music.yandex.ru/album/89962">
           <v-img src="https://avatars.yandex.net/get-music-content/49876/cbf41616.a.89962-1/600x600"></v-img>
 
           <v-card-item>
