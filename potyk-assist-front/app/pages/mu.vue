@@ -3,29 +3,25 @@ import { ref } from 'vue'
 
 const audioRef = ref<HTMLAudioElement | null>(null)
 const currentSrc = ref<string | null>(null)
-const isPlaying = ref(false)
 
 const toggleTrack = (src: string) => {
   const audio = audioRef.value
   if (!audio) return
 
-  // if another track selected – switch and play
+  // if another track selected – switch and play from start
   if (currentSrc.value !== src) {
     currentSrc.value = src
-    // reload source and play
-    audio.load()
+    audio.src = src
+    audio.currentTime = 0
     void audio.play()
-    isPlaying.value = true
     return
   }
 
   // same track – toggle play/pause
-  if (isPlaying.value) {
-    audio.pause()
-    isPlaying.value = false
-  } else {
+  if (audio.paused) {
     void audio.play()
-    isPlaying.value = true
+  } else {
+    audio.pause()
   }
 }
 </script>
@@ -49,8 +45,6 @@ const toggleTrack = (src: string) => {
 
           <audio
             ref="audioRef"
-            :src="currentSrc ?? undefined"
-            controls
           ></audio>
 
           <mu-track
