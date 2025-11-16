@@ -11,7 +11,6 @@ useSeoMeta({
 
 <template>
   <v-container max-width="800">
-
         <i>{{ page.meta.date }}</i>
 
         <ContentRenderer v-if="page" :value="page"/>
