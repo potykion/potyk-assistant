@@ -21,7 +21,7 @@ const onToggleClick = () => {
     class="track-item"
     clickable
     rounded="lg"
-    @click="onToggleClick"
+    @click.stop.prevent="onToggleClick"
   >
     <template #prepend>
       <div class="track-cover-wrapper">

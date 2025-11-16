@@ -38,12 +38,25 @@ const toggleTrack = (src: string) => {
 
     <v-row>
       <v-col cols="3">
-        <v-card href="https://music.yandex.ru/album/89962">
-          <v-img src="https://avatars.yandex.net/get-music-content/49876/cbf41616.a.89962-1/600x600"></v-img>
+        <v-card>
+          <v-img src="https://avatars.yandex.net/get-music-content/49876/cbf41616.a.89962-1/600x600" />
 
           <v-card-item>
             <v-card-title>Londinium</v-card-title>
             <v-card-subtitle>Archive • 1996</v-card-subtitle>
+
+            <template #append>
+              <v-btn
+                icon
+                variant="text"
+                size="small"
+                href="https://music.yandex.ru/album/89962"
+                target="_blank"
+                @click.stop
+              >
+                <v-icon icon="mdi-open-in-new" />
+              </v-btn>
+            </template>
           </v-card-item>
 
           <v-divider></v-divider>
