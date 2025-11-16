@@ -9,7 +9,9 @@ date: 2025-11-14
 Пятница, планов больших нет, значит можно отдохнуть. Зайдя по обыкновению на перекус в вв, глаз зацепился за <mark style="background: #ff3c3c; color: white; padding: 2px 4px; border-radius: 2px" title="большая скидка на товар, который скоро снимут с продажи">красный ценник</mark> рядом со знакомым логотипом Шнайдера - не долго думая, взял бутылочку - так и была выбрана тема вечера - пшенички.
 
 ## [Schneider – Hefeweissbier Naturtrüb](https://untappd.com/b/schneider-weisse-g-schneider-and-sohn-hefeweissbier-naturtrub/6232155) 
-*🇩🇪 •  Пшеничка • ABV: 4.9° • Розлив: 06.25 • <mark>220₽</mark> @ ВкусВилл • 4.25 / 5 ⭐*
+
+::blog-beer-info{country-flag="🇩🇪" name="Пшеничка" :abv="4.9" tap-date="06.25" :price="220" place="ВкусВилл" :rating="4.25"}
+:: 
 
 ![|300](https://storage.yandexcloud.net/potyk-io-static/images/01-wheat-evening-04.jpg){width=300}
 
@@ -20,7 +22,9 @@ date: 2025-11-14
 Итого за такие деньги получаем, пусть и не особо насыщенную пше (можно даже сказать *столовую*), но довольно питкую позицию, которую легко можно бахнуть в количестве нескольких батлов 👍
 
 ## [Huyghe – Floris Passion](https://untappd.com/b/delirium-huyghe-brewery-floris-passion/70362)
-*🇧🇪 • Фруктовая Пшеничка • ABV: 3.6° • Розлив: 08.25 • Цена: 350₽ @ Перекресток • 4.5 / 5 ⭐*
+
+::blog-beer-info{country-flag="🇧🇪" name="Фруктовая Пшеничка" :abv="3.6" tap-date="08.25" :price="350" place="Перекресток" :rating="4.5"}
+::
 
 ![|300](https://storage.yandexcloud.net/potyk-io-static/images/01-wheat-evening-03.jpg){width=300}
 
@@ -31,7 +35,9 @@ date: 2025-11-14
 В любом случае, это очень вкусно и легко, всем бы саурочкам быть такими!
 
 ## [Weihenstephan – Vitus](https://untappd.com/b/bayerische-staatsbrauerei-weihenstephan-weihenstephaner-vitus/7408)
-*🇩🇪 • Пшеничный Бок • ABV: 7.7° • Розлив: 01.25 • Цена: 400₽ @ Пиво и ПенаПаки • 4.5 / 5 ⭐*
+
+::blog-beer-info{country-flag="🇩🇪" name="Пшеничный Бок" :abv="7.7" tap-date="01.25" :price="400" place="Пиво и ПенаПаки" :rating="4.5"}
+::
 
 ![](https://storage.yandexcloud.net/potyk-io-static/images/01-wheat-evening-02.jpg){width=300}
 

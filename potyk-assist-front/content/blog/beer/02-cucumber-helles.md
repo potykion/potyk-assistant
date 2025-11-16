@@ -8,7 +8,8 @@ date: 2025-11-15
 
 ## [Arcobräu — Mooser Liesl](https://untappd.com/b/arcobrau-grafliches-brauhaus-mooser-liesl-helles/1123571) 
 
-_🇩🇪 • Хеллес • 5.3° • 320₽ @ Перекресток • 2 / 5 ⭐_
+::blog-beer-info{country-flag="🇩🇪" name="Хеллес" :abv="5.3" tap-date="06.25" :price="320" place="Перекресток" :rating="2"}
+:: 
 
 ![](https://storage.yandexcloud.net/potyk-io-static/images/02-cucumber-helles-01.jpg){width=300}
 

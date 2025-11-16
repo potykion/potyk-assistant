@@ -37,4 +37,5 @@ const maxRating = props.maxRating ?? 5
   align-items: center
   gap: 4px
   flex-wrap: wrap
+  font-style: italic
 </style>
