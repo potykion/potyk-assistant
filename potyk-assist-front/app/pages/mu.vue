@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import {ref} from 'vue'
 
 const audioRef = ref<HTMLAudioElement | null>(null)
 const currentSrc = ref<string | null>(null)
@@ -38,27 +38,40 @@ const toggleTrack = (src: string) => {
 
     <v-row>
       <v-col cols="3">
-        <div>
+        <v-card>
           <v-img src="https://avatars.yandex.net/get-music-content/49876/cbf41616.a.89962-1/600x600"></v-img>
-          <div class="font-weight-bold text-h6">Londinium</div>
-          <div class="text-subtitle-2">Archive • 1996</div>
 
-          <div class="text-subtitle-2 font-italic">
-            Highlighted track:
-          </div>
+          <v-card-item>
+            <v-card-title>Londinium</v-card-title>
+            <v-card-subtitle>Archive • 1996</v-card-subtitle>
+          </v-card-item>
 
-          <audio
-            ref="audioRef"
-          ></audio>
+          <v-divider></v-divider>
 
-          <mu-track
-            title="So Few Words"
-            artist="Londinium"
-            src="/Archive%20-%20So%20Few%20Words.mp3"
-            cover="https://avatars.yandex.net/get-music-content/49876/cbf41616.a.89962-1/600x600"
-            :playing="playingSrc === '/Archive%20-%20So%20Few%20Words.mp3'"
-            @toggle="toggleTrack"
-          ></mu-track>
+          <v-card-text>
+            <div class="font-italic">
+              Highlighted track:
+            </div>
+
+            <audio
+                ref="audioRef"
+            ></audio>
+
+            <mu-track
+                title="So Few Words"
+                artist="Londinium"
+                src="/Archive%20-%20So%20Few%20Words.mp3"
+                cover="https://avatars.yandex.net/get-music-content/49876/cbf41616.a.89962-1/600x600"
+                :playing="playingSrc === '/Archive%20-%20So%20Few%20Words.mp3'"
+                @toggle="toggleTrack"
+            ></mu-track>
+          </v-card-text>
+
+        </v-card>
+
+        <div>
+
+
         </div>
       </v-col>
     </v-row>
