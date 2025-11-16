@@ -12,6 +12,7 @@ type FeaturedAlbum = {
     title: string
     artist: string
     src: string
+    cover?: string
   }
 }
 
@@ -27,6 +28,7 @@ const featuredAlbums: FeaturedAlbum[] = [
       title: 'So Few Words',
       artist: 'Archive',
       src: '/Archive%20-%20So%20Few%20Words.mp3',
+      cover: 'https://avatars.yandex.net/get-music-content/49876/cbf41616.a.89962-1/600x600',
     },
   },
 ]
@@ -79,9 +81,7 @@ const toggleTrack = (src: string) => {
           :artist="album.artist"
           :year="album.year"
           :cover="album.cover"
-          :track-title="album.track.title"
-          :track-artist="album.track.artist"
-          :track-src="album.track.src"
+          :track="album.track"
           :playing="playingSrc === album.track.src"
           @toggle="toggleTrack"
         >

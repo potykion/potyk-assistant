@@ -1,9 +1,13 @@
 <script setup lang="ts">
-const props = defineProps<{
+type Track = {
   title: string
   artist: string
   src: string
   cover: string
+}
+
+const props = defineProps<{
+  track: Track
   playing: boolean
 }>()
 
@@ -12,7 +16,7 @@ const emit = defineEmits<{
 }>()
 
 const onToggleClick = () => {
-  emit('toggle', props.src)
+  emit('toggle', props.track.src)
 }
 </script>
 
@@ -25,8 +29,8 @@ const onToggleClick = () => {
   >
     <template #prepend>
       <div class="track-cover-wrapper">
-        <v-avatar >
-          <v-img :src="props.cover" cover />
+        <v-avatar>
+          <v-img :src="props.track.cover" cover />
         </v-avatar>
 
         <v-btn
@@ -36,16 +40,13 @@ const onToggleClick = () => {
           size="small"
           @click.stop="onToggleClick"
         >
-          <v-icon
-            :icon="props.playing ? 'mdi-pause' : 'mdi-play'"
-            color="white"
-          />
+          <v-icon :icon="props.playing ? 'mdi-pause' : 'mdi-play'" color="white" />
         </v-btn>
       </div>
     </template>
 
-    <v-list-item-title>{{ props.title }}</v-list-item-title>
-    <v-list-item-subtitle>{{ props.artist }}</v-list-item-subtitle>
+    <v-list-item-title>{{ props.track.title }}</v-list-item-title>
+    <v-list-item-subtitle>{{ props.track.artist }}</v-list-item-subtitle>
   </v-list-item>
 </template>
 

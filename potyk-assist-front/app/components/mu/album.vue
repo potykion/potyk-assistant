@@ -4,9 +4,12 @@ const props = defineProps<{
   artist: string
   year: string | number
   cover: string
-  trackTitle: string
-  trackArtist: string
-  trackSrc: string
+  track: {
+    title: string
+    artist: string
+    src: string
+    cover?: string
+  }
   playing: boolean
 }>()
 
@@ -40,13 +43,10 @@ const onToggle = (src: string) => {
       </div>
 
       <mu-track
-        :title="props.trackTitle"
-        :artist="props.trackArtist"
-        :src="props.trackSrc"
-        :cover="props.cover"
+        :track="props.track"
         :playing="props.playing"
         @toggle="onToggle"
-      />
+      ></mu-track>
     </v-card-text>
   </v-card>
 </template>
