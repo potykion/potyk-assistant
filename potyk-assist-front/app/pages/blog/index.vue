@@ -3,10 +3,6 @@ const {data: beerArticles} = await useAsyncData(() =>
     queryCollection('content').where("path", "like", "%beer%").order("date", "DESC").all()
 )
 
-useSeoMeta({
-  title: 'Блог',
-  description: 'Список статей блога'
-})
 </script>
 
 <template>
