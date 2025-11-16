@@ -6,9 +6,9 @@ date: 2025-11-15
 
 Как то раз в переке затарился хеллесами под сочный кешбек на импорт, и вот, спустя пару месяцев, один хеллесочек остался невыпитым, а мы как раз под него битые огурчики сварганили
 
-## Arcobräu — Mooser Liesl 
+## [Arcobräu — Mooser Liesl](https://untappd.com/b/arcobrau-grafliches-brauhaus-mooser-liesl-helles/1123571) 
 
-_🇩🇪 • Хеллес • 5.3° • 320₽ @ Перекресток_
+_🇩🇪 • Хеллес • 5.3° • 320₽ @ Перекресток • 2 / 5 ⭐_
 
 ![](https://storage.yandexcloud.net/potyk-io-static/images/02-cucumber-helles-01.jpg){width=300}
 

@@ -11,7 +11,7 @@ useSeoMeta({
 
 <template>
   <v-container max-width="800">
-        <i>{{ page.meta.date }}</i>
+        <i>{{ page.date.slice(0,10) }}</i>
 
         <ContentRenderer v-if="page" :value="page"/>
         <div v-else>Home not found</div>
