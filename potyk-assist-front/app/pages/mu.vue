@@ -3,6 +3,7 @@ import { ref } from 'vue'
 
 const audioRef = ref<HTMLAudioElement | null>(null)
 const currentSrc = ref<string | null>(null)
+const playingSrc = ref<string | null>(null)
 
 const toggleTrack = (src: string) => {
   const audio = audioRef.value
@@ -14,14 +15,17 @@ const toggleTrack = (src: string) => {
     audio.src = src
     audio.currentTime = 0
     void audio.play()
+    playingSrc.value = src
     return
   }
 
   // same track – toggle play/pause
   if (audio.paused) {
     void audio.play()
+    playingSrc.value = src
   } else {
     audio.pause()
+    playingSrc.value = null
   }
 }
 </script>
@@ -40,7 +44,7 @@ const toggleTrack = (src: string) => {
           <div class="text-subtitle-2">Archive • 1996</div>
 
           <div class="text-subtitle-2 font-italic">
-            Highlighted track: <b>So Few Words</b>
+            Highlighted track:
           </div>
 
           <audio
@@ -51,6 +55,7 @@ const toggleTrack = (src: string) => {
             title="So Few Words"
             artist="Londinium"
             src="/Archive%20-%20So%20Few%20Words.mp3"
+            :playing="playingSrc === '/Archive%20-%20So%20Few%20Words.mp3'"
             @toggle="toggleTrack"
           ></mu-track>
         </div>

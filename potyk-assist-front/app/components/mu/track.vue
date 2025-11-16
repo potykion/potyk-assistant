@@ -3,6 +3,7 @@ const props = defineProps<{
   title: string
   artist: string
   src: string
+  playing: boolean
 }>()
 
 const emit = defineEmits<{
@@ -15,7 +16,10 @@ const onToggleClick = () => {
 </script>
 
 <template>
-  <v-list-item>
+  <v-list-item
+    clickable
+    @click="onToggleClick"
+  >
     <template #prepend>
       <v-btn
         icon
@@ -23,7 +27,7 @@ const onToggleClick = () => {
         size="small"
         @click.stop="onToggleClick"
       >
-        <v-icon icon="mdi-play-pause" />
+        <v-icon :icon="props.playing ? 'mdi-pause' : 'mdi-play'" />
       </v-btn>
     </template>
 
