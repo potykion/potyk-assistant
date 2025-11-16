@@ -167,6 +167,10 @@ class LoadCandlesTgFeature(TgFeature):
             "growth_count": len(growths),
             "fall_count": len(falls),
         }
+
+        latest_candle = max(candles, key=lambda c: c.time)
+        current_price = latest_candle.close
+        stats["current_price"] = round(current_price, 2)
         
         if falls:
             stats["min_fall"] = round(max(falls), 2)
@@ -195,6 +199,33 @@ class LoadCandlesTgFeature(TgFeature):
             if stats["total"] > 0
             else 0
         )
+
+        avg_growth = stats.get("avg_growth")
+        median_growth = stats.get("median_growth")
+        if avg_growth is not None and median_growth is not None:
+            take_profit_percent = (avg_growth + median_growth) / 2
+            stats["take_profit_percent"] = round(take_profit_percent, 2)
+            stats["take_profit_price"] = round(
+                current_price * (1 + take_profit_percent / 100),
+                2,
+            )
+        else:
+            stats["take_profit_percent"] = None
+            stats["take_profit_price"] = None
+
+        avg_fall = stats.get("avg_fall")
+        median_fall = stats.get("median_fall")
+        if avg_fall is not None and median_fall is not None:
+            avg_fall_magnitude = (abs(avg_fall) + abs(median_fall)) / 2
+            stop_loss_percent = min(5.0, avg_fall_magnitude)
+            stats["stop_loss_percent"] = round(stop_loss_percent, 2)
+            stats["stop_loss_price"] = round(
+                current_price * (1 - stop_loss_percent / 100),
+                2,
+            )
+        else:
+            stats["stop_loss_percent"] = None
+            stats["stop_loss_price"] = None
 
         return stats
 
@@ -246,7 +277,29 @@ class LoadCandlesTgFeature(TgFeature):
             colalign=("left", "right", "right", "right", "right"),
         )
 
-        return f"{label} ({stats['total']}):<code>\n{table}\n</code>"
+        details: list[str] = []
+
+        current_price = stats.get("current_price")
+        if current_price is not None:
+            details.append(f"Текущая цена: {current_price:.2f}")
+
+        take_profit_percent = stats.get("take_profit_percent")
+        take_profit_price = stats.get("take_profit_price")
+        if take_profit_percent is not None and take_profit_price is not None:
+            details.append(
+                f"Тейк-профит (+{take_profit_percent:.1f}%): {take_profit_price:.2f}"
+            )
+
+        stop_loss_percent = stats.get("stop_loss_percent")
+        stop_loss_price = stats.get("stop_loss_price")
+        if stop_loss_percent is not None and stop_loss_price is not None:
+            details.append(
+                f"Стоп-лосс (-{stop_loss_percent:.1f}%): {stop_loss_price:.2f}"
+            )
+
+        extra = f"\n<code>{'\n'.join(details)}</code>" if details else ""
+
+        return f"{label} ({stats['total']}):<code>\n{table}\n</code>{extra}"
 
     @staticmethod
     def _fmt_percent(value: float | None) -> str:
