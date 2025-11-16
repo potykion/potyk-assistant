@@ -17,7 +17,10 @@ const onToggleClick = () => {
 
 <template>
   <v-list-item
+    class="track-item"
     clickable
+    rounded="lg"
+    density="compact"
     @click="onToggleClick"
   >
     <template #prepend>
@@ -37,4 +40,7 @@ const onToggleClick = () => {
 </template>
 
 <style scoped lang="sass">
+.track-item
+  padding-left: 0 !important
+  padding-right: 0 !important
 </style>
