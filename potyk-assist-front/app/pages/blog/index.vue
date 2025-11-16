@@ -1,6 +1,6 @@
 <script setup lang="ts">
-const { data: articles } = await useAsyncData(() =>
-  queryCollection('content').path('/blog').all()
+const {data: articles} = await useAsyncData(() =>
+    queryCollection('content').all()
 )
 
 useSeoMeta({
@@ -10,23 +10,12 @@ useSeoMeta({
 </script>
 
 <template>
-  <div>
+  <v-container>
     <h1>Блог</h1>
 
-    <div v-if="articles?.length">
-      <v-list>
-        <v-list-item
-          v-for="article in articles"
-          :key="article._id"
-          :to="article._path"
-          link
-          :title="article.title || article._path"
-        >
-        </v-list-item>
-      </v-list>
-    </div>
-    <div v-else>
-      Статей пока нет
-    </div>
-  </div>
+    <v-list>
+      <v-list-item v-for="post in articles" :key="post.id" :title="post.title" :to="post.path"/>
+    </v-list>
+
+  </v-container>
 </template>

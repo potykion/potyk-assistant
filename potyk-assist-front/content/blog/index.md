@@ -1,3 +1,0 @@
-# hi from blog
-
-blog
