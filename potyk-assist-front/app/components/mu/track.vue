@@ -36,7 +36,10 @@ const onToggleClick = () => {
           size="small"
           @click.stop="onToggleClick"
         >
-          <v-icon :icon="props.playing ? 'mdi-pause' : 'mdi-play'" />
+          <v-icon
+            :icon="props.playing ? 'mdi-pause' : 'mdi-play'"
+            color="white"
+          />
         </v-btn>
       </div>
     </template>
