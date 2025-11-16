@@ -6,6 +6,12 @@ alwaysApply: true
 
 - Локальная разработка ведется на Винде - имей в виду при запуске команд, вроде по умолчанию powershell
 
+## Stack
+### Frontend
+
+- Nuxt
+- Vuetify
+
 
 ## Нужно
 
@@ -28,12 +34,11 @@ cd /c%3A/Users/admin/PycharmProjects/kys_in_rest && python -m pytest tests/ -v
 - Не надо "Давайте проверим синтаксис Python файлов:"
 - Не надо "Давайте проверим, что файл IoC компилируется корректно:"
 - Не надо "Давайте проверим, что main.py компилируется:"
-- Не надо хуйни, типа: 
+- Не надо хуйни, типа:
 
 ```
 Отлично! Теперь давайте протестируем, что все работает. Создам простой тестовый скрипт:
 ```
-
 
 ## Архитектура
 
@@ -73,10 +78,10 @@ from kys_in_rest.tg.features.bot_msg_repo import BotMsgRepo
 
 class DownloadMusic(TgFeature):
     def __init__(
-        self,
-        bot_msg_repo: BotMsgRepo,
-        check_tg_admin: CheckTgAdmin,
-        download_repo: DownloadRepo,
+            self,
+            bot_msg_repo: BotMsgRepo,
+            check_tg_admin: CheckTgAdmin,
+            download_repo: DownloadRepo,
     ):
         self.bot_msg_repo = bot_msg_repo
         self.check_tg_admin = check_tg_admin
@@ -87,3 +92,4 @@ class DownloadMusic(TgFeature):
 
         ...
 ```
+
