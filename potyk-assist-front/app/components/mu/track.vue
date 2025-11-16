@@ -3,6 +3,7 @@ const props = defineProps<{
   title: string
   artist: string
   src: string
+  cover: string
   playing: boolean
 }>()
 
@@ -20,18 +21,24 @@ const onToggleClick = () => {
     class="track-item"
     clickable
     rounded="lg"
-    density="compact"
     @click="onToggleClick"
   >
     <template #prepend>
-      <v-btn
-        icon
-        variant="text"
-        size="small"
-        @click.stop="onToggleClick"
-      >
-        <v-icon :icon="props.playing ? 'mdi-pause' : 'mdi-play'" />
-      </v-btn>
+      <div class="track-cover-wrapper">
+        <v-avatar >
+          <v-img :src="props.cover" cover />
+        </v-avatar>
+
+        <v-btn
+          class="track-play-btn"
+          icon
+          variant="text"
+          size="small"
+          @click.stop="onToggleClick"
+        >
+          <v-icon :icon="props.playing ? 'mdi-pause' : 'mdi-play'" />
+        </v-btn>
+      </div>
     </template>
 
     <v-list-item-title>{{ props.title }}</v-list-item-title>
@@ -40,7 +47,25 @@ const onToggleClick = () => {
 </template>
 
 <style scoped lang="sass">
+.track-item :deep(.v-list-item__prepend)
+  padding-right: 8px
+
 .track-item
-  padding-left: 0 !important
-  padding-right: 0 !important
+  padding-left: 4px
+  padding-right: 4px
+
+.track-cover-wrapper
+  position: relative
+  display: inline-flex
+
+.track-play-btn
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  opacity: 0
+  transition: opacity 0.15s ease
+
+.track-item:hover .track-play-btn
+  opacity: 1
 </style>

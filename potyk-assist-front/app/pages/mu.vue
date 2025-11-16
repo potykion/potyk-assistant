@@ -55,6 +55,7 @@ const toggleTrack = (src: string) => {
             title="So Few Words"
             artist="Londinium"
             src="/Archive%20-%20So%20Few%20Words.mp3"
+            cover="https://avatars.yandex.net/get-music-content/49876/cbf41616.a.89962-1/600x600"
             :playing="playingSrc === '/Archive%20-%20So%20Few%20Words.mp3'"
             @toggle="toggleTrack"
           ></mu-track>
