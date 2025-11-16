@@ -1,10 +1,5 @@
 <script setup lang="ts">
-type Track = {
-  title: string
-  artist: string
-  src: string
-  cover: string
-}
+import type { Track } from './mu-data'
 
 const props = defineProps<{
   track: Track

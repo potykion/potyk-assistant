@@ -1,15 +1,8 @@
 <script setup lang="ts">
+import type { Album } from './mu-data'
+
 const props = defineProps<{
-  title: string
-  artist: string
-  year: string | number
-  cover: string
-  track: {
-    title: string
-    artist: string
-    src: string
-    cover?: string
-  }
+  album: Album
   playing: boolean
 }>()
 
@@ -23,12 +16,12 @@ const onToggle = (src: string) => {
 </script>
 
 <template>
-  <v-card>
-    <v-img :src="props.cover" />
+  <v-card >
+    <v-img :src="props.album.cover" />
 
     <v-card-item>
-      <v-card-title>{{ props.title }}</v-card-title>
-      <v-card-subtitle>{{ props.artist }} • {{ props.year }}</v-card-subtitle>
+      <v-card-title>{{ props.album.title }}</v-card-title>
+      <v-card-subtitle>{{ props.album.artist }} • {{ props.album.year }}</v-card-subtitle>
 
       <template #append>
         <slot name="actions" />
@@ -43,10 +36,10 @@ const onToggle = (src: string) => {
       </div>
 
       <mu-track
-        :track="props.track"
+        :track="props.album.track"
         :playing="props.playing"
         @toggle="onToggle"
-      ></mu-track>
+      />
     </v-card-text>
   </v-card>
 </template>
