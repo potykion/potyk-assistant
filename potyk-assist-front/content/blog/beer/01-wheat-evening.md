@@ -4,7 +4,7 @@ tags:
   - пивной-вечер
 ---
 
-# 01. Пшеничный вечер
+# Пшеничный вечер
 
 ![|400](https://storage.yandexcloud.net/potyk-io-static/images/01-wheat-evening-01.jpg){width=300}
 

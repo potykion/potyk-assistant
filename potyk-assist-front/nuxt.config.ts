@@ -4,6 +4,7 @@ export default defineNuxtConfig({
     devtools: {enabled: true},
     modules: ['@nuxt/content', '@nuxt/fonts', 'vuetify-nuxt-module', '@nuxt/eslint'],
     ssr: true,
+    // https://content.nuxt.com/docs/getting-started/configuration
     content: {
         renderer: {
             anchorLinks: {h2: false, h3: false, h4: false},
