@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; justify-content: center; padding-bottom: 4px; padding-top: 4px;">
+  <div style="display: flex; justify-content: center; padding-bottom: 8px; padding-top: 8px;">
     <img
         style="border-radius: 4px"
         :src="refinedSrc"

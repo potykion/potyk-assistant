@@ -1,13 +1,17 @@
 ---
 date: 2025-11-17
+tags:
+  - попитьпозже 
 ---
 
 
-# 03. Попить попозже • Поставочка Бельгия и Сидр 
+# 03. Поставочка Бельгия и Сидр 
 
 >Гениальная идея мне пришла, писать не про прошлое, а про будущее. Например в контексте пива - обзор на новиночки почтавочек. Погнали смотреть завоз в пенапаки 
 
 ## [Het Anker — Gouden Carolus Classic](https://untp.beer/7ef011cb01)
+
+![](https://assets.untappd.com/site/beer_logos_hd/beer-9087_9ce05_hd.jpeg){width=300}
 
 Никогда не слышал об этой пивоварне, а на пивасе 137к чекинов! Да ещё и Бельгия. А ещё вижу есть, внезапно, коллаба с Джовс, которые оказывается не в первой уже с бельгийскими ребятами коллабят (первая заметная коллаба - ищу человека).
 
@@ -15,9 +19,13 @@ date: 2025-11-17
 
 ## [Corsendonk — Pater Dubbel](https://untp.beer/ff66effe91)
 
+![](https://assets.untappd.com/site/beer_logos_hd/beer-1829_01c5d_hd.jpeg){width=100}
+
 Вот эту уже бутылочку видал ни раз - красивая, но не питая. Стилек полегче - дюбель - но от этого не менее интересный. Опять же похожий профиль - изюм, орешки, квас. И за хороший прайс в 350₽.
 
 ## [De Koningshoeven -- La Trappe Isid'or (2025)](https://untp.beer/5j8W9)
+
+![](https://assets.untappd.com/site/beer_logos_hd/beer-6646_6f88a_hd.jpeg){width=300}
 
 И ещё немного Бельгии — La Trappe - квадрик и трипель от 25 года
 
@@ -25,21 +33,31 @@ date: 2025-11-17
 
 ## [Быков — Гора Стреляная](https://untp.beer/4jwVV) | [La Maiзon Verte — Таруса](https://untappd.com/b/la-maizon-verte-tarusa-2024/6311592)
 
+![](https://assets.untappd.com/site/beer_logos_hd/beer-6311592_68a15_hd.jpeg){width=300}
+
 Большой завоз сидров - Быков, La Maiзon Verte, французы и испанцы - нас конечно интересуют только русские яблочки.
 
 ## [Brewlok -- Достоевский. Том 11.](https://untp.beer/K4WgW)
  
+![](https://assets.untappd.com/site/beer_logos_hd/beer-6482981_371b8_hd.jpeg){width=300}
+
 Brewlok много новинок/псевдо-новинок делает, но как-то все равно не хочется их брать, всё-таки есть к ним предубеждение, как у Волкам, хотя может в слепой деле что-то и понравится, но стауты пока не хочется, хотя новый том Достаевского , премьера которого прошла на Балтик Портер дне, народу зашёл, первое место в рейтинге 
 
 ## [Диета — Red Berries Gang Scarlet Drank](https://untp.beer/VXmlV)
+
+![](https://assets.untappd.com/site/beer_logos_hd/beer-6445136_cdd22_hd.jpeg){width=300}
 
 Новинка от Диеты. Опять же брать не хочется. Какие хорошие томатки, фрутбиры делают, а возврат к смузякам - неодобяемо, хотя народу тоже зашло.
 
 ## [Atlas Meadery -- Penrose X](https://untp.beer/7j1Pw)
 
+![](https://assets.untappd.com/site/beer_logos_hd/beer-6376227_0df0a_hd.jpeg){width=300}
+
 На чуть более адекватный десерт можно взять медочек от атласов. Обещают вишню, уходящую в миндаль - что является той ещё вкусняхой 
 
 ## [Zubr -- Gradus 12](https://untp.beer/xAbMJ)
+
+![](https://assets.untappd.com/site/beer_logos_hd/beer-2542893_80207_hd.jpeg){width=300}
 
 Из лагерков можно отметить лежака от Зубр. А больше достойный классики как-то и нет 
 

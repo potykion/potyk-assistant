@@ -41,9 +41,3 @@ cp ./db.sqlite ./db_prod.sqlite
 scp leybovich-nikita@84.201.131.244:./kys_in_rest/db_prod.sqlite .
 ```
 
-## Frontend Refs
-
-- https://vuetifyjs.com/en/components/all/#data-and-display
-- https://content.nuxt.com/docs/files/markdown#mdc-syntax
-    - https://github.com/nuxt-content/mdc/blob/main/src/runtime/components/prose/ProseH1.vue
-- https://console.yandex.cloud/folders/b1grljff5jqj8g3cs69f/storage/buckets/potyk-io-static?key=images%2F&versionsDisplay=false

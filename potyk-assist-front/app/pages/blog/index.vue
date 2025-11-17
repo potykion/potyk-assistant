@@ -19,8 +19,13 @@ const {data: newsArticles} = await useAsyncData(() =>
     </v-list>
     <h2>🍻 Пиво</h2>
     <v-list>
-      <v-list-item v-for="post in beerArticles" :key="post.id" :title="post.title" :to="post.path"
-                   :subtitle="post.date.slice(0,10)"/>
+      <v-list-item v-for="page in beerArticles" :key="page.id" :title="page.title" :to="page.path"
+      >
+        <v-list-item-subtitle>
+          <i>{{ page.date.slice(0, 10) }}</i> • <i>{{ page.tags.map(tag => `#${tag}`).join(' ') }}</i>
+
+        </v-list-item-subtitle>
+      </v-list-item>
     </v-list>
 
   </v-container>

@@ -7,7 +7,7 @@ const {data: page} = await useAsyncData(() => queryCollection('content').path(ro
 
 <template>
   <v-container max-width="800">
-        <i>{{ page.date.slice(0,10) }}</i>
+        <i>{{ page.date.slice(0,10) }}</i> • <i>{{ page.tags.map(tag => `#${tag}`).join(' ')  }}</i>
 
         <ContentRenderer v-if="page" :value="page"/>
         <div v-else>Home not found</div>
