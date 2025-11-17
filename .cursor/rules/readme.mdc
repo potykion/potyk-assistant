@@ -6,8 +6,7 @@ alwaysApply: true
 
 - Локальная разработка ведется на Винде - имей в виду при запуске команд, вроде по умолчанию powershell
 
-## Stack
-### Frontend
+## Frontend
 
 - Nuxt 4.2
     - Nuxt Content 3.8
@@ -20,8 +19,9 @@ alwaysApply: true
     - Исключения - `components\content`
 - Используем nuxt-auto imports так что если компонент лежит в `components\blog\beer-info.vue`, то в страницах его нужно использовать с префиксом - `blog-beer-info`
 
+## Backend
 
-## Нужно
+### Нужно
 
 - После добавления кода нужно запускать `mypy` и править ошибки:
 
@@ -29,7 +29,7 @@ alwaysApply: true
 .venv/Scripts/mypy
 ```
 
-## Запрещено
+### Запрещено
 
 - Создавать тесты/скрипты, если я явно не попросил об этом
 - Запускать тесты/команды/скрипты, если я явно не попросил об этом (за исключением `mypy`)
@@ -48,7 +48,7 @@ cd /c%3A/Users/admin/PycharmProjects/kys_in_rest && python -m pytest tests/ -v
 Отлично! Теперь давайте протестируем, что все работает. Создам простой тестовый скрипт:
 ```
 
-## Архитектура
+### Архитектура
 
 - Что-то типа DDD
 - `kys_in_rest` - основной пакет, внутри разбивка по доменам
@@ -69,7 +69,7 @@ cd /c%3A/Users/admin/PycharmProjects/kys_in_rest && python -m pytest tests/ -v
         - `ports` - порты: абстрактные репо
     - `infra` - имплементации: sql-репо/апи-клиенты/...
 
-### Телеграм фичи
+#### Телеграм фичи
 
 - Наследуемся от `kys_in_rest.core.tg_utils.TgFeature`
 - Реализуем `do_async`
