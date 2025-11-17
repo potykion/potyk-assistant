@@ -2,6 +2,9 @@
 const {data: beerArticles} = await useAsyncData(() =>
     queryCollection('content').where("path", "like", "%beer%").order("date", "DESC").all()
 )
+const {data: newsArticles} = await useAsyncData(() =>
+    queryCollection('content').where("path", "like", "%news%").order("date", "DESC").all()
+)
 
 </script>
 
@@ -17,11 +20,10 @@ const {data: beerArticles} = await useAsyncData(() =>
     </cite>
 
     <h2>Блог</h2>
+    <h3>📰 Новости</h3>
+    <blog-post-list :posts="newsArticles" />
     <h3>🍻 Пиво</h3>
-    <v-list>
-      <v-list-item v-for="post in beerArticles" :key="post.id" :title="post.title" :to="post.path"
-                   :subtitle="post.date.slice(0,10)"/>
-    </v-list>
+    <blog-post-list :posts="beerArticles" />
 
   </v-container>
 

@@ -14,6 +14,13 @@ alwaysApply: true
 - Vuetify 3.9
 - Остальное тут: potyk-assist-front\package.json
 
+#### Особенности
+
+- Компоненты именуем в kebab-case и в страницах тоже пишем как kebab-case
+    - Исключения - `components\content`
+- Используем nuxt-auto imports так что если компонент лежит в `components\blog\beer-info.vue`, то в страницах его нужно использовать с префиксом - `blog-beer-info`
+
+
 ## Нужно
 
 - После добавления кода нужно запускать `mypy` и править ошибки:
