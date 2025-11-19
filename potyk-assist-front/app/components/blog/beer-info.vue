@@ -1,7 +1,7 @@
 <!--
 Usage in content/**/*.md:
 
-::blog-beer-info{country-flag="🇩🇪" name="Пшеничка" :abv="4.9" tap-date="06.25" :price="220" place="ВкусВилл" :rating="4.25"}
+::blog-beer-info{country-flag="🇩🇪" style="Пшеничка" :abv="4.9" tap-date="06.25" :price="220" place="ВкусВилл" :rating="4.25"}
 ::
 
 Will render:
@@ -12,7 +12,7 @@ Will render:
 <script setup lang="ts">
 const props = defineProps<{
   countryFlag: string
-  name: string
+  styleName: string
   abv: number
   tapDate: string
   price: number
@@ -25,22 +25,20 @@ const maxRating = props.maxRating ?? 5
 </script>
 
 <template>
-  <p>
-    <i>
+  <p  class="font-weight-semibold font-italic   text-grey-darken-4">
       {{ props.countryFlag }}
       •
-      {{ props.name }}
+      🍺: {{ props.styleName }}
       •
-      ABV: {{ props.abv }}°
+      💪: {{ props.abv }}°
       •
-      Розлив: {{ props.tapDate }}
+      📅: {{ props.tapDate }}
       •
-      Цена: {{ props.price }}₽
-      @
-      {{ props.place }}
+      💵: {{ props.price }}₽
       •
-      {{ props.rating }} / {{ maxRating }} ⭐
-    </i>
+      🏪: {{ props.place }}
+      •
+      ⭐: {{ props.rating }} / {{ maxRating }}
   </p>
 </template>
 

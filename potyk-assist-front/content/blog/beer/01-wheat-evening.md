@@ -12,7 +12,7 @@ tags:
 
 ## [Schneider – Hefeweissbier Naturtrüb](https://untappd.com/b/schneider-weisse-g-schneider-and-sohn-hefeweissbier-naturtrub/6232155) 
 
-::blog-beer-info{country-flag="🇩🇪" name="Пшеничка" :abv="4.9" tap-date="06.25" :price="220" place="ВкусВилл" :rating="4.25"}
+::blog-beer-info{country-flag="🇩🇪" style-name="Пшеничка" :abv="4.9" tap-date="06.25" :price="220" place="ВкусВилл" :rating="4.25"}
 :: 
 
 ![|300](https://storage.yandexcloud.net/potyk-io-static/images/01-wheat-evening-04.jpg){width=300}
@@ -25,7 +25,7 @@ tags:
 
 ## [Huyghe – Floris Passion](https://untappd.com/b/delirium-huyghe-brewery-floris-passion/70362)
 
-::blog-beer-info{country-flag="🇧🇪" name="Фруктовая Пшеничка" :abv="3.6" tap-date="08.25" :price="350" place="Перекресток" :rating="4.5"}
+::blog-beer-info{country-flag="🇧🇪" style-name="Фруктовая Пшеничка" :abv="3.6" tap-date="08.25" :price="350" place="Перекресток" :rating="4.5"}
 ::
 
 ![|300](https://storage.yandexcloud.net/potyk-io-static/images/01-wheat-evening-03.jpg){width=300}
@@ -38,7 +38,7 @@ tags:
 
 ## [Weihenstephan – Vitus](https://untappd.com/b/bayerische-staatsbrauerei-weihenstephan-weihenstephaner-vitus/7408)
 
-::blog-beer-info{country-flag="🇩🇪" name="Пшеничный Бок" :abv="7.7" tap-date="01.25" :price="400" place="Пиво и ПенаПаки" :rating="4.5"}
+::blog-beer-info{country-flag="🇩🇪" style-name="Пшеничный Бок" :abv="7.7" tap-date="01.25" :price="400" place="Пиво и ПенаПаки" :rating="4.5"}
 ::
 
 ![](https://storage.yandexcloud.net/potyk-io-static/images/01-wheat-evening-02.jpg){width=300}

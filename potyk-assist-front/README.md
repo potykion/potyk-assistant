@@ -76,6 +76,7 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 ## Refs
 
 - https://vuetifyjs.com/en/components/all/#data-and-display
+- https://vuetifyjs.com/en/styles/text-and-typography/#usage
 - https://content.nuxt.com/docs/files/markdown#mdc-syntax
     - https://github.com/nuxt-content/mdc/blob/main/src/runtime/components/prose/ProseH1.vue
 - https://console.yandex.cloud/folders/b1grljff5jqj8g3cs69f/storage/buckets/potyk-io-static?key=images%2F&versionsDisplay=false
