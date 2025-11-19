@@ -1,7 +1,7 @@
 <template>
   <v-app>
 
-    <v-app-bar :elevation="0" density="compact">
+    <v-app-bar :elevation="0" density="compact" >
 
       <v-app-bar-title >
         <v-btn to="/">potyk.io</v-btn>
