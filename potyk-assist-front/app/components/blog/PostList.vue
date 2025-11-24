@@ -8,17 +8,21 @@ interface Post {
 }
 
 interface Props {
-  posts: Post[]
+  posts: Post[];
+  showDate: boolean;
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  showDate: true
+})
 </script>
 
 <template>
   <v-list>
     <v-list-item v-for="post in posts" :key="post.id" :title="post.title" :to="post.path">
       <v-list-item-subtitle>
-        <i>{{ post.date.slice(0, 10) }}
+        <i>
+          <template v-if="props.showDate">{{ post.date.slice(0, 10) }}</template>
           <template v-if="post.tags?.length"> • {{ post.tags?.map(tag => `#${tag}`).join(' ') }}
           </template>
         </i>
