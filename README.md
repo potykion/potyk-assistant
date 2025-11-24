@@ -6,7 +6,7 @@
 - [Бот](https://t.me/kys_in_rest_bot)
 - [Github](https://github.com/potykion/kys_in_rest)
 - Server: http://84.201.131.244:5000
-- Frontend: http://84.201.131.244:5000
+- Frontend: http://84.201.131.244:3030
 - 
 
 
