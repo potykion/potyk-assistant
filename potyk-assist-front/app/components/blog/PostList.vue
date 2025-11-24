@@ -15,6 +15,12 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   showDate: true
 })
+
+const handleTagClick = (tag: string, event: Event) => {
+  event.preventDefault()
+  event.stopPropagation()
+  navigateTo(`/blog/search?tag=${encodeURIComponent(tag)}`)
+}
 </script>
 
 <template>
@@ -23,10 +29,30 @@ const props = withDefaults(defineProps<Props>(), {
       <v-list-item-subtitle>
         <i>
           <template v-if="props.showDate">{{ post.date.slice(0, 10) }}</template>
-          <template v-if="post.tags?.length"> • {{ post.tags?.map(tag => `#${tag}`).join(' ') }}
+          <template v-if="post.tags?.length"> •
+            <span v-for="(tag, index) in post.tags" :key="tag">
+              <span v-if="index > 0"> </span>
+              <a
+                href="#"
+                class="tag-link"
+                @click="handleTagClick(tag, $event)"
+              >#{{ tag }}</a>
+            </span>
           </template>
         </i>
       </v-list-item-subtitle>
     </v-list-item>
   </v-list>
 </template>
+
+<style scoped>
+.tag-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.tag-link:hover {
+  text-decoration: underline;
+}
+</style>
