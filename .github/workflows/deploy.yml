@@ -63,6 +63,12 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y ffmpeg
           fi
+
+          # Устанавливаем Node.js LTS если не установлен
+          if ! command -v node &> /dev/null; then
+            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+          fi
           
           # Обновляем код
           git pull
@@ -71,6 +77,12 @@ jobs:
           pip install -r requirements.txt
           python -c "import nltk; nltk.download('punkt_tab')"
           python -m scripts.migrate
+
+          # Сборка Nuxt фронтенда
+          cd potyk-assist-front
+          npm ci
+          npm run build
+          cd ..
           
           # Копируем и настраиваем сервисы
           
@@ -84,6 +96,12 @@ jobs:
           if [ -f "./ops/flask.service" ]; then
             sudo cp ./ops/flask.service /etc/systemd/system/flask.service
             sudo chmod 644 /etc/systemd/system/flask.service
+          fi
+
+          ## Nuxt SSR Service
+          if [ -f "./ops/nuxt.service" ]; then
+            sudo cp ./ops/nuxt.service /etc/systemd/system/nuxt.service
+            sudo chmod 644 /etc/systemd/system/nuxt.service
           fi
           
           # Перезагружаем systemd
@@ -104,6 +122,13 @@ jobs:
           else
             sudo systemctl enable --now flask.service
           fi
+
+          ## Nuxt SSR
+          if sudo systemctl is-enabled nuxt.service 2>/dev/null; then
+            sudo systemctl restart nuxt.service
+          else
+            sudo systemctl enable --now nuxt.service
+          fi
           
           # Проверяем статусы
           echo "=== Telegram Bot Status ==="
@@ -111,6 +136,9 @@ jobs:
           
           echo "=== Flask Server Status ==="
           sudo systemctl status flask.service --no-pager
+
+          echo "=== Nuxt SSR Status ==="
+          sudo systemctl status nuxt.service --no-pager
           EOF
 
       - name: Send Failure Notification

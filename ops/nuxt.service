@@ -1,0 +1,19 @@
+[Unit]
+Description=Nuxt SSR Service
+After=network.target
+
+[Service]
+User=leybovich-nikita
+WorkingDirectory=/home/leybovich-nikita/kys_in_rest/potyk-assist-front
+Environment=HOST=0.0.0.0
+Environment=PORT=3030
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/env node ./.output/server/index.mjs
+Restart=always
+RestartSec=10
+StandardOutput=file:/home/leybovich-nikita/kys_in_rest/logs/nuxt.log
+StandardError=file:/home/leybovich-nikita/kys_in_rest/logs/nuxt.error.log
+
+[Install]
+WantedBy=multi-user.target
+
