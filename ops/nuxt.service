@@ -17,3 +17,5 @@ StandardError=file:/home/leybovich-nikita/kys_in_rest/logs/nuxt.error.log
 [Install]
 WantedBy=multi-user.target
 
+
+
