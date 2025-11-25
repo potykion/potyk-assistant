@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ref} from 'vue'
-import {featuredAlbums} from '../../components/mu/mu-data'
+import {featuredAlbums, listenLaterAlbums} from '../../components/mu/mu-data'
 
 const audioRef = ref<HTMLAudioElement | null>(null)
 const currentSrc = ref<string | null>(null)
@@ -37,11 +37,13 @@ const {data: genreArticles} = await useAsyncData(() =>
 
 <template>
   <v-container>
-    <h1>mu</h1>
-    <h2>Featured</h2>
+    <v-row>
+      <v-col>
+        <h1>mu</h1>
+        <h2>Featured</h2>
 
-    <!-- глобальный аудиоплеер, общий для всех альбомов на странице -->
-
+      </v-col>
+    </v-row>
     <v-row>
       <v-col
           v-for="album in featuredAlbums"
@@ -50,29 +52,45 @@ const {data: genreArticles} = await useAsyncData(() =>
       >
         <mu-album
             :album="album"
-            :playing="playingSrc === album.track.src"
+            :playing="album.track && playingSrc === album.track.src"
             @toggle="toggleTrack"
         >
-          <template #actions>
-            <v-btn
-                icon
-                variant="text"
-                size="small"
-                :href="album.link"
-                target="_blank"
-                @click.stop
-            >
-              <v-icon icon="mdi-open-in-new"/>
-            </v-btn>
-          </template>
         </mu-album>
       </v-col>
     </v-row>
 
-    <h2>Listen Later</h2>
+    <v-row>
+      <v-col>
+        <h2>Listen Later</h2>
 
-    <h2>Genres</h2>
-    <blog-post-list :posts="genreArticles"  :show-date="false" />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col
+          v-for="album in listenLaterAlbums"
+          :key="album.id"
+          cols="3"
+      >
+        <mu-album
+            :album="album"
+            :playing="album.track &&  playingSrc === album.track.src"
+            @toggle="toggleTrack"
+        >
+        </mu-album>
+      </v-col>
+    </v-row>
+
+  <v-row>
+      <v-col>
+            <h2>Genres</h2>
+
+
+
+        <blog-post-list :posts="genreArticles" :show-date="false"/>
+
+      </v-col>
+    </v-row>
+
 
 
     <audio ref="audioRef"></audio>
