@@ -7,15 +7,13 @@ interface Movie {
   downloadUrl: string
 }
 
-const movies = ref<Movie[]>([
-  {
-    image: 'https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/2b9b671e-4558-4d08-b114-4d6ac79f26dd/3840x',
-    title: 'Красивая работа',
-    why: 'сигма-муви по мнению <a href="https://t.me/rzhavuykholodez/95">ржавого холодца</a>',
-    kinopoiskUrl: 'https://www.kinopoisk.ru/film/119363/',
-    downloadUrl: 'https://rutracker.org/forum/viewtopic.php?t=3010430/'
-  }
-])
+const apiBaseUrl = import.meta.dev 
+  ? 'http://127.0.0.1:5000' 
+  : 'http://84.201.131.244:5000'
+
+const { data: movies } = await useFetch<Movie[]>(`${apiBaseUrl}/movies`, {
+  default: () => []
+})
 
 const dialog = ref(false)
 const editingIndex = ref<number | null>(null)
