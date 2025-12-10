@@ -9,10 +9,8 @@ tags: [ ]
 
 - Поммо https://untp.beer/gv910
 - Столовое https://untp.beer/lEv57
-
-## Новая пивоварня
-
-- Рвем когти https://untp.beer/mba9w
+- Альтбир https://untp.beer/7B34B
+- Копченое https://untappd.com/b/schlenkerla-heller-brau-trum-aecht-schlenkerla-erle-schwarzbier/5456891
 
 ## Приколы
 
@@ -21,31 +19,6 @@ tags: [ ]
 - Роксана https://untp.beer/A5DK0
 - Балтика 10 https://untappd.com/b/baltika-breweries-baltika-baltika-10-jubilee-baltika-10-yubilejnoe/23137
 - Метеглин с багульником https://untappd.com/b/veresk-meadery-myod-pej/5798915
-
-## Крепняки, темное
-
-- Барлик https://untp.beer/1y1mg
-- Выморозка https://untp.beer/Ez8vw
-- Стаут кофе https://untp.beer/2mY0n
-- Стаут имперский овсяный импорт https://untp.beer/3c9a0e1f31
-- Стаут имперский https://untp.beer/xr75Y
-- Стаут ирландский https://untp.beer/3M5v5
-- Стаут овсяный https://untp.beer/yGKNd
-
-
-## Кислое, дикое
-
-- Фармхаус https://untp.beer/jgdl7
-- Фруктовый Ламбик https://untappd.com/b/brouwerij-lindemans-cassis/7895
-- Гёз https://untappd.com/b/brouwerij-boon-geuze-mariage-parfait/29149
-- Крик https://untappd.com/b/brasserie-cantillon-kriek-100-lambic-bio-2024/5685869
-- Красный эль https://untappd.com/b/jaws-brewery-bonbon/5585464
-- Од брюн https://untappd.com/b/brouwerij-t-verzet-oud-bruin-raspberry-harvest-2023/5970446
-- Фламандец https://untappd.com/b/brouwerij-verhaeghe-duchesse-de-bourgogne/3954
-- Вайлд https://untp.beer/vrgzO
-
-
-
 
 
 ## Вайб
@@ -61,8 +34,6 @@ tags: [ ]
 - Сидр с добавками https://untp.beer/VVELq
 - Грушевый https://untp.beer/EBO6D
 - Грушевый айс https://untp.beer/bVBjE
-
-
 
 
 ## Мед
@@ -83,7 +54,8 @@ tags: [ ]
 - ИПА https://untappd.com/b/gorkovskaya-brewery-gorkovskaya-pivovarnya-ipa-0-0/3860563
 - Лагер https://untappd.com/b/tradicni-pivovar-v-rakovniku-bakalar-nealko-za-studena-chmeleny-non-alcoholic-dry-hopped-lager/1171072
 - Пейл эль https://untappd.com/b/plague-zero-sportacus-talus/6326136
-- Саур https://untappd.com/b/4brewers-zavisimost-bazilik-no-alco/6470526
+- гозе https://untappd.com/b/4brewers-zavisimost-bazilik-no-alco/6470526
+- Саур https://untappd.com/b/black-cat-brewery-for-all-the-dogs-non-alcoholic/6282897
 
 
 ## Англия
@@ -91,13 +63,6 @@ tags: [ ]
 - Биттер https://untp.beer/rDgqg
 - Есб https://untp.beer/Mp1D1
 - Браун https://untp.beer/OVvAn
-- Портер https://untappd.com/b/velka-morava-oresund/6123790
-
-## Америка
-
-- Альтбир https://untp.beer/7B34B
-- Копченое https://untappd.com/b/schlenkerla-heller-brau-trum-aecht-schlenkerla-erle-schwarzbier/5456891
-- https://untappd.com/b/plague-brew-anangu/5774159
 
 
 
@@ -124,6 +89,28 @@ tags: [ ]
 ---
 
 ## Обработано
+
+## Кислое, дикое
+
+- Фармхаус https://untp.beer/jgdl7
+- Фруктовый Ламбик https://untappd.com/b/brouwerij-lindemans-cassis/7895
+- Гёз https://untappd.com/b/brouwerij-boon-geuze-mariage-parfait/29149
+- Крик https://untappd.com/b/brasserie-cantillon-kriek-100-lambic-bio-2024/5685869
+- Красный эль https://untappd.com/b/jaws-brewery-bonbon/5585464
+- Од брюн https://untappd.com/b/brouwerij-t-verzet-oud-bruin-raspberry-harvest-2023/5970446
+- Фламандец https://untappd.com/b/brouwerij-verhaeghe-duchesse-de-bourgogne/3954
+- Вайлд https://untp.beer/vrgzO
+
+
+## Крепняки, темное
+
+- Барлик https://untp.beer/1y1mg
+- Выморозка https://untp.beer/Ez8vw
+- Стаут кофе https://untp.beer/2mY0n
+- Стаут имперский овсяный импорт https://untp.beer/3c9a0e1f31
+- Стаут имперский https://untp.beer/xr75Y
+- Стаут ирландский https://untp.beer/3M5v5
+- Стаут овсяный https://untp.beer/yGKNd
 
 
 ### Фруктовенькое, овощное

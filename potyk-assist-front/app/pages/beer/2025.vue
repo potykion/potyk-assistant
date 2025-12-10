@@ -96,11 +96,12 @@ const ipaBeers: Beer[] = [
 
 const lagerBeers: Beer[] = [
   {
-    url: "",
-    icon: "",
-    photo: "",
-    title: "",
-    brewery: "",
+    url: "https://untappd.com/b/big-village-brewery-village-lager/5302067",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-5302067_22b97_sm.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_11_29/4469c59bc35edd9a3f84ad226fdda46e_c_1531847616_raw.jpg",
+    title: "VILLAGE LAGER",
+    brewery: "Big Village",
     style: "Lager — Pale",
   },
   {
@@ -483,12 +484,187 @@ const sourGoseBeers: Beer[] = [
       "https://assets.untappd.com/photos/2025_01_19/429274fb7442096f9c75474acdddba1b_c_1451094076_raw.jpg",
   },
 ];
+
+const stoutBeers: Beer[] = [
+  {
+    url: "https://untappd.com/b/baltika-breweries-baltika-baltika-stout/6071592",
+    title: "Baltika Stout",
+    brewery: "Балтика",
+    style: "Stout - Irish Dry",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-6071592_fe8fd_sm.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_03_12/14b237de2d83d50317fff70b42497eb7_c_1462633225_raw.jpg",
+  },
+  {
+    url: "https://untappd.com/b/zagovor-brewery-scratch/823908",
+    title: "Scratch",
+    brewery: "Zagovor",
+    style: "Stout - Oatmeal",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-823908_29e2c_sm.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_02_19/5dbf3984dc6015977b95ef98c6822b6b_c_1457766066_raw.jpg",
+  },
+  {
+    url: "https://untappd.com/b/pivoteka-brew-pivoteka-zavtrak-v-kaire/5785656",
+    title: "Завтрак в Каире",
+    brewery: "Пивотека",
+    style: "Stout - Coffee",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-5785656_e3b8e_sm.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_09_13/1659ef62eeac8fe93ca55dcd238775a5_c_1513216255_raw.jpg",
+  },
+  {
+    url: "https://untappd.com/b/pivovarnya-odna-tonna-odna-tonna-brewery-temnaya-energiya-kokos-kakao-vanil/6264025",
+    title: "Темная энергия: Кокос, Какао, Ваниль",
+    brewery: "Одна тонна",
+    style: "Stout - Imperial / Double",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-6264025_5f603_sm.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_07_26/cfda56a5ea41a1ad36351204e5a60c31_c_1499640055_raw.jpg",
+  },
+  {
+    url: "https://untappd.com/b/4brewers-chary/6198286",
+    title: "Чары",
+    brewery: "4BREWERS",
+    style: "Barleywine",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-6198286_6fc72_sm.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_08_06/c73818c68ce618cf0be95e94dc1cd1ff_c_1502973626_raw.jpg",
+  },
+  {
+    url: "https://untappd.com/b/ability-brewing-project-echo-slam/6203343",
+    title: "Echo Slam",
+    brewery: "Ability",
+    style: "Freeze-Distilled Beer",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-6203343_1f3f2_sm.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_06_14/db6eb22805ed4e3de2ecd7c4d73c57b0_c_1487552634_raw.jpg",
+  },
+];
+
+const wildBeers = [
+  {
+    title: "Duchesse de Bourgogne",
+    brewery: "Verhaeghe",
+    url: "https://untappd.com/b/brouwerij-verhaeghe-duchesse-de-bourgogne/3954",
+    style: "Sour - Flanders Red Ale",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-3954_c81f1_sm.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_01_02/ff84aa560138760871449e5eec5f65e3_c_1447392612_raw.jpg",
+  },
+  {
+    title: "Oud Bruin Raspberry (harvest 2023)",
+    brewery: "Verzet",
+    url: "https://untappd.com/b/brouwerij-t-verzet-oud-bruin-raspberry-harvest-2023/5970446",
+    style: "Sour - Flanders Oud Bruin",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-1897631_a59b9_sm.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_10_16/4844cf07b0a6ccbbf78e1d82cff8a1f7_c_1521414232_raw.jpg",
+  },
+  {
+    title: "Bonbon",
+    brewery: "Jaws",
+    url: "https://untappd.com/b/jaws-brewery-bonbon/5585464",
+    style: "Red Ale",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-5585464_8116a_sm.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_11_18/b2c7e47142d05e5c5320368b94b96425_c_1529412676_raw.jpg",
+  },
+  {
+    title: "Kriek 100% Lambic Bio (2024)",
+    brewery: "Cantillon",
+    url: "https://untappd.com/b/brasserie-cantillon-kriek-100-lambic-bio-2024/5685869",
+    style: "Lambic - Kriek",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-5685869_fb805_sm.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_06_14/9670c6784854153e2fc3a2f99b5b7aea_c_1487567364_raw.jpg",
+  },
+  {
+    title: "Rosé de Gambrinus",
+    brewery: "Cantillon",
+    url: "https://untappd.com/b/brasserie-cantillon-rose-de-gambrinus/13142",
+    style: "Lambic - Framboise",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-RosedeGambrinus_13142.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_12_05/3eb0cc0cea1b516aa18bdf75b12bc86b_c_1533235766_raw.jpg",
+  },
+  {
+    title: "Cassis",
+    brewery: "Lindemans",
+    url: "https://untappd.com/b/brouwerij-lindemans-cassis/7895",
+    style: "Lambic - Fruit",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-7895_543a6_sm.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_01_29/5e64d96831ee2245c88beb0ba28b15e1_c_1453056204_raw.jpg",
+  },
+  {
+    title: "Geuze Mariage Parfait",
+    brewery: "Boon",
+    url: "https://untappd.com/b/brouwerij-boon-geuze-mariage-parfait/29149",
+    style: "Lambic - Gueuze",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-29149_05088_sm.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_06_09/d576706d3b97c7e77216ae4ebcddb383_c_1486363755_raw.jpg",
+  },
+  {
+    title: "Полуночница",
+    brewery: "Wild Hills",
+    url: "https://untappd.com/b/wild-hills-brewery-polunochnica/6323139",
+    style: "Wild Ale",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-6323139_05200_sm.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_11_24/d5827aac1395a3622911d3b4b2a2c5e7_c_1530785804_raw.jpg",
+  },
+  {
+    title: "Abby Che Brett Ale",
+    brewery: "KLAATU BREW",
+    url: "https://untappd.com/b/klaatu-brew-abby-che-brett-ale/5441401",
+    style: "Farmhouse Ale",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-5441401_c20be_sm.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_10_03/fa28e70c680407d3810ab983feace6d1_c_1518136433_raw.jpg",
+  },
+];
+
+const englishBeers = [
+  {
+    title: "Dogmatic",
+    brewery: "Boxing Wizard × Чаща",
+    url: "https://untappd.com/b/boxing-wizard-brewery-dogmatic/6202603",
+    style: "Bitter - Best",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-6202603_50f13_sm.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_04_19/edd69adeba9d97a5b34e12e79995cbe5_c_1472187660_raw.jpg",
+  },
+  {
+    title: "ESB",
+    brewery: "Fuller's Griffin",
+    url: "https://assets.untappd.com/site/beer_logos/beer-5455_0a690_sm.jpeg",
+    style: "Bitter - Extra Special / Strong (ESB)",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-5455_0a690_sm.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_06_09/e11bb927563881ed5f0a3f0fc52786a6_c_1486366215_raw.jpg",
+  },
+  {
+    title: "Hazelnut Brown Ale",
+    brewery: "Rogue Ales",
+    url: "https://untappd.com/b/rogue-ales-hazelnut-brown-ale/4179",
+    style: "Brown Ale - American",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-4179_56c20_sm.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_11_07/85311b92d3a8f1b5e33b6b8eb1425cf5_c_1526667300_raw.jpg",
+  },
+];
+
 const styleGroups = [
   { group: "IPA / APA", beers: ipaBeers },
   { group: "Lager / Pilsner / Bock", beers: lagerBeers },
   { group: "Wheat", beers: wheatBeers },
   { group: "Belgian", beers: belgianBeers },
+  { group: "English", beers: englishBeers },
+  { group: "Stout / Barleywine / Freeze", beers: stoutBeers },
   { group: "Sour / Gose", beers: sourGoseBeers },
+  { group: "Flanders / Lambic / Wild / Farmhouse", beers: wildBeers },
 ];
 </script>
 
@@ -533,7 +709,12 @@ const styleGroups = [
               }}</v-card-title>
               <v-card-subtitle class="text-center pb-3">
                 <template v-if="beer.newBrewery">
-                  <v-badge inline location="top right" color="success" content="new!">
+                  <v-badge
+                    inline
+                    location="top right"
+                    color="success"
+                    content="new!"
+                  >
                     <span class="mr-1">{{ beer.brewery || "-" }}</span>
                   </v-badge>
                 </template>
