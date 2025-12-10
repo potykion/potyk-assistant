@@ -1,5 +1,6 @@
 <script setup lang="ts">
 interface Movie {
+  id?: number
   image: string
   title: string
   why: string
@@ -17,6 +18,7 @@ const { data: movies } = await useFetch<Movie[]>(`${apiBaseUrl}/movies`, {
 
 const dialog = ref(false)
 const editingIndex = ref<number | null>(null)
+const editingMovieId = ref<number | null>(null)
 const formData = ref<Movie>({
   image: '',
   title: '',
@@ -29,6 +31,7 @@ const openEditDialog = (index: number) => {
   editingIndex.value = index
   const movie = movies.value[index]
   if (movie) {
+    editingMovieId.value = movie.id ?? null
     formData.value = {
       image: movie.image,
       title: movie.title,
@@ -43,6 +46,7 @@ const openEditDialog = (index: number) => {
 const closeDialog = () => {
   dialog.value = false
   editingIndex.value = null
+  editingMovieId.value = null
   formData.value = {
     image: '',
     title: '',
@@ -52,11 +56,25 @@ const closeDialog = () => {
   }
 }
 
-const saveMovie = () => {
-  if (editingIndex.value !== null) {
-    movies.value[editingIndex.value] = { ...formData.value }
+const saveMovie = async () => {
+  if (editingMovieId.value === null) {
+    closeDialog()
+    return
   }
-  closeDialog()
+
+  try {
+    await $fetch(`${apiBaseUrl}/movies/${editingMovieId.value}`, {
+      method: 'PUT',
+      body: formData.value
+    })
+
+    if (editingIndex.value !== null) {
+      movies.value[editingIndex.value] = { ...formData.value, id: editingMovieId.value }
+    }
+    closeDialog()
+  } catch (error) {
+    console.error('Ошибка при сохранении фильма:', error)
+  }
 }
 </script>
 
