@@ -542,7 +542,7 @@ const stoutBeers: Beer[] = [
   },
 ];
 
-const wildBeers = [
+const wildBeers: Beer[] = [
   {
     title: "Duchesse de Bourgogne",
     brewery: "Verhaeghe",
@@ -626,7 +626,7 @@ const wildBeers = [
   },
 ];
 
-const englishBeers = [
+const englishBeers: Beer[] = [
   {
     title: "Dogmatic",
     brewery: "Boxing Wizard × Чаща",
@@ -666,6 +666,38 @@ const styleGroups = [
   { group: "Sour / Gose", beers: sourGoseBeers },
   { group: "Flanders / Lambic / Wild / Farmhouse", beers: wildBeers },
 ];
+
+const getSlug = (text: string): string => {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .trim();
+};
+
+const tocItems = computed(() =>
+  styleGroups.map((group) => ({
+    title: group.group,
+    id: getSlug(group.group),
+  }))
+);
+
+const showScrollTop = ref(false);
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+onMounted(() => {
+  const handleScroll = () => {
+    showScrollTop.value = window.scrollY > 300;
+  };
+  window.addEventListener("scroll", handleScroll);
+  onUnmounted(() => {
+    window.removeEventListener("scroll", handleScroll);
+  });
+});
 </script>
 
 <template>
@@ -674,10 +706,30 @@ const styleGroups = [
       <v-col> <h1 class="text-center text-h2">Пивные итоги 2025</h1> </v-col>
     </v-row>
 
+    <v-row>
+      <v-col>
+        <div class="text-center ">
+          <div class="d-flex flex-wrap justify-center ga-2">
+            <v-chip
+              v-for="item in tocItems"
+              :key="item.id"
+              :href="`#${item.id}`"
+              variant="outlined"
+              class="ma-1"
+            >
+              {{ item.title }}
+            </v-chip>
+          </div>
+        </div>
+      </v-col>
+    </v-row>
+
     <template v-for="styleGroup in styleGroups" :key="styleGroup.group">
       <v-row>
         <v-col>
-          <h2 class="text-center text-h3">{{ styleGroup.group }}</h2>
+          <h2 :id="getSlug(styleGroup.group)" class="text-center text-h3">
+            {{ styleGroup.group }}
+          </h2>
         </v-col>
       </v-row>
 
@@ -731,6 +783,15 @@ const styleGroups = [
         </template>
       </v-row>
     </template>
+
+    <v-fab
+      v-model="showScrollTop"
+      location="bottom end"
+      app
+      icon="mdi-arrow-up"
+      color="primary"
+      @click="scrollToTop"
+    />
   </v-container>
 </template>
 
