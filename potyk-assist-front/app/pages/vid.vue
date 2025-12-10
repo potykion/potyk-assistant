@@ -156,7 +156,7 @@ const saveMovie = async () => {
 
     <h2>Kino</h2>
 
-    <div class="d-flex align-center mb-4">
+    <div class="d-flex align-center justify-space-between mb-4">
       <h3 class="mr-4">Посмотреть позже</h3>
       <v-btn
         icon="mdi-plus"
@@ -185,8 +185,10 @@ const saveMovie = async () => {
             <v-card-title>{{ movie.title }}</v-card-title>
           </v-card-item>
 
-          <v-card-text >
-            <b>Почему?:</b> <span v-html="movie.why" ></span>
+          <v-card-text class="movie-why">
+            <div class="movie-why-content">
+              <b>Почему?:</b> <span v-html="movie.why"></span>
+            </div>
           </v-card-text>
 
           <v-card-actions>
@@ -225,17 +227,18 @@ const saveMovie = async () => {
         <v-card-title>{{ isCreating ? 'Добавить фильм' : 'Редактировать фильм' }}</v-card-title>
         <v-card-text>
           <v-text-field
-            v-model="formData.image"
-            label="URL изображения"
-            variant="outlined"
-            class="mb-3"
-          ></v-text-field>
-          <v-text-field
             v-model="formData.title"
             label="Название"
             variant="outlined"
             class="mb-3"
           ></v-text-field>
+          <v-text-field
+            v-model="formData.image"
+            label="URL изображения"
+            variant="outlined"
+            class="mb-3"
+          ></v-text-field>
+
           <v-textarea
             v-model="formData.why"
             label="Почему?"
@@ -274,10 +277,22 @@ const saveMovie = async () => {
 <style scoped lang="sass">
 .movie-card
   position: relative
+  display: flex
+  flex-direction: column
 
   .edit-toolbar
     opacity: 0
     transition: opacity 0.2s ease-in-out
+
+  .movie-why
+    height: 4.5em
+    overflow: hidden
+
+  .movie-why-content
+    line-height: 1.5em
+    max-height: 3em
+    overflow: hidden
+    display: block
 
 .movie-image:hover .edit-toolbar
   opacity: 1
