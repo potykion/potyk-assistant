@@ -3,6 +3,7 @@ import os
 import dotenv
 import flask
 from flask import Flask
+from flask_cors import CORS
 
 from kys_in_rest.applications.ioc import make_ioc
 from kys_in_rest.beer.features.beer_sync import BeerSync
@@ -23,6 +24,7 @@ def create_app() -> Flask:
     )
 
     app = Flask(__name__)
+    CORS(app)
 
     @app.route("/weight")
     def weight() -> flask.Response:

@@ -8,13 +8,48 @@ interface Movie {
   downloadUrl: string
 }
 
+interface MovieServer {
+  id?: number
+  image: string
+  title: string
+  why: string
+  kinopoisk_url: string
+  download_url: string
+}
+
 const apiBaseUrl = import.meta.dev 
   ? 'http://127.0.0.1:5000' 
   : 'http://84.201.131.244:5000'
 
-const { data: movies } = await useFetch<Movie[]>(`${apiBaseUrl}/movies`, {
+const snakeToCamel = (serverMovie: MovieServer): Movie => ({
+  id: serverMovie.id,
+  image: serverMovie.image,
+  title: serverMovie.title,
+  why: serverMovie.why,
+  kinopoiskUrl: serverMovie.kinopoisk_url,
+  downloadUrl: serverMovie.download_url
+})
+
+const camelToSnake = (movie: Movie): MovieServer => ({
+  id: movie.id,
+  image: movie.image,
+  title: movie.title,
+  why: movie.why,
+  kinopoisk_url: movie.kinopoiskUrl,
+  download_url: movie.downloadUrl
+})
+
+const { data: moviesData } = await useFetch<MovieServer[]>(`${apiBaseUrl}/movies`, {
   default: () => []
 })
+
+const movies = ref<Movie[]>((moviesData.value || []).map(snakeToCamel))
+
+watch(moviesData, (newData) => {
+  if (newData) {
+    movies.value = newData.map(snakeToCamel)
+  }
+}, { immediate: true })
 
 const dialog = ref(false)
 const editingIndex = ref<number | null>(null)
@@ -63,9 +98,10 @@ const saveMovie = async () => {
   }
 
   try {
+    const serverData = camelToSnake(formData.value)
     await $fetch(`${apiBaseUrl}/movies/${editingMovieId.value}`, {
       method: 'PUT',
-      body: formData.value
+      body: serverData
     })
 
     if (editingIndex.value !== null) {
