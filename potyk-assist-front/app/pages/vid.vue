@@ -6,6 +6,7 @@ interface Movie {
   why: string
   kinopoiskUrl: string
   downloadUrl: string
+  watchUrl?: string
 }
 
 interface MovieServer {
@@ -15,6 +16,7 @@ interface MovieServer {
   why: string
   kinopoisk_url: string
   download_url: string
+  watch_url?: string
 }
 
 const apiBaseUrl = import.meta.dev 
@@ -27,7 +29,8 @@ const snakeToCamel = (serverMovie: MovieServer): Movie => ({
   title: serverMovie.title,
   why: serverMovie.why,
   kinopoiskUrl: serverMovie.kinopoisk_url,
-  downloadUrl: serverMovie.download_url
+  downloadUrl: serverMovie.download_url,
+  watchUrl: serverMovie.watch_url
 })
 
 const camelToSnake = (movie: Movie): MovieServer => ({
@@ -36,10 +39,11 @@ const camelToSnake = (movie: Movie): MovieServer => ({
   title: movie.title,
   why: movie.why,
   kinopoisk_url: movie.kinopoiskUrl,
-  download_url: movie.downloadUrl
+  download_url: movie.downloadUrl,
+  watch_url: movie.watchUrl
 })
 
-const { data: moviesData } = await useFetch<MovieServer[]>(`${apiBaseUrl}/movies`, {
+const { data: moviesData, refresh: refreshMovies } = await useFetch<MovieServer[]>(`${apiBaseUrl}/movies`, {
   default: () => []
 })
 
@@ -52,6 +56,7 @@ watch(moviesData, (newData) => {
 }, { immediate: true })
 
 const dialog = ref(false)
+const isCreating = ref(false)
 const editingIndex = ref<number | null>(null)
 const editingMovieId = ref<number | null>(null)
 const formData = ref<Movie>({
@@ -59,10 +64,27 @@ const formData = ref<Movie>({
   title: '',
   why: '',
   kinopoiskUrl: '',
-  downloadUrl: ''
+  downloadUrl: '',
+  watchUrl: ''
 })
 
+const openCreateDialog = () => {
+  isCreating.value = true
+  editingIndex.value = null
+  editingMovieId.value = null
+  formData.value = {
+    image: '',
+    title: '',
+    why: '',
+    kinopoiskUrl: '',
+    downloadUrl: '',
+    watchUrl: ''
+  }
+  dialog.value = true
+}
+
 const openEditDialog = (index: number) => {
+  isCreating.value = false
   editingIndex.value = index
   const movie = movies.value[index]
   if (movie) {
@@ -72,7 +94,8 @@ const openEditDialog = (index: number) => {
       title: movie.title,
       why: movie.why,
       kinopoiskUrl: movie.kinopoiskUrl,
-      downloadUrl: movie.downloadUrl
+      downloadUrl: movie.downloadUrl,
+      watchUrl: movie.watchUrl ?? ''
     }
   }
   dialog.value = true
@@ -80,6 +103,7 @@ const openEditDialog = (index: number) => {
 
 const closeDialog = () => {
   dialog.value = false
+  isCreating.value = false
   editingIndex.value = null
   editingMovieId.value = null
   formData.value = {
@@ -87,25 +111,35 @@ const closeDialog = () => {
     title: '',
     why: '',
     kinopoiskUrl: '',
-    downloadUrl: ''
+    downloadUrl: '',
+    watchUrl: ''
   }
 }
 
 const saveMovie = async () => {
-  if (editingMovieId.value === null) {
-    closeDialog()
-    return
-  }
-
   try {
     const serverData = camelToSnake(formData.value)
-    await $fetch(`${apiBaseUrl}/movies/${editingMovieId.value}`, {
-      method: 'PUT',
-      body: serverData
-    })
+    
+    if (isCreating.value) {
+      await $fetch(`${apiBaseUrl}/movies`, {
+        method: 'POST',
+        body: serverData
+      })
+      await refreshMovies()
+    } else {
+      if (editingMovieId.value === null) {
+        closeDialog()
+        return
+      }
+      
+      await $fetch(`${apiBaseUrl}/movies/${editingMovieId.value}`, {
+        method: 'PUT',
+        body: serverData
+      })
 
-    if (editingIndex.value !== null) {
-      movies.value[editingIndex.value] = { ...formData.value, id: editingMovieId.value }
+      if (editingIndex.value !== null) {
+        movies.value[editingIndex.value] = { ...formData.value, id: editingMovieId.value }
+      }
     }
     closeDialog()
   } catch (error) {
@@ -122,7 +156,15 @@ const saveMovie = async () => {
 
     <h2>Kino</h2>
 
-    <h3>Посмотреть позже</h3>
+    <div class="d-flex align-center mb-4">
+      <h3 class="mr-4">Посмотреть позже</h3>
+      <v-btn
+        icon="mdi-plus"
+        color="primary"
+        @click="openCreateDialog"
+        variant="outlined"
+      ></v-btn>
+    </div>
     <v-row>
       <v-col v-for="(movie, index) in movies" :key="movie.title" cols="3">
         <v-card class="movie-card">
@@ -148,6 +190,7 @@ const saveMovie = async () => {
           </v-card-text>
 
           <v-card-actions>
+            <v-btn v-if="movie.watchUrl" :href="movie.watchUrl" color="primary">Смотреть</v-btn>
             <v-btn :href="movie.kinopoiskUrl">КП</v-btn>
             <v-btn :href="movie.downloadUrl">Скачать</v-btn>
           </v-card-actions>
@@ -179,7 +222,7 @@ const saveMovie = async () => {
 
     <v-dialog v-model="dialog" max-width="600">
       <v-card>
-        <v-card-title>Редактировать фильм</v-card-title>
+        <v-card-title>{{ isCreating ? 'Добавить фильм' : 'Редактировать фильм' }}</v-card-title>
         <v-card-text>
           <v-text-field
             v-model="formData.image"
@@ -208,6 +251,12 @@ const saveMovie = async () => {
           <v-text-field
             v-model="formData.downloadUrl"
             label="URL скачивания"
+            variant="outlined"
+            class="mb-3"
+          ></v-text-field>
+          <v-text-field
+            v-model="formData.watchUrl"
+            label="URL просмотра"
             variant="outlined"
           ></v-text-field>
         </v-card-text>
