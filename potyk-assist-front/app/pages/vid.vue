@@ -167,8 +167,8 @@ const saveMovie = async () => {
     </div>
     <v-row>
       <v-col v-for="(movie, index) in movies" :key="movie.title" cols="3">
-        <v-card class="movie-card">
-          <v-img :src="movie.image" cover class="movie-image">
+        <v-card class="movie-card" >
+          <v-img :src="movie.image" cover class="movie-image" height="400">
             <v-toolbar color="transparent" class="edit-toolbar">
               <template v-slot:append>
                 <v-btn
@@ -185,14 +185,14 @@ const saveMovie = async () => {
             <v-card-title>{{ movie.title }}</v-card-title>
           </v-card-item>
 
-          <v-card-text>
-            <b>Почему?:</b> <span v-html="movie.why"></span>
+          <v-card-text >
+            <b>Почему?:</b> <span v-html="movie.why" ></span>
           </v-card-text>
 
           <v-card-actions>
             <v-btn v-if="movie.watchUrl" :href="movie.watchUrl" color="primary">Смотреть</v-btn>
-            <v-btn :href="movie.kinopoiskUrl">КП</v-btn>
-            <v-btn :href="movie.downloadUrl">Скачать</v-btn>
+            <v-btn v-if="movie.kinopoiskUrl" :href="movie.kinopoiskUrl">КП</v-btn>
+            <v-btn v-if="movie.downloadUrl" :href="movie.downloadUrl">Скачать</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
