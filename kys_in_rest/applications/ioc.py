@@ -15,6 +15,8 @@ from kys_in_rest.core.ioc import IOC
 from kys_in_rest.core.sqlite_utils import make_sqlite_cursor
 from kys_in_rest.health.features.weight_repo import WeightRepo
 from kys_in_rest.health.infra.weight_repo import SqliteWeightRepo
+from kys_in_rest.movies.features.movie_repo import MovieRepo
+from kys_in_rest.movies.infra.movie_repo import SqliteMovieRepo
 from kys_in_rest.money.features.repos.goal_repo import MoneyGoalRepo
 from kys_in_rest.money.features.repos.spending_repo import SpendingRepo
 from kys_in_rest.money.features.repos.tinkoff_candles_repo import TinkoffCandlesRepo
@@ -71,6 +73,7 @@ def make_ioc(
     ioc.register(FlowRepo, SqliteFlowRepo)
     ioc.register(BeerPostRepo, SqliteBeerPostRepo)
     ioc.register(WeightRepo, SqliteWeightRepo)
+    ioc.register(MovieRepo, SqliteMovieRepo)
     ioc.register(WishlistRepo, SqliteWishlistRepo)
     ioc.register(SpendingRepo, SqliteSpendingRepo)
     ioc.register(MoneyGoalRepo, SqliteMoneyGoalRepo)

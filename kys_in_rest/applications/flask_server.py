@@ -8,6 +8,7 @@ from kys_in_rest.applications.ioc import make_ioc
 from kys_in_rest.beer.features.beer_sync import BeerSync
 from kys_in_rest.core.cfg import root_dir
 from kys_in_rest.health.features.weight_repo import WeightRepo
+from kys_in_rest.movies.features.movie_repo import MovieRepo
 
 
 def create_app() -> Flask:
@@ -27,6 +28,11 @@ def create_app() -> Flask:
     def weight() -> flask.Response:
         entries = ioc.resolve(WeightRepo).list_weight_entries()
         return flask.jsonify([e.model_dump() for e in entries])
+
+    @app.route("/movies")
+    def movies() -> flask.Response:
+        movies_list = ioc.resolve(MovieRepo).list_movies()
+        return flask.jsonify([m.model_dump() for m in movies_list])
 
     # todo auth required
     @app.route("/beer/sync", methods=["POST"])
