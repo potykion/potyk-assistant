@@ -34,6 +34,37 @@ def create_app() -> Flask:
         movies_list = ioc.resolve(MovieRepo).list_movies()
         return flask.jsonify([m.model_dump() for m in movies_list])
 
+    @app.route("/movies", methods=["POST"])
+    def create_movie() -> flask.Response:
+        movie_repo = ioc.resolve(MovieRepo)
+        data = flask.request.get_json()
+        if not data:
+            return flask.jsonify({"error": "No JSON data provided"}), 400
+
+        from kys_in_rest.movies.entities.movie import Movie
+
+        movie = Movie(**data)
+        created_movie = movie_repo.create_movie(movie)
+        return flask.jsonify(created_movie.model_dump()), 201
+
+    @app.route("/movies/<int:movie_id>", methods=["PUT"])
+    def update_movie(movie_id: int) -> flask.Response:
+        movie_repo = ioc.resolve(MovieRepo)
+        existing_movie = movie_repo.get_by_id(movie_id)
+        if not existing_movie:
+            return flask.jsonify({"error": "Movie not found"}), 404
+
+        data = flask.request.get_json()
+        if not data:
+            return flask.jsonify({"error": "No JSON data provided"}), 400
+
+        from kys_in_rest.movies.entities.movie import Movie
+
+        movie = Movie(id=movie_id, **data)
+        movie_repo.update_movie(movie)
+        updated_movie = movie_repo.get_by_id(movie_id)
+        return flask.jsonify(updated_movie.model_dump() if updated_movie else {}), 200
+
     # todo auth required
     @app.route("/beer/sync", methods=["POST"])
     def beer_sync() -> flask.Response:
