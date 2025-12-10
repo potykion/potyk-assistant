@@ -7,9 +7,7 @@ tags: [ ]
 
 ## Новый стиль
 
-- Альтбир https://untp.beer/7B34B
 - Поммо https://untp.beer/gv910
-- Квадро ипа https://untp.beer/GPrbJ
 - Столовое https://untp.beer/lEv57
 
 ## Новая пивоварня
@@ -35,16 +33,6 @@ tags: [ ]
 - Стаут овсяный https://untp.beer/yGKNd
 
 
-
-## Бельгия
-
-- Дюбель https://untp.beer/8f083135fe
-- Квад https://untp.beer/f10bf47085
-- Бсга https://untp.beer/zGOGp
-- Бсда
-- Блонд https://untp.beer/mba9w
-- Трипель https://untappd.com/b/brouwerij-bosteels-tripel-karmeliet/6511
-
 ## Кислое, дикое
 
 - Фармхаус https://untp.beer/jgdl7
@@ -56,24 +44,9 @@ tags: [ ]
 - Фламандец https://untappd.com/b/brouwerij-verhaeghe-duchesse-de-bourgogne/3954
 - Вайлд https://untp.beer/vrgzO
 
-## Англия
 
-- Биттер https://untp.beer/rDgqg
-- Есб https://untp.beer/Mp1D1
 
-## Германия
 
-- Пше бок https://untp.beer/e668fa9ce1
-- Бок https://untp.beer/c39bb49e09
-- Айсбок https://untp.beer/lAVp7
-- Мерцен https://untappd.com/b/velka-morava-marzen/5253759
-- Хофенвайзен https://untp.beer/8XaDb
-- Американ Пейл Вайс https://untp.beer/b8Qye
-- Пшеничка https://untp.beer/pPej
-
-## Америка
-
-- Браун https://untp.beer/OVvAn
 
 ## Вайб
 
@@ -89,43 +62,8 @@ tags: [ ]
 - Грушевый https://untp.beer/EBO6D
 - Грушевый айс https://untp.beer/bVBjE
 
-## Фруктовенькое, овощное
 
-- Фрутбир https://untp.beer/QVJxb
-- Катарина https://untappd.com/b/plague-brew-perfect-red-2025/6365766
-- Саур https://untappd.com/b/big-village-brewery-winds-of-fear/6348058
-- Берлинер https://untappd.com/b/gusi-hoola-hoop-16-black-currant-blueberry-lime/6231642
-- Фруктовое Гозе https://untappd.com/b/midnight-project-limonsol/6254724 
-- Дарк саур https://untp.beer/8b306d223e
-- Бочковый саур https://untp.beer/V4xvn
-- Другое гозе https://untp.beer/Av9rK
-- Смузи https://untp.beer/212cf013e1
-- Томатка https://untp.beer/1yYpe
-- Гозе https://untp.beer/vrw6b
-- Пшеничка фруктовая https://untp.beer/qK1Vp
 
-## Ипа
-
-- Нью Зи https://untp.beer/8XOWd
-- Сессионка https://untp.beer/GY5Gn
-- Двойная https://untp.beer/NV78e
-- Тройная https://untp.beer/MwbEG
-- Вайт https://untp.beer/zYD9A
-
-## Лагеря
-
-- Кельш https://untp.beer/7BazK
-- Лайт https://untp.beer/qeBGg
-- Дортмундер https://untp.beer/On2yn
-- Темный https://untp.beer/a4WYa
-- Хеллес https://untp.beer/f95649bd0d
-- IPL https://untappd.com/b/midnight-project-zhigulikkeller/3069407
-- Рисовый https://untappd.com/b/stamm-brewing-koinobori/6264963
-- Мексиканский https://untappd.com/b/big-village-brewery-que-pasa/5917687
-- Дюнкель https://untappd.com/b/ayinger-privatbrauerei-ayinger-altbairisch-dunkel/26091
-- Другое https://untappd.com/b/pivovarnya-odna-tonna-odna-tonna-brewery-elevenactka/6082347
-- Пейл https://untappd.com/b/moscow-brewing-company-moskovskaya-pivovarennaya-kompaniya-zhiguli-barnoe-zhiguli-barnoe/26210
-- Чешский https://untappd.com/b/velka-morava-humara/6471779
 
 ## Мед
 
@@ -147,26 +85,26 @@ tags: [ ]
 - Пейл эль https://untappd.com/b/plague-zero-sportacus-talus/6326136
 - Саур https://untappd.com/b/4brewers-zavisimost-bazilik-no-alco/6470526
 
-## Пейл эль
 
-- Американ https://untappd.com/b/malanka-mlosc-superdelic-and-mosaic/6405405
-- Нью Ингланд https://untappd.com/b/big-village-brewery-sunlit-silence/6397612
+## Англия
 
-## Пилз
-
-- Чех https://untappd.com//b/russian-north-martinek/5156616?filter=you
-- Немецкий https://untappd.com//b/velka-morava-karma-police/6211663?filter=you
-- Нью зи https://untappd.com/b/zagovor-brewery-recovery-pils/5955289
-- Другое https://untappd.com/b/4brewers-lagerino-italyano/6047591
-
-## Темное 
-
+- Биттер https://untp.beer/rDgqg
+- Есб https://untp.beer/Mp1D1
+- Браун https://untp.beer/OVvAn
 - Портер https://untappd.com/b/velka-morava-oresund/6123790
+
+## Америка
+
+- Альтбир https://untp.beer/7B34B
 - Копченое https://untappd.com/b/schlenkerla-heller-brau-trum-aecht-schlenkerla-erle-schwarzbier/5456891
+- https://untappd.com/b/plague-brew-anangu/5774159
+
+
 
 ## Худшие
 
 - https://untappd.com/b/baltika-breweries-baltika-rudiger-original-pilsener/6121453
+- https://untappd.com/b/t-s-k-apfelblut-pommeau-mmxxiv/6091291
 
 ## Экскурсия года
 
@@ -179,3 +117,82 @@ tags: [ ]
 Мой не мой стили 
 
 Красивые карточки по центру фотка, поверх логотип, 
+
+бейджи "Новый стиль"
+
+
+---
+
+## Обработано
+
+
+### Фруктовенькое, овощное
+
+- Фрутбир https://untp.beer/QVJxb
+- Катарина https://untappd.com/b/plague-brew-perfect-red-2025/6365766
+- Саур https://untappd.com/b/big-village-brewery-winds-of-fear/6348058
+- Берлинер https://untappd.com/b/gusi-hoola-hoop-16-black-currant-blueberry-lime/6231642
+- Фруктовое Гозе https://untappd.com/b/midnight-project-limonsol/6254724 
+- Дарк саур https://untp.beer/8b306d223e
+- Бочковый саур https://untp.beer/V4xvn
+- Другое гозе https://untp.beer/Av9rK
+- Смузи https://untp.beer/212cf013e1
+- Томатка https://untp.beer/1yYpe
+- Гозе https://untp.beer/vrw6b
+- Пшеничка фруктовая https://untp.beer/qK1Vp
+
+
+### Бельгия
+
+- Дюбель https://untp.beer/8f083135fe
+- Квад https://untp.beer/f10bf47085
+- Бсга https://untp.beer/zGOGp
+- Бсда
+- Блонд https://untp.beer/mba9w
+- Трипель https://untappd.com/b/brouwerij-bosteels-tripel-karmeliet/6511
+
+
+### Ипа
+
+- Нью Зи https://untp.beer/8XOWd
+- Сессионка https://untp.beer/GY5Gn
+- Двойная https://untp.beer/NV78e
+- Тройная https://untp.beer/MwbEG
+- Вайт https://untp.beer/zYD9A
+- Квадро ипа https://untp.beer/GPrbJ
+#### Пейл эль
+
+- Американ https://untappd.com/b/malanka-mlosc-superdelic-and-mosaic/6405405
+- Нью Ингланд https://untappd.com/b/big-village-brewery-sunlit-silence/6397612
+
+### Лагеря
+
+- Кельш https://untp.beer/7BazK
+- Лайт https://untp.beer/qeBGg
+- Дортмундер https://untp.beer/On2yn
+- Темный https://untp.beer/a4WYa
+- Хеллес https://untp.beer/f95649bd0d
+- IPL https://untappd.com/b/midnight-project-zhigulikkeller/3069407
+- Рисовый https://untappd.com/b/stamm-brewing-koinobori/6264963
+- Мексиканский https://untappd.com/b/big-village-brewery-que-pasa/5917687
+- Дюнкель https://untappd.com/b/ayinger-privatbrauerei-ayinger-altbairisch-dunkel/26091
+- Другое https://untappd.com/b/pivovarnya-odna-tonna-odna-tonna-brewery-elevenactka/6082347
+- Пейл https://untappd.com/b/moscow-brewing-company-moskovskaya-pivovarennaya-kompaniya-zhiguli-barnoe-zhiguli-barnoe/26210
+- Чешский https://untappd.com/b/velka-morava-humara/6471779
+- Мерцен https://untappd.com/b/velka-morava-marzen/5253759
+
+#### Пилз
+
+- Чех https://untappd.com//b/russian-north-martinek/5156616?filter=you
+- Немецкий https://untappd.com//b/velka-morava-karma-police/6211663?filter=you
+- Нью зи https://untappd.com/b/zagovor-brewery-recovery-pils/5955289
+- Другое https://untappd.com/b/4brewers-lagerino-italyano/6047591
+
+### Пшеничка
+
+- Пшеничка https://untp.beer/pPej
+- https://untappd.com/b/brouwerij-van-steenberge-baptist-wit-blanche/2138256
+- Хофенвайзен https://untp.beer/8XaDb
+- Американ Пейл Вайс https://untp.beer/b8Qye
+- Пше бок https://untp.beer/e668fa9ce1
+- Айсбок https://untp.beer/lAVp7

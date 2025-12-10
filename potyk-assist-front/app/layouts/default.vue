@@ -17,7 +17,7 @@
 
     </v-app-bar>
 
-    <v-main>
+    <v-main CLASS="pb-10">
       <slot/>
     </v-main>
 
