@@ -30,23 +30,22 @@ tags: [ ]
 
 - Сухой https://untp.beer/eb6b0fd8df
 - Традиционный https://untp.beer/KrOlr
-- Айс https://untp.beer/f948c5b656
 - Сидр с добавками https://untp.beer/VVELq
 - Грушевый https://untp.beer/EBO6D
+- Айс https://untp.beer/f948c5b656
 - Грушевый айс https://untp.beer/bVBjE
-
 
 ## Мед
 
+- Традиционный https://untappd.com/b/sheglec-dennica/5910224
+- Сессионный https://untappd.com/b/pivovarnya-odna-tonna-odna-tonna-brewery-bolshaya-strana-donskaya-vishnya/5970758
 - Боше https://untappd.com/b/steppe-and-wind-meadery-step-i-veter-cola-mead/6340235
-- Браггот https://untappd.com/b/pivovarnya-chasha-thicket-brewery-son-masala-christmas-edition/4637336
-- Сайсер https://untappd.com/b/gurin-craft-sajser-yabloki-i-myod/6026564
 - Меломель https://untappd.com/b/big-village-brewery-practical-joke/6134701
+- Сайсер https://untappd.com/b/gurin-craft-sajser-yabloki-i-myod/6026564
+- Браггот https://untappd.com/b/pivovarnya-chasha-thicket-brewery-son-masala-christmas-edition/4637336
+- Пимент https://untappd.com/b/ashram-cider-pyment-white-batch-2/5911384
 - Метеглин https://untappd.com/b/ashram-cider-metheglin-iz-oduvanchikov-batch-4/6182074
 - Другое https://untappd.com/b/steppe-and-wind-meadery-step-i-veter-juniper-and-basil-tonic-mead/5776656
-- Пимент https://untappd.com/b/ashram-cider-pyment-white-batch-2/5911384
-- Сессионный https://untappd.com/b/pivovarnya-odna-tonna-odna-tonna-brewery-bolshaya-strana-donskaya-vishnya/5970758
-- Традиционный https://untappd.com/b/sheglec-dennica/5910224
 
 ## Без алко
 
@@ -56,13 +55,6 @@ tags: [ ]
 - Пейл эль https://untappd.com/b/plague-zero-sportacus-talus/6326136
 - гозе https://untappd.com/b/4brewers-zavisimost-bazilik-no-alco/6470526
 - Саур https://untappd.com/b/black-cat-brewery-for-all-the-dogs-non-alcoholic/6282897
-
-
-## Англия
-
-- Биттер https://untp.beer/rDgqg
-- Есб https://untp.beer/Mp1D1
-- Браун https://untp.beer/OVvAn
 
 
 
@@ -89,6 +81,12 @@ tags: [ ]
 ---
 
 ## Обработано
+
+## Англия
+
+- Биттер https://untp.beer/rDgqg
+- Есб https://untp.beer/Mp1D1
+- Браун https://untp.beer/OVvAn
 
 ## Кислое, дикое
 
