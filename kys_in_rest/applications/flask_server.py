@@ -37,7 +37,7 @@ def create_app() -> Flask:
         return flask.jsonify([m.model_dump() for m in movies_list])
 
     @app.route("/movies", methods=["POST"])
-    def create_movie() -> flask.Response:
+    def create_movie() -> tuple[flask.Response, int]:
         movie_repo = ioc.resolve(MovieRepo)
         data = flask.request.get_json()
         if not data:
@@ -50,7 +50,7 @@ def create_app() -> Flask:
         return flask.jsonify(created_movie.model_dump()), 201
 
     @app.route("/movies/<int:movie_id>", methods=["PUT"])
-    def update_movie(movie_id: int) -> flask.Response:
+    def update_movie(movie_id: int) -> tuple[flask.Response, int]:
         movie_repo = ioc.resolve(MovieRepo)
         existing_movie = movie_repo.get_by_id(movie_id)
         if not existing_movie:
