@@ -33,7 +33,7 @@ def apply_migrations(cursor: sqlite3.Cursor) -> None:
     migration_dir = root_dir / "migrations"
     for migration_file in sorted(
         os.listdir(migration_dir),
-        key=lambda file: int(file.split()[0]),
+        key=lambda file: int(file.split(".")[0]),
     ):
         if not migration_file.endswith(".py"):
             continue
