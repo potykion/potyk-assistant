@@ -32,11 +32,9 @@ def apply_migrations(cursor: sqlite3.Cursor) -> None:
 
     migration_dir = root_dir / "migrations"
     for migration_file in sorted(
-        os.listdir(migration_dir),
+        [file for file in os.listdir(migration_dir) if file.endswith(".py")],
         key=lambda file: int(file.split(".")[0]),
     ):
-        if not migration_file.endswith(".py"):
-            continue
         print(f"Applying migration {migration_file}...")
 
         migration_file_path = migration_dir / migration_file
