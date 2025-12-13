@@ -45,3 +45,16 @@ class TinkoffCandlesRepo(abc.ABC):
         """
         raise NotImplementedError
 
+    @abc.abstractmethod
+    def get_current_price(self, ticker: str) -> float:
+        """
+        Получает текущую цену инструмента
+
+        Args:
+            ticker: Тикер акции (например, 'NLMK')
+
+        Returns:
+            Текущая цена инструмента
+        """
+        raise NotImplementedError
+

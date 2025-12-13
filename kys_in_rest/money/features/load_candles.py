@@ -61,12 +61,15 @@ class LoadCandlesTgFeature(TgFeature):
                 await self.bot_msg_repo.send_text(f"Нет полных недельных свечей для {ticker}")
                 return
 
+            # Получаем текущую цену
+            current_price = self.candles_repo.get_current_price(ticker)
+
             # Создаем Excel файл
             excel_bytes = self._create_excel(complete_monthly, complete_weekly, ticker)
 
             # Вычисляем статистику
-            monthly_stats = self._calculate_statistics(complete_monthly)
-            weekly_stats = self._calculate_statistics(complete_weekly)
+            monthly_stats = self._calculate_statistics(complete_monthly, current_price)
+            weekly_stats = self._calculate_statistics(complete_weekly, current_price)
 
             # Отправляем файл
             filename = f"{ticker}_candles.xlsx"
@@ -151,7 +154,7 @@ class LoadCandlesTgFeature(TgFeature):
         sheet.column_dimensions["A"].width = 18
         sheet.column_dimensions["B"].width = 18
 
-    def _calculate_statistics(self, candles: list[Candle]) -> dict[str, Any]:
+    def _calculate_statistics(self, candles: list[Candle], current_price: float) -> dict[str, Any]:
         """Вычисляет статистику по свечам"""
         changes: list[float] = []
         for candle in candles:
@@ -168,8 +171,6 @@ class LoadCandlesTgFeature(TgFeature):
             "fall_count": len(falls),
         }
 
-        latest_candle = max(candles, key=lambda c: c.time)
-        current_price = latest_candle.close
         stats["current_price"] = round(current_price, 2)
         
         if falls:
@@ -240,6 +241,8 @@ class LoadCandlesTgFeature(TgFeature):
         lines.append("")
 
         lines.append(self._format_period_stats("Месяцы", monthly_stats))
+        lines.append("")
+
         lines.append(self._format_period_stats("Недели", weekly_stats))
 
         return "\n".join(lines)

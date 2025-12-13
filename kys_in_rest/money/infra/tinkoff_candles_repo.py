@@ -101,6 +101,18 @@ class TinkoffInvestCandlesRepo(TinkoffCandlesRepo):
         candles.sort(key=lambda c: c.time)
         return candles
 
+    def get_current_price(self, ticker: str) -> float:
+        """Получает текущую цену инструмента"""
+        with Client(token=self.token) as client:
+            figi = self._resolve_figi(client, ticker)
+            last_prices_response = client.market_data.get_last_prices(figi=[figi])
+            if not last_prices_response.last_prices:
+                raise ValueError(f"Не удалось получить текущую цену для {ticker}")
+            last_price = last_prices_response.last_prices[0]
+            if not last_price.price:
+                raise ValueError(f"Цена не найдена для {ticker}")
+            return self._quotation_to_float(last_price.price)
+
     @staticmethod
     def _quotation_to_float(quotation: Any) -> float:
         return float(quotation.units) + float(quotation.nano) / 1e9
