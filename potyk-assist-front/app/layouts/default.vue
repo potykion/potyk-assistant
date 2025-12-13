@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar :elevation="0" density="compact">
+    <v-app-bar color="transparent" :elevation="0" density="compact">
       <v-app-bar-title>
         <v-btn size="x-small" to="/">potyk.io</v-btn>
 
@@ -12,7 +12,10 @@
       </v-app-bar-title>
     </v-app-bar>
 
-    <v-main CLASS="pb-10">
+    <!-- bg-pink-lighten-5 -->
+    <v-main class="pb-10 bg-amber-lighten-5">
+      <!-- <v-main class="pb-10 bg-yellow-lighten-5"> -->
+      <!-- <v-main class="pb-10 bg-blue-lighten-5"> -->
       <slot />
     </v-main>
   </v-app>

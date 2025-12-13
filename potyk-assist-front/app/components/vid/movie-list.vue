@@ -204,13 +204,9 @@ defineExpose({
   <div>
     <v-row>
       <v-col v-for="(movie, index) in movies" :key="movie.title" cols="3">
-        <v-card class="movie-card">
+        <v-card class="movie-card" elevation="0" variant="outlined">
           <v-img :src="movie.image" cover class="movie-image" height="400">
-            <v-toolbar
-              v-if="editable"
-              color="transparent"
-              class="edit-toolbar"
-            >
+            <v-toolbar v-if="editable" color="transparent" class="edit-toolbar">
               <template v-slot:append>
                 <v-btn
                   icon="mdi-pencil"
@@ -233,13 +229,21 @@ defineExpose({
           </v-card-text>
 
           <v-card-actions>
-            <v-btn v-if="movie.kinopoiskUrl" :href="movie.kinopoiskUrl"
+            <v-btn
+              size="small"
+              v-if="movie.kinopoiskUrl"
+              :href="movie.kinopoiskUrl"
               >КП</v-btn
             >
-            <v-btn v-if="movie.downloadUrl" :href="movie.downloadUrl"
+            <v-btn
+              size="small"
+              v-if="movie.downloadUrl"
+              :href="movie.downloadUrl"
               >Скачать</v-btn
             >
-            <v-btn v-if="movie.watchUrl" :href="movie.watchUrl">Смотреть</v-btn>
+            <v-btn size="small" v-if="movie.watchUrl" :href="movie.watchUrl"
+              >Смотреть</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-col>
@@ -317,7 +321,7 @@ defineExpose({
     transition: opacity 0.2s ease-in-out
 
   .movie-why
-    height: 4.5em
+    height: 3em
     overflow: hidden
 
   .movie-why-content

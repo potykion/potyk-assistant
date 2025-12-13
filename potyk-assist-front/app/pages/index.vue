@@ -23,10 +23,12 @@ const { data: newsArticles } = await useAsyncData(() =>
     </div>
 
     <v-alert
-      style="margin: 8px 0"
+      rounded="lg"
+      class="mb-4"
       color="warning"
       variant="tonal"
-      title="Пивные итоги 2025"
+      elevation="6"
+      title="🍻 Пивные итоги 2025"
     >
       <template #append>
         <v-btn icon to="/beer/2025" variant="text">
@@ -35,22 +37,37 @@ const { data: newsArticles } = await useAsyncData(() =>
       </template>
     </v-alert>
 
-    <v-alert
+    <!-- <v-alert
       style="margin: 8px 0"
       color="success"
       variant="tonal"
       title="Юбик"
       text="      Прив. 5 лет пытаюсь вести блог, 5 лет бросаю это дело. Пора отметить это очередным блогом 😂."
-    ></v-alert>
+    ></v-alert> -->
 
-    <h2>Почитать</h2>
-    <h3 class="my-6 text-h5 font-weight-bold">🍻 Пиво</h3>
-    <blog-post-list :posts="beerArticles" />
+    <v-row>
+      <v-col>
+        <v-card elevation="6" rounded="lg">
+          <v-card-title class="text-h4"> Посмотреть </v-card-title>
+          <v-card-text>
+            <vid-movie-list :editable="false" />
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-card elevation="6" rounded="lg">
+          <v-card-title class="text-h4"> Почитать </v-card-title>
+          <v-card-text>
+            <h3 class="my-2 text-h5 font-weight-bold">🍻 Пиво</h3>
+            <blog-post-list class="mb-4" :posts="beerArticles" />
 
-    <h3 class="my-6 text-h5 font-weight-bold">📰 Лайф</h3>
-    <blog-post-list :posts="newsArticles" />
-
-    <h2>Посмотреть</h2>
-    <vid-movie-list :editable="false" />
+            <h3 class="my-2 text-h5 font-weight-bold">📰 Лайф</h3>
+            <blog-post-list :posts="newsArticles" />
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>

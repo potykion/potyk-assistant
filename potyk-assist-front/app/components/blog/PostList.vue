@@ -26,7 +26,7 @@ const handleTagClick = (tag: string, event: Event) => {
 <template>
   <v-row>
     <v-col cols="4" v-for="post in posts" :key="post.id">
-      <v-card :title="post.title" :to="post.path">
+      <v-card :title="post.title" :to="post.path" variant="outlined">
         <template #subtitle>
           <i>
             <template v-if="props.showDate">{{
