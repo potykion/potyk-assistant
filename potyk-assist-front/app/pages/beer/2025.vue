@@ -308,12 +308,13 @@ const wheatBeers: Beer[] = [
       "https://assets.untappd.com/photos/2025_11_14/45f9a295bff9151c5f10ee63889f2ae6_c_1528387008_raw.jpg",
   },
   {
-    url: "",
-    title: "",
-    brewery: "",
-    style: "Wheat Beer — Dunkelweizen",
-    icon: "",
-    photo: "",
+    url: "https://untappd.com/b/brasserie-de-la-senne-witz-bio/6064208",
+    title: "Witz Bio",
+    brewery: "Brasserie de la Senne",
+    style: "Wheat Beer — Other",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-6064208_c0211_sm.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_12_03/3a0626b5a3f2a371b1822155e94be152_c_1532740659_raw.jpg",
   },
 ];
 
@@ -656,6 +657,203 @@ const englishBeers: Beer[] = [
   },
 ];
 
+const ciders: Beer[] = [
+  {
+    title: "Le Shouga Barrel Made",
+    brewery: "Заповедник",
+    url: "https://untappd.com/b/zapovednik-le-shouga-barrel-made/6315738",
+    style: "Cider - Dry",
+    icon: "https://assets.untappd.com/site/beer_logos_hd/beer-6315738_c0e27_hd.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_08_02/573e3a3af414581fd649bbef731aba21_c_1501728554_raw.jpg",
+  },
+  {
+    title: "Анархия",
+    brewery: "Andreev Ciderworks",
+    url: "https://untappd.com/b/andreev-ciderworks-anarhiya/5979131",
+    style: "Cider - Traditional / Apfelwein",
+    icon: "https://assets.untappd.com/site/beer_logos_hd/beer-5979131_c05e5_hd.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_03_16/49c1e0c2e166fb5d077d4ba59e026a2b_c_1463871492_raw.jpg",
+  },
+  {
+    title: "Тузы и Восьмёрки",
+    brewery: "Заповедник",
+    url: "https://untappd.com/b/zapovednik-tuzy-i-vosmyorki/6064424",
+    style: "Cider - Other Fruit",
+    icon: "https://assets.untappd.com/site/beer_logos_hd/beer-6064424_0e896_hd.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_04_25/b9c934a3a4bb191a3ec2d98aa5e3efcc_c_1473819723_raw.jpg",
+  },
+  {
+    title: "Le Shouga Poiré",
+    brewery: "Заповедник",
+    url: "https://untappd.com/b/zapovednik-le-shouga-poire/6316394",
+    style: "Cider - Perry / Poiré",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-6316394_f992f_sm.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_06_28/e4905c73019521cc24ad7a4cff99e886_c_1491459807_raw.jpg",
+  },
+  // todo 1000 checkin!
+  {
+    title: "Ice Cider (2023)",
+    brewery: "Sólville",
+    url: "https://untappd.com/b/solville-ice-cider-2023/5890370",
+    style: "Cider - Ice",
+    icon: "https://assets.untappd.com/site/beer_logos_hd/beer-5890370_f4971_hd.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_03_01/635f8d61ae55c8c943fa5b3959826cdc_c_1460031043_raw.jpg",
+  },
+  {
+    title: "Ice Perry",
+    brewery: "Andreev Ciderworks",
+    url: "https://untappd.com/b/andreev-ciderworks-ice-perry/5061877",
+    style: "Cider - Ice",
+    icon: "https://assets.untappd.com/site/beer_logos_hd/beer-5061877_95871_hd.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_06_10/890ca934f3a6b948e4244f6eabc57f11_c_1486488444_raw.jpg",
+  },
+];
+const meads: Beer[] = [
+  {
+    title: "Денница",
+    brewery: "Щеглец",
+    url: "https://untappd.com/b/sheglec-dennica/5910224",
+    style: "Mead - Traditional",
+    icon: "https://assets.untappd.com/site/beer_logos_hd/beer-5910224_c7d97_hd.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_07_05/da4799a5758225d419f9f2827d7dcbfe_c_1493500214_raw.jpg",
+  },
+  {
+    title: "Большая страна: Донская вишня",
+    brewery: "Одна тонна",
+    url: "https://untappd.com/b/pivovarnya-odna-tonna-odna-tonna-brewery-bolshaya-strana-donskaya-vishnya/5970758",
+    style: "Mead - Session / Short",
+    icon: "https://assets.untappd.com/site/beer_logos_hd/beer-5970758_0baf0_hd.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_03_12/10e7c14857a8fdd8ee0920728253a0f8_c_1462637203_raw.jpg",
+  },
+  {
+    title: "Practical Joke",
+    brewery: "Big Village",
+    url: "https://untappd.com/b/big-village-brewery-practical-joke/6134701",
+    style: "Mead - Melomel",
+    icon: "https://assets.untappd.com/site/beer_logos_hd/beer-6134701_4a7b0_hd.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_03_17/aed9c2509df4d324f6cbb202c8d2ec52_c_1464074271_raw.jpg",
+  },
+  {
+    title: "Cola Mead",
+    brewery: "Степь и Ветер",
+    url: "https://untappd.com/b/steppe-and-wind-meadery-step-i-veter-cola-mead/6340235",
+    style: "Mead - Melomel",
+    icon: "https://assets.untappd.com/site/beer_logos_hd/beer-6340235_4f57f_hd.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_09_10/fd59bc87a1ff592c7e78fa2be0e40ade_c_1512428694_raw.jpg",
+  },
+  {
+    title: "Сайсер Яблоки и мёд",
+    brewery: "Gurin Craft × Ля Фуар Дэ Нижний Новгород",
+    url: "https://untappd.com/b/gurin-craft-sajser-yabloki-i-myod/6026564",
+    style: "Mead - Cyser",
+    icon: "https://assets.untappd.com/site/beer_logos/beer-6026564_6109e_sm.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_05_16/0efbb968a3d2712a8d5d5b96eea7c38b_c_1479283893_raw.jpg",
+  },
+  {
+    title: "Сон Масала Christmas Edition",
+    brewery: "Чаща",
+    url: "https://untappd.com/b/pivovarnya-chasha-thicket-brewery-son-masala-christmas-edition/4637336",
+    style: "Mead - Cyser",
+    icon: "https://assets.untappd.com/site/beer_logos_hd/beer-4637336_670a9_hd.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_04_27/aa229c78f9c1384181c045243512ae7f_c_1474684443_raw.jpg",
+  },
+  {
+    title: "Pyment White Batch #2",
+    brewery: "Ashram",
+    url: "https://untappd.com/b/ashram-cider-pyment-white-batch-2/5911384",
+    style: "Mead - Cyser",
+    icon: "https://assets.untappd.com/site/beer_logos_hd/beer-5911384_74783_hd.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_03_01/9545784cdbee47eb83c5d0486cdfec02_c_1460008429_raw.jpg",
+  },
+  {
+    title: "Metheglin из одуванчиков Batch #4",
+    brewery: "Ashram",
+    url: "https://untappd.com/b/ashram-cider-metheglin-iz-oduvanchikov-batch-4/6182074",
+    style: "Mead - Metheglin",
+    icon: "https://assets.untappd.com/site/beer_logos_hd/beer-6182074_c0b24_hd.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_03_29/a167aa74f9821e329d63898fb15ff286_c_1466805776_raw.jpg",
+  },
+  {
+    title: "Juniper & Basil Tonic Mead",
+    brewery: "Степь и Ветер",
+    url: "https://untappd.com/b/steppe-and-wind-meadery-step-i-veter-juniper-and-basil-tonic-mead/5776656",
+    style: "Mead - Other",
+    icon: "https://assets.untappd.com/site/beer_logos_hd/beer-5776656_b31d4_hd.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_04_26/ea3da05bd113b76c0ec4e7d30a293b54_c_1474351188_raw.jpg",
+  },
+];
+const nonAlcoBeers: Beer[] = [
+  {
+    url: "https://untappd.com/b/tradicni-pivovar-v-rakovniku-bakalar-nealko-za-studena-chmeleny-non-alcoholic-dry-hopped-lager/1171072",
+    title: "Nealko Za studena chmelený",
+    brewery: "Bakalář",
+    style: "Non-Alcoholic - Lager",
+    icon: "https://assets.untappd.com/site/beer_logos_hd/beer-1171072_4e61a_hd.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_10_26/f45d332a3cbde400feb07689d609ddce_c_1524241121_raw.jpg",
+  },
+  {
+    url: "https://untappd.com/b/gorkovskaya-brewery-gorkovskaya-pivovarnya-ipa-0-0/3860563",
+    title: "IPA 0,0",
+    brewery: "Горьковская",
+    style: "Non-Alcoholic - IPA",
+    icon: "https://assets.untappd.com/site/beer_logos_hd/beer-3860563_01898_hd.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_09_26/b828fce1eac221cd57ab52ac5c6d1e60_c_1516254289_raw.jpg",
+  },
+  {
+    url: "https://untappd.com/b/plague-zero-sportacus-talus/6326136",
+    title: "Sportacus Talus",
+    brewery: "Plague Zero",
+    style: "Non-Alcoholic - Pale Ale",
+    icon: "https://assets.untappd.com/site/brewery_logos/brewery-447721_81eb8.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_07_27/d77f6a0d36084ebfcc63b24e158c7846_c_1500082976_raw.jpg",
+  },
+  {
+    url: "https://untappd.com/b/sidr-oktyabr-oktyabr-0/5568428",
+    title: "Октябрь №0",
+    brewery: "Сидр Октябрь",
+    style: "Non-Alcoholic - Cider / Perry",
+    icon: "https://assets.untappd.com/site/beer_logos_hd/beer-5568428_b51a5_hd.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_03_01/76a664ab0d92a30de742e15075713fbc_c_1460015489_raw.jpg",
+  },
+  {
+    url: "https://untappd.com/b/black-cat-brewery-for-all-the-dogs-non-alcoholic/6282897",
+    title: "For All the Dogs Non Alcoholic",
+    brewery: "Black Cat Zero",
+    style: "Non-Alcoholic - Sour",
+    icon: "https://assets.untappd.com/site/beer_logos_hd/beer-6282897_6a48a_hd.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_08_31/c20b2080415818059216a305827b062b_c_1510014216_raw.jpg",
+  },
+  {
+    url: "https://untappd.com/b/4brewers-zavisimost-bazilik-no-alco/6470526",
+    title: "Зависимость Базилик [No Alco]",
+    brewery: "4BREWERS",
+    style: "Non-Alcoholic - Gose",
+    icon: "https://assets.untappd.com/site/beer_logos_hd/beer-6470526_b9eea_hd.jpeg",
+    photo:
+      "https://assets.untappd.com/photos/2025_11_10/659a1544f008ce5748e1e3ed44ab194d_c_1527658093_raw.jpg",
+  },
+];
+
 const styleGroups = [
   { group: "IPA / APA", beers: ipaBeers },
   { group: "Lager / Pilsner / Bock", beers: lagerBeers },
@@ -665,6 +863,9 @@ const styleGroups = [
   { group: "Stout / Barleywine / Freeze", beers: stoutBeers },
   { group: "Sour / Gose", beers: sourGoseBeers },
   { group: "Flanders / Lambic / Wild / Farmhouse", beers: wildBeers },
+  { group: "Cider", beers: ciders },
+  { group: "Mead", beers: meads },
+  { group: "Non-alco", beers: nonAlcoBeers },
 ];
 
 const getSlug = (text: string): string => {
@@ -680,7 +881,7 @@ const tocItems = computed(() =>
   styleGroups.map((group) => ({
     title: group.group,
     id: getSlug(group.group),
-  }))
+  })),
 );
 
 const showScrollTop = ref(false);
@@ -708,7 +909,7 @@ onMounted(() => {
 
     <v-row>
       <v-col>
-        <div class="text-center ">
+        <div class="text-center">
           <div class="d-flex flex-wrap justify-center ga-2">
             <v-chip
               v-for="item in tocItems"
