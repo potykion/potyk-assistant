@@ -43,10 +43,13 @@ const { data: newsArticles } = await useAsyncData(() =>
       text="      Прив. 5 лет пытаюсь вести блог, 5 лет бросаю это дело. Пора отметить это очередным блогом 😂."
     ></v-alert>
 
+    <h2>Почитать</h2>
     <h3 class="my-6 text-h5 font-weight-bold">🍻 Пиво</h3>
     <blog-post-list :posts="beerArticles" />
 
     <h3 class="my-6 text-h5 font-weight-bold">📰 Лайф</h3>
     <blog-post-list :posts="newsArticles" />
+
+    <h2>Посмотреть</h2>
   </v-container>
 </template>
