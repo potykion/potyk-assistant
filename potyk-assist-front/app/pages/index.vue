@@ -51,5 +51,6 @@ const { data: newsArticles } = await useAsyncData(() =>
     <blog-post-list :posts="newsArticles" />
 
     <h2>Посмотреть</h2>
+    <vid-movie-list :editable="false" />
   </v-container>
 </template>
