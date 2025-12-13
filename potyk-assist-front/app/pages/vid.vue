@@ -67,6 +67,20 @@ const formData = ref<Movie>({
   downloadUrl: '',
   watchUrl: ''
 })
+const form = ref<any>(null)
+
+const requiredRule = (value: string) => {
+  return !!value || 'Поле обязательно для заполнения'
+}
+
+const urlRule = (value: string) => {
+  const downloadUrl = formData.value.downloadUrl?.trim() || ''
+  const watchUrl = formData.value.watchUrl?.trim() || ''
+  if (!downloadUrl && !watchUrl) {
+    return 'Должен быть заполнен хотя бы один URL (скачивания или просмотра)'
+  }
+  return true
+}
 
 const openCreateDialog = () => {
   isCreating.value = true
@@ -114,9 +128,15 @@ const closeDialog = () => {
     downloadUrl: '',
     watchUrl: ''
   }
+  form.value?.resetValidation()
 }
 
 const saveMovie = async () => {
+  const { valid } = await form.value.validate()
+  if (!valid) {
+    return
+  }
+
   try {
     const serverData = camelToSnake(formData.value)
     
@@ -226,42 +246,50 @@ const saveMovie = async () => {
       <v-card>
         <v-card-title>{{ isCreating ? 'Добавить фильм' : 'Редактировать фильм' }}</v-card-title>
         <v-card-text>
-          <v-text-field
-            v-model="formData.title"
-            label="Название"
-            variant="outlined"
-            class="mb-3"
-          ></v-text-field>
-          <v-text-field
-            v-model="formData.image"
-            label="URL изображения"
-            variant="outlined"
-            class="mb-3"
-          ></v-text-field>
+          <v-form ref="form">
+            <v-text-field
+              v-model="formData.title"
+              label="Название"
+              variant="outlined"
+              class="mb-3"
+              :rules="[requiredRule]"
+            ></v-text-field>
+            <v-text-field
+              v-model="formData.image"
+              label="URL изображения"
+              variant="outlined"
+              class="mb-3"
+              :rules="[requiredRule]"
+            ></v-text-field>
 
-          <v-textarea
-            v-model="formData.why"
-            label="Почему?"
-            variant="outlined"
-            class="mb-3"
-          ></v-textarea>
-          <v-text-field
-            v-model="formData.kinopoiskUrl"
-            label="URL Кинопоиска"
-            variant="outlined"
-            class="mb-3"
-          ></v-text-field>
-          <v-text-field
-            v-model="formData.downloadUrl"
-            label="URL скачивания"
-            variant="outlined"
-            class="mb-3"
-          ></v-text-field>
-          <v-text-field
-            v-model="formData.watchUrl"
-            label="URL просмотра"
-            variant="outlined"
-          ></v-text-field>
+            <v-textarea
+              v-model="formData.why"
+              label="Почему?"
+              variant="outlined"
+              class="mb-3"
+              :rules="[requiredRule]"
+            ></v-textarea>
+            <v-text-field
+              v-model="formData.kinopoiskUrl"
+              label="URL Кинопоиска"
+              variant="outlined"
+              class="mb-3"
+              :rules="[requiredRule]"
+            ></v-text-field>
+            <v-text-field
+              v-model="formData.downloadUrl"
+              label="URL скачивания"
+              variant="outlined"
+              class="mb-3"
+              :rules="[urlRule]"
+            ></v-text-field>
+            <v-text-field
+              v-model="formData.watchUrl"
+              label="URL просмотра"
+              variant="outlined"
+              :rules="[urlRule]"
+            ></v-text-field>
+          </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>

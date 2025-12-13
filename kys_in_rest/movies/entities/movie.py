@@ -10,3 +10,4 @@ class Movie(BaseModel):
     watch_url: str | None = None
     why: str | None = None
 
+
