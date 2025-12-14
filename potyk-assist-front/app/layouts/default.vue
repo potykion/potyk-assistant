@@ -5,10 +5,8 @@
         <v-btn size="x-small" to="/">potyk.io</v-btn>
 
         <v-btn size="x-small" to="/blog">blog</v-btn>
-        <v-btn size="x-small" to="/img">img</v-btn>
         <v-btn size="x-small" to="/vid">vid</v-btn>
         <v-btn size="x-small" to="/mu">mu</v-btn>
-        <v-btn size="x-small" to="/feed">feed</v-btn>
         <v-btn size="x-small" to="/clishe">clishe</v-btn>
       </v-app-bar-title>
     </v-app-bar>
