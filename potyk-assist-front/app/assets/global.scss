@@ -24,3 +24,27 @@ li {
   margin-bottom: 4px;
   margin-top: 4px;
 }
+
+// Адаптивные flex-классы
+// sm: < 600px
+@media (max-width: 599px) {
+  .flex-sm-column {
+    flex-direction: column;
+  }
+
+  .flex-sm-nowrap {
+    flex-wrap: nowrap;
+  }
+}
+
+// md: 600px - 960px
+// and (max-width: 959px)
+@media (min-width: 600px)  {
+  .flex-md-row {
+    flex-direction: row;
+  }
+
+  .flex-md-wrap {
+    flex-wrap: wrap;
+  }
+}

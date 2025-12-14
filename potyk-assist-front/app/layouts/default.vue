@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar color="transparent" :elevation="0" density="compact">
+    <v-app-bar color="amber-lighten-5" :elevation="0" density="compact">
       <v-app-bar-title>
         <v-btn size="x-small" to="/">potyk.io</v-btn>
 

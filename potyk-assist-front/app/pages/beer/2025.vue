@@ -934,11 +934,11 @@ onMounted(() => {
         </v-col>
       </v-row>
 
-      <v-row>
+      <v-row class="flex-sm-column flex-md-row flex-sm-nowrap flex-md-wrap">
         <template v-for="beer in styleGroup.beers" :key="beer.url">
           <v-col md="4" sm="12" xl="2">
             <v-card
-              min-width="372"
+              min-width="min(372px, 100%)"
               class="beer-card"
               :href="beer.url"
               rounded="lg"

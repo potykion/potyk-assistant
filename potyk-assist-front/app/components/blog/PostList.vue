@@ -24,8 +24,8 @@ const handleTagClick = (tag: string, event: Event) => {
 </script>
 
 <template>
-  <v-row>
-    <v-col cols="4" v-for="post in posts" :key="post.id">
+  <v-row class="flex-sm-column flex-md-row">
+    <v-col v-for="post in posts" :key="post.id" md="4" xl="3" sm="12">
       <v-card :title="post.title" :to="post.path" variant="outlined">
         <template #subtitle>
           <i>

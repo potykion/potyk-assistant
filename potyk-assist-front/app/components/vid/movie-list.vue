@@ -202,8 +202,14 @@ defineExpose({
 
 <template>
   <div>
-    <v-row>
-      <v-col v-for="(movie, index) in movies" :key="movie.title" cols="3">
+    <v-row class="flex-sm-column flex-md-row">
+      <v-col
+        v-for="(movie, index) in movies"
+        :key="movie.title"
+        md="3"
+        xl="2"
+        sm="12"
+      >
         <v-card class="movie-card" elevation="0" variant="outlined">
           <v-img :src="movie.image" cover class="movie-image" height="400">
             <v-toolbar v-if="editable" color="transparent" class="edit-toolbar">
