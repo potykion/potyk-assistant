@@ -9,6 +9,7 @@
         <v-btn size="x-small" to="/vid">vid</v-btn>
         <v-btn size="x-small" to="/mu">mu</v-btn>
         <v-btn size="x-small" to="/feed">feed</v-btn>
+        <v-btn size="x-small" to="/clishe">clishe</v-btn>
       </v-app-bar-title>
     </v-app-bar>
 
