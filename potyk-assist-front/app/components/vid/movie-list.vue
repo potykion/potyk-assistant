@@ -339,3 +339,4 @@ defineExpose({
 .movie-image:hover .edit-toolbar
   opacity: 1
 </style>
+

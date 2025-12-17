@@ -8,6 +8,7 @@ interface Beer {
   style: string;
   newStyle?: boolean;
   newBrewery?: boolean;
+  titleBadge?: string;
 }
 
 const ipaBeers: Beer[] = [
@@ -491,7 +492,7 @@ const stoutBeers: Beer[] = [
     url: "https://untappd.com/b/baltika-breweries-baltika-baltika-stout/6071592",
     title: "Baltika Stout",
     brewery: "Балтика",
-    style: "Stout - Irish Dry",
+    style: "Stout — Irish Dry",
     icon: "https://assets.untappd.com/site/beer_logos/beer-6071592_fe8fd_sm.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_03_12/14b237de2d83d50317fff70b42497eb7_c_1462633225_raw.jpg",
@@ -500,7 +501,7 @@ const stoutBeers: Beer[] = [
     url: "https://untappd.com/b/zagovor-brewery-scratch/823908",
     title: "Scratch",
     brewery: "Zagovor",
-    style: "Stout - Oatmeal",
+    style: "Stout — Oatmeal",
     icon: "https://assets.untappd.com/site/beer_logos/beer-823908_29e2c_sm.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_02_19/5dbf3984dc6015977b95ef98c6822b6b_c_1457766066_raw.jpg",
@@ -509,7 +510,7 @@ const stoutBeers: Beer[] = [
     url: "https://untappd.com/b/pivoteka-brew-pivoteka-zavtrak-v-kaire/5785656",
     title: "Завтрак в Каире",
     brewery: "Пивотека",
-    style: "Stout - Coffee",
+    style: "Stout — Coffee",
     icon: "https://assets.untappd.com/site/beer_logos/beer-5785656_e3b8e_sm.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_09_13/1659ef62eeac8fe93ca55dcd238775a5_c_1513216255_raw.jpg",
@@ -518,7 +519,7 @@ const stoutBeers: Beer[] = [
     url: "https://untappd.com/b/pivovarnya-odna-tonna-odna-tonna-brewery-temnaya-energiya-kokos-kakao-vanil/6264025",
     title: "Темная энергия: Кокос, Какао, Ваниль",
     brewery: "Одна тонна",
-    style: "Stout - Imperial / Double",
+    style: "Stout — Imperial / Double",
     icon: "https://assets.untappd.com/site/beer_logos/beer-6264025_5f603_sm.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_07_26/cfda56a5ea41a1ad36351204e5a60c31_c_1499640055_raw.jpg",
@@ -548,7 +549,7 @@ const wildBeers: Beer[] = [
     title: "Duchesse de Bourgogne",
     brewery: "Verhaeghe",
     url: "https://untappd.com/b/brouwerij-verhaeghe-duchesse-de-bourgogne/3954",
-    style: "Sour - Flanders Red Ale",
+    style: "Sour — Flanders Red Ale",
     icon: "https://assets.untappd.com/site/beer_logos/beer-3954_c81f1_sm.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_01_02/ff84aa560138760871449e5eec5f65e3_c_1447392612_raw.jpg",
@@ -557,7 +558,7 @@ const wildBeers: Beer[] = [
     title: "Oud Bruin Raspberry (harvest 2023)",
     brewery: "Verzet",
     url: "https://untappd.com/b/brouwerij-t-verzet-oud-bruin-raspberry-harvest-2023/5970446",
-    style: "Sour - Flanders Oud Bruin",
+    style: "Sour — Flanders Oud Bruin",
     icon: "https://assets.untappd.com/site/beer_logos/beer-1897631_a59b9_sm.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_10_16/4844cf07b0a6ccbbf78e1d82cff8a1f7_c_1521414232_raw.jpg",
@@ -575,7 +576,7 @@ const wildBeers: Beer[] = [
     title: "Kriek 100% Lambic Bio (2024)",
     brewery: "Cantillon",
     url: "https://untappd.com/b/brasserie-cantillon-kriek-100-lambic-bio-2024/5685869",
-    style: "Lambic - Kriek",
+    style: "Lambic — Kriek",
     icon: "https://assets.untappd.com/site/beer_logos/beer-5685869_fb805_sm.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_06_14/9670c6784854153e2fc3a2f99b5b7aea_c_1487567364_raw.jpg",
@@ -584,7 +585,7 @@ const wildBeers: Beer[] = [
     title: "Rosé de Gambrinus",
     brewery: "Cantillon",
     url: "https://untappd.com/b/brasserie-cantillon-rose-de-gambrinus/13142",
-    style: "Lambic - Framboise",
+    style: "Lambic — Framboise",
     icon: "https://assets.untappd.com/site/beer_logos/beer-RosedeGambrinus_13142.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_12_05/3eb0cc0cea1b516aa18bdf75b12bc86b_c_1533235766_raw.jpg",
@@ -593,7 +594,7 @@ const wildBeers: Beer[] = [
     title: "Cassis",
     brewery: "Lindemans",
     url: "https://untappd.com/b/brouwerij-lindemans-cassis/7895",
-    style: "Lambic - Fruit",
+    style: "Lambic — Fruit",
     icon: "https://assets.untappd.com/site/beer_logos/beer-7895_543a6_sm.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_01_29/5e64d96831ee2245c88beb0ba28b15e1_c_1453056204_raw.jpg",
@@ -602,7 +603,7 @@ const wildBeers: Beer[] = [
     title: "Geuze Mariage Parfait",
     brewery: "Boon",
     url: "https://untappd.com/b/brouwerij-boon-geuze-mariage-parfait/29149",
-    style: "Lambic - Gueuze",
+    style: "Lambic — Gueuze",
     icon: "https://assets.untappd.com/site/beer_logos/beer-29149_05088_sm.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_06_09/d576706d3b97c7e77216ae4ebcddb383_c_1486363755_raw.jpg",
@@ -632,7 +633,7 @@ const englishBeers: Beer[] = [
     title: "Dogmatic",
     brewery: "Boxing Wizard × Чаща",
     url: "https://untappd.com/b/boxing-wizard-brewery-dogmatic/6202603",
-    style: "Bitter - Best",
+    style: "Bitter — Best",
     icon: "https://assets.untappd.com/site/beer_logos/beer-6202603_50f13_sm.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_04_19/edd69adeba9d97a5b34e12e79995cbe5_c_1472187660_raw.jpg",
@@ -641,7 +642,7 @@ const englishBeers: Beer[] = [
     title: "ESB",
     brewery: "Fuller's Griffin",
     url: "https://assets.untappd.com/site/beer_logos/beer-5455_0a690_sm.jpeg",
-    style: "Bitter - Extra Special / Strong (ESB)",
+    style: "Bitter — Extra Special / Strong (ESB)",
     icon: "https://assets.untappd.com/site/beer_logos/beer-5455_0a690_sm.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_06_09/e11bb927563881ed5f0a3f0fc52786a6_c_1486366215_raw.jpg",
@@ -650,7 +651,7 @@ const englishBeers: Beer[] = [
     title: "Hazelnut Brown Ale",
     brewery: "Rogue Ales",
     url: "https://untappd.com/b/rogue-ales-hazelnut-brown-ale/4179",
-    style: "Brown Ale - American",
+    style: "Brown Ale — American",
     icon: "https://assets.untappd.com/site/beer_logos/beer-4179_56c20_sm.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_11_07/85311b92d3a8f1b5e33b6b8eb1425cf5_c_1526667300_raw.jpg",
@@ -662,7 +663,7 @@ const ciders: Beer[] = [
     title: "Le Shouga Barrel Made",
     brewery: "Заповедник",
     url: "https://untappd.com/b/zapovednik-le-shouga-barrel-made/6315738",
-    style: "Cider - Dry",
+    style: "Cider — Dry",
     icon: "https://assets.untappd.com/site/beer_logos_hd/beer-6315738_c0e27_hd.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_08_02/573e3a3af414581fd649bbef731aba21_c_1501728554_raw.jpg",
@@ -671,7 +672,7 @@ const ciders: Beer[] = [
     title: "Анархия",
     brewery: "Andreev Ciderworks",
     url: "https://untappd.com/b/andreev-ciderworks-anarhiya/5979131",
-    style: "Cider - Traditional / Apfelwein",
+    style: "Cider — Traditional / Apfelwein",
     icon: "https://assets.untappd.com/site/beer_logos_hd/beer-5979131_c05e5_hd.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_03_16/49c1e0c2e166fb5d077d4ba59e026a2b_c_1463871492_raw.jpg",
@@ -680,7 +681,7 @@ const ciders: Beer[] = [
     title: "Тузы и Восьмёрки",
     brewery: "Заповедник",
     url: "https://untappd.com/b/zapovednik-tuzy-i-vosmyorki/6064424",
-    style: "Cider - Other Fruit",
+    style: "Cider — Other Fruit",
     icon: "https://assets.untappd.com/site/beer_logos_hd/beer-6064424_0e896_hd.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_04_25/b9c934a3a4bb191a3ec2d98aa5e3efcc_c_1473819723_raw.jpg",
@@ -689,7 +690,7 @@ const ciders: Beer[] = [
     title: "Le Shouga Poiré",
     brewery: "Заповедник",
     url: "https://untappd.com/b/zapovednik-le-shouga-poire/6316394",
-    style: "Cider - Perry / Poiré",
+    style: "Cider — Perry / Poiré",
     icon: "https://assets.untappd.com/site/beer_logos/beer-6316394_f992f_sm.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_06_28/e4905c73019521cc24ad7a4cff99e886_c_1491459807_raw.jpg",
@@ -699,16 +700,17 @@ const ciders: Beer[] = [
     title: "Ice Cider (2023)",
     brewery: "Sólville",
     url: "https://untappd.com/b/solville-ice-cider-2023/5890370",
-    style: "Cider - Ice",
+    style: "Cider — Ice",
     icon: "https://assets.untappd.com/site/beer_logos_hd/beer-5890370_f4971_hd.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_03_01/635f8d61ae55c8c943fa5b3959826cdc_c_1460031043_raw.jpg",
+    titleBadge: "1000!",
   },
   {
     title: "Ice Perry",
     brewery: "Andreev Ciderworks",
     url: "https://untappd.com/b/andreev-ciderworks-ice-perry/5061877",
-    style: "Cider - Ice",
+    style: "Cider — Ice Perry",
     icon: "https://assets.untappd.com/site/beer_logos_hd/beer-5061877_95871_hd.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_06_10/890ca934f3a6b948e4244f6eabc57f11_c_1486488444_raw.jpg",
@@ -719,7 +721,7 @@ const meads: Beer[] = [
     title: "Денница",
     brewery: "Щеглец",
     url: "https://untappd.com/b/sheglec-dennica/5910224",
-    style: "Mead - Traditional",
+    style: "Mead — Traditional",
     icon: "https://assets.untappd.com/site/beer_logos_hd/beer-5910224_c7d97_hd.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_07_05/da4799a5758225d419f9f2827d7dcbfe_c_1493500214_raw.jpg",
@@ -728,7 +730,7 @@ const meads: Beer[] = [
     title: "Большая страна: Донская вишня",
     brewery: "Одна тонна",
     url: "https://untappd.com/b/pivovarnya-odna-tonna-odna-tonna-brewery-bolshaya-strana-donskaya-vishnya/5970758",
-    style: "Mead - Session / Short",
+    style: "Mead — Session / Short",
     icon: "https://assets.untappd.com/site/beer_logos_hd/beer-5970758_0baf0_hd.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_03_12/10e7c14857a8fdd8ee0920728253a0f8_c_1462637203_raw.jpg",
@@ -737,7 +739,7 @@ const meads: Beer[] = [
     title: "Practical Joke",
     brewery: "Big Village",
     url: "https://untappd.com/b/big-village-brewery-practical-joke/6134701",
-    style: "Mead - Melomel",
+    style: "Mead — Melomel",
     icon: "https://assets.untappd.com/site/beer_logos_hd/beer-6134701_4a7b0_hd.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_03_17/aed9c2509df4d324f6cbb202c8d2ec52_c_1464074271_raw.jpg",
@@ -746,7 +748,7 @@ const meads: Beer[] = [
     title: "Cola Mead",
     brewery: "Степь и Ветер",
     url: "https://untappd.com/b/steppe-and-wind-meadery-step-i-veter-cola-mead/6340235",
-    style: "Mead - Melomel",
+    style: "Mead — Melomel",
     icon: "https://assets.untappd.com/site/beer_logos_hd/beer-6340235_4f57f_hd.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_09_10/fd59bc87a1ff592c7e78fa2be0e40ade_c_1512428694_raw.jpg",
@@ -755,7 +757,7 @@ const meads: Beer[] = [
     title: "Сайсер Яблоки и мёд",
     brewery: "Gurin Craft × Ля Фуар Дэ Нижний Новгород",
     url: "https://untappd.com/b/gurin-craft-sajser-yabloki-i-myod/6026564",
-    style: "Mead - Cyser",
+    style: "Mead — Cyser",
     icon: "https://assets.untappd.com/site/beer_logos/beer-6026564_6109e_sm.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_05_16/0efbb968a3d2712a8d5d5b96eea7c38b_c_1479283893_raw.jpg",
@@ -764,7 +766,7 @@ const meads: Beer[] = [
     title: "Сон Масала Christmas Edition",
     brewery: "Чаща",
     url: "https://untappd.com/b/pivovarnya-chasha-thicket-brewery-son-masala-christmas-edition/4637336",
-    style: "Mead - Cyser",
+    style: "Mead — Cyser",
     icon: "https://assets.untappd.com/site/beer_logos_hd/beer-4637336_670a9_hd.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_04_27/aa229c78f9c1384181c045243512ae7f_c_1474684443_raw.jpg",
@@ -773,7 +775,7 @@ const meads: Beer[] = [
     title: "Pyment White Batch #2",
     brewery: "Ashram",
     url: "https://untappd.com/b/ashram-cider-pyment-white-batch-2/5911384",
-    style: "Mead - Cyser",
+    style: "Mead — Cyser",
     icon: "https://assets.untappd.com/site/beer_logos_hd/beer-5911384_74783_hd.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_03_01/9545784cdbee47eb83c5d0486cdfec02_c_1460008429_raw.jpg",
@@ -782,7 +784,7 @@ const meads: Beer[] = [
     title: "Metheglin из одуванчиков Batch #4",
     brewery: "Ashram",
     url: "https://untappd.com/b/ashram-cider-metheglin-iz-oduvanchikov-batch-4/6182074",
-    style: "Mead - Metheglin",
+    style: "Mead — Metheglin",
     icon: "https://assets.untappd.com/site/beer_logos_hd/beer-6182074_c0b24_hd.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_03_29/a167aa74f9821e329d63898fb15ff286_c_1466805776_raw.jpg",
@@ -791,7 +793,7 @@ const meads: Beer[] = [
     title: "Juniper & Basil Tonic Mead",
     brewery: "Степь и Ветер",
     url: "https://untappd.com/b/steppe-and-wind-meadery-step-i-veter-juniper-and-basil-tonic-mead/5776656",
-    style: "Mead - Other",
+    style: "Mead — Other",
     icon: "https://assets.untappd.com/site/beer_logos_hd/beer-5776656_b31d4_hd.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_04_26/ea3da05bd113b76c0ec4e7d30a293b54_c_1474351188_raw.jpg",
@@ -802,7 +804,7 @@ const nonAlcoBeers: Beer[] = [
     url: "https://untappd.com/b/tradicni-pivovar-v-rakovniku-bakalar-nealko-za-studena-chmeleny-non-alcoholic-dry-hopped-lager/1171072",
     title: "Nealko Za studena chmelený",
     brewery: "Bakalář",
-    style: "Non-Alcoholic - Lager",
+    style: "Non-Alcoholic — Lager",
     icon: "https://assets.untappd.com/site/beer_logos_hd/beer-1171072_4e61a_hd.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_10_26/f45d332a3cbde400feb07689d609ddce_c_1524241121_raw.jpg",
@@ -811,7 +813,7 @@ const nonAlcoBeers: Beer[] = [
     url: "https://untappd.com/b/gorkovskaya-brewery-gorkovskaya-pivovarnya-ipa-0-0/3860563",
     title: "IPA 0,0",
     brewery: "Горьковская",
-    style: "Non-Alcoholic - IPA",
+    style: "Non-Alcoholic — IPA",
     icon: "https://assets.untappd.com/site/beer_logos_hd/beer-3860563_01898_hd.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_09_26/b828fce1eac221cd57ab52ac5c6d1e60_c_1516254289_raw.jpg",
@@ -820,7 +822,7 @@ const nonAlcoBeers: Beer[] = [
     url: "https://untappd.com/b/plague-zero-sportacus-talus/6326136",
     title: "Sportacus Talus",
     brewery: "Plague Zero",
-    style: "Non-Alcoholic - Pale Ale",
+    style: "Non-Alcoholic — Pale Ale",
     icon: "https://assets.untappd.com/site/brewery_logos/brewery-447721_81eb8.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_07_27/d77f6a0d36084ebfcc63b24e158c7846_c_1500082976_raw.jpg",
@@ -829,7 +831,7 @@ const nonAlcoBeers: Beer[] = [
     url: "https://untappd.com/b/sidr-oktyabr-oktyabr-0/5568428",
     title: "Октябрь №0",
     brewery: "Сидр Октябрь",
-    style: "Non-Alcoholic - Cider / Perry",
+    style: "Non-Alcoholic — Cider / Perry",
     icon: "https://assets.untappd.com/site/beer_logos_hd/beer-5568428_b51a5_hd.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_03_01/76a664ab0d92a30de742e15075713fbc_c_1460015489_raw.jpg",
@@ -838,7 +840,7 @@ const nonAlcoBeers: Beer[] = [
     url: "https://untappd.com/b/black-cat-brewery-for-all-the-dogs-non-alcoholic/6282897",
     title: "For All the Dogs Non Alcoholic",
     brewery: "Black Cat Zero",
-    style: "Non-Alcoholic - Sour",
+    style: "Non-Alcoholic — Sour",
     icon: "https://assets.untappd.com/site/beer_logos_hd/beer-6282897_6a48a_hd.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_08_31/c20b2080415818059216a305827b062b_c_1510014216_raw.jpg",
@@ -847,7 +849,7 @@ const nonAlcoBeers: Beer[] = [
     url: "https://untappd.com/b/4brewers-zavisimost-bazilik-no-alco/6470526",
     title: "Зависимость Базилик [No Alco]",
     brewery: "4BREWERS",
-    style: "Non-Alcoholic - Gose",
+    style: "Non-Alcoholic — Gose",
     icon: "https://assets.untappd.com/site/beer_logos_hd/beer-6470526_b9eea_hd.jpeg",
     photo:
       "https://assets.untappd.com/photos/2025_11_10/659a1544f008ce5748e1e3ed44ab194d_c_1527658093_raw.jpg",
@@ -944,12 +946,7 @@ onMounted(() => {
               rounded="lg"
             >
               <div class="beer-card__media">
-                <v-img
-                  height="541"
-                  cover
-                  :src="beer.photo"
-                  rounded="lg"
-                ></v-img>
+                <v-img height="541" cover :src="beer.photo" rounded="lg" />
                 <v-avatar
                   class="beer-card__icon"
                   size="100"
@@ -957,9 +954,22 @@ onMounted(() => {
                   :image="beer.icon"
                 />
               </div>
-              <v-card-title class="text-center font-weight-bold mt-5 pb-0">{{
-                beer.title || "-"
-              }}</v-card-title>
+              <v-card-title class="text-center font-weight-bold mt-5 pb-0">
+                <template v-if="beer.titleBadge">
+                  <v-badge
+                    inline
+                    location="top right"
+                    color="red"
+                    :content="beer.titleBadge"
+                  >
+                    <span class="mr-1">{{ beer.title || "-" }}</span>
+                  </v-badge>
+                </template>
+
+                <template v-else>
+                  {{ beer.title || "-" }}
+                </template>
+              </v-card-title>
               <v-card-subtitle class="text-center pb-3">
                 <template v-if="beer.newBrewery">
                   <v-badge
@@ -975,7 +985,7 @@ onMounted(() => {
                   <div>{{ beer.brewery || "-" }}</div>
                 </template>
               </v-card-subtitle>
-              <v-divider></v-divider>
+              <v-divider />
               <v-card-text class="text-center">
                 {{ beer.style }}
               </v-card-text>
