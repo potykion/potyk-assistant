@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar color="amber-lighten-5" :elevation="0" density="compact">
+    <v-app-bar v-if="!shouldHideAppBar" color="amber-lighten-5" :elevation="0" density="compact">
       <v-app-bar-title>
         <v-btn size="x-small" to="/">potyk.io</v-btn>
 
@@ -19,4 +19,7 @@
     </v-main>
   </v-app>
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const route = useRoute()
+const shouldHideAppBar = computed(() => route.query.share === '1')
+</script>
