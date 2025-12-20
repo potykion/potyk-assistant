@@ -45,3 +45,23 @@ cp ./db.sqlite ./db_prod.sqlite
 scp leybovich-nikita@84.201.131.244:./kys_in_rest/db_prod.sqlite .
 ```
 
+### Установка на Win-локалке
+
+#### Frontend
+
+- Install node 22
+
+```sh
+npm i
+```
+
+#### Backend
+
+- Install uv: https://docs.astral.sh/uv/#installation
+- uv will be installed on sample path: `C:\Users\GANSOR\.local\bin\uv.exe`
+
+```sh
+uv venv
+uv pip install  -r .\requirements-dev.txt
+uv run flask --app .\kys_in_rest\applications\flask_server.py run
+```
