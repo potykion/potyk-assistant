@@ -80,4 +80,22 @@ def create_app() -> Flask:
         checkins = beer_sync.first_time("potykion")
         return flask.jsonify([c.model_dump() for c in checkins])
 
+    @app.route("/auth/telegram", methods=["POST"])
+    def auth_telegram() -> flask.Response:
+        data = flask.request.get_json()
+        if not data:
+            return flask.jsonify({"error": "No JSON data provided"}), 400
+
+        tg_user_id = data.get("id")
+        if not tg_user_id:
+            return flask.jsonify({"error": "Telegram user ID is required"}), 400
+
+        tg_admins = ioc.resolve("tg_admins")
+        is_admin = int(tg_user_id) in tg_admins
+
+        return flask.jsonify({
+            "user": data,
+            "is_admin": is_admin,
+        }), 200
+
     return app
