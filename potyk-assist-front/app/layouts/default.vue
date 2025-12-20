@@ -11,8 +11,29 @@
       </v-app-bar-title>
 
       <template v-slot:append>
-        <div v-if="!user" id="telegram-auth-container"></div>
-        <v-btn v-if="user" icon="mdi-logout" @click="logout" size="small" title="Выйти"></v-btn>
+        <template v-if="!user">
+          <v-btn
+            size="small"
+            @click="showOtpDialog = true"
+            color="primary"
+            variant="flat"
+          >
+            Войти
+          </v-btn>
+          <div v-if="showWidget" id="telegram-auth-container" class="ml-2"></div>
+          <v-btn
+            v-if="!showWidget"
+            icon="mdi-telegram"
+            size="small"
+            @click="showWidget = true"
+            title="Войти через Telegram Widget"
+            variant="text"
+          ></v-btn>
+        </template>
+        <template v-else>
+          <span class="mr-2 text-caption">{{ user.first_name }}{{ user.username ? ` (@${user.username})` : '' }}</span>
+          <v-btn icon="mdi-logout" @click="logout" size="small" title="Выйти"></v-btn>
+        </template>
       </template>
     </v-app-bar>
 
@@ -22,6 +43,11 @@
       <!-- <v-main class="pb-10 bg-blue-lighten-5"> -->
       <slot />
     </v-main>
+
+    <auth-telegram-otp-auth
+      v-model="showOtpDialog"
+      @success="handleOtpAuthSuccess"
+    />
   </v-app>
 
 
@@ -30,7 +56,10 @@
 const route = useRoute()
 const shouldHideAppBar = computed(() => route.query.share === '1')
 
-const { user, onTelegramAuth, logout, initAuth } = useTelegramAuth()
+const { user, onTelegramAuth, onOtpAuthSuccess, logout, initAuth } = useTelegramAuth()
+
+const showOtpDialog = ref(false)
+const showWidget = ref(false)
 
 // Функция для загрузки Telegram Widget
 const loadTelegramWidget = () => {
@@ -78,5 +107,17 @@ if (process.client) {
   watch(user, () => {
     loadTelegramWidget()
   })
+
+  watch(showWidget, (newValue) => {
+    if (newValue && !user.value) {
+      loadTelegramWidget()
+    }
+  })
+}
+
+// Обработчик успешной OTP авторизации
+const handleOtpAuthSuccess = async () => {
+  // Компонент уже обработал авторизацию, просто закрываем диалог
+  showOtpDialog.value = false
 }
 </script>
