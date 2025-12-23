@@ -11,7 +11,7 @@ class OtpStorage:
         Args:
             ttl_seconds: Время жизни OTP в секундах (по умолчанию 5 минут)
         """
-        self._storage: Dict[str, tuple[int, str]] = {}  # username -> (user_id, otp, timestamp)
+        self._storage: Dict[str, tuple[int, str, int]] = {}  # username -> (user_id, otp, timestamp)
         self.ttl_seconds = ttl_seconds
 
     def generate_otp(self, username: str, user_id: int) -> str:

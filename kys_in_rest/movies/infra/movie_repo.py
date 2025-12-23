@@ -1,3 +1,5 @@
+from typing import Any
+
 from kys_in_rest.core.sqlite_utils import SqliteRepo
 from kys_in_rest.movies.entities.movie import Movie
 from kys_in_rest.movies.features.movie_repo import MovieRepo
@@ -8,7 +10,7 @@ class SqliteMovieRepo(MovieRepo, SqliteRepo):
         rows = self.cursor.execute("select * from movies order by id").fetchall()
         return [self._row_to_movie(row) for row in rows]
     
-    def _row_to_movie(self, row: dict) -> Movie:
+    def _row_to_movie(self, row: dict[str, Any]) -> Movie:
         movie_dict = dict(row)
         # Convert SQLite integer (0/1) to boolean
         if "watched" in movie_dict:
