@@ -9,6 +9,7 @@ class Movie(BaseModel):
     download_url: str | None = None
     watch_url: str | None = None
     why: str | None = None
+    watched: bool | None = False
 
 
 

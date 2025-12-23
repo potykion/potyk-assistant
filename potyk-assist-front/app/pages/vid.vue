@@ -1,8 +1,13 @@
 <script setup lang="ts">
 const showCreateDialog = ref(false);
+const showArchiveDialog = ref(false);
 
 const openCreateDialog = () => {
   showCreateDialog.value = true;
+};
+
+const openArchiveDialog = () => {
+  showArchiveDialog.value = true;
 };
 </script>
 
@@ -15,14 +20,26 @@ const openCreateDialog = () => {
 
     <div class="d-flex align-center justify-space-between mb-4">
       <h3 class="mr-4">Посмотреть позже</h3>
-      <v-btn
-        icon="mdi-plus"
-        color="primary"
-        @click="openCreateDialog"
-        variant="outlined"
-      ></v-btn>
+      <div class="d-flex gap-2">
+        <v-btn
+          icon="mdi-archive"
+          color="secondary"
+          @click="openArchiveDialog"
+          variant="outlined"
+        ></v-btn>
+        <v-btn
+          icon="mdi-plus"
+          color="primary"
+          @click="openCreateDialog"
+          variant="outlined"
+        ></v-btn>
+      </div>
     </div>
-    <vid-movie-list :editable="true" v-model:show-create-dialog="showCreateDialog" />
+    <vid-movie-list 
+      :editable="true" 
+      v-model:show-create-dialog="showCreateDialog"
+      v-model:show-archive-dialog="showArchiveDialog"
+    />
 
     <v-row>
       <v-col>
