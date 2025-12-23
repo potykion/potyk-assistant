@@ -21,11 +21,17 @@ interface MovieServer {
 
 interface Props {
   editable?: boolean;
+  showCreateDialog?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   editable: true,
+  showCreateDialog: false,
 });
+
+const emit = defineEmits<{
+  'update:showCreateDialog': [value: boolean];
+}>();
 
 const apiBaseUrl = import.meta.dev
   ? "http://127.0.0.1:5000"
@@ -113,6 +119,13 @@ const openCreateDialog = () => {
   };
   dialog.value = true;
 };
+
+watch(() => props.showCreateDialog, (newVal) => {
+  if (newVal) {
+    openCreateDialog();
+    emit('update:showCreateDialog', false);
+  }
+});
 
 const openEditDialog = (index: number) => {
   if (!props.editable) {

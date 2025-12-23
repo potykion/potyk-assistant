@@ -1,8 +1,8 @@
 <script setup lang="ts">
-const movieListRef = ref<any>(null);
+const showCreateDialog = ref(false);
 
 const openCreateDialog = () => {
-  movieListRef.value?.openCreateDialog();
+  showCreateDialog.value = true;
 };
 </script>
 
@@ -22,7 +22,7 @@ const openCreateDialog = () => {
         variant="outlined"
       ></v-btn>
     </div>
-    <vid-movie-list ref="movieListRef" :editable="true" />
+    <vid-movie-list :editable="true" v-model:show-create-dialog="showCreateDialog" />
 
     <v-row>
       <v-col>
