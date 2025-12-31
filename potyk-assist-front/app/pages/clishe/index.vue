@@ -5,12 +5,32 @@
 
     <v-row dense>
       <v-col cols="12">
-        <h2><code>basis</code></h2>
-        <code-block>cd /mnt/c/users/admin/PycharmProjects/ibs_vms/</code-block>
+        <h2 :id="getSlug('basis')"><code>basis</code></h2>
       </v-col>
 
       <v-col cols="12">
-        <v-card title="Скачать логи агента">
+        <div class="text-center">
+          <div class="d-flex flex-wrap ga-2">
+            <v-chip
+              v-for="item in tocItems"
+              :key="item.id"
+              :href="`#${item.id}`"
+              variant="outlined"
+              class="ma-1"
+            >
+              {{ item.title }}
+            </v-chip>
+          </div>
+        </div>
+      </v-col>
+
+      <v-col cols="12">
+        <code-block>cd /mnt/c/users/admin/PycharmProjects/ibs_vms/</code-block>
+      </v-col>
+
+
+      <v-col cols="12">
+        <v-card :id="getSlug('Скачать логи агента')" title="Скачать логи агента">
           <v-card-text>
             <v-row dense>
               <v-col cols="6">
@@ -58,7 +78,7 @@
       </v-col>
 
       <v-col cols="12">
-        <v-card title="Скачать логи бека">
+        <v-card :id="getSlug('Скачать логи бека')" title="Скачать логи бека">
           <v-card-text>
             <v-row dense>
               <v-col cols="6">
@@ -120,7 +140,7 @@
       </v-col>
 
       <v-col cols="12">
-        <v-card title="Деплой">
+        <v-card :id="getSlug('Деплой')" title="Деплой">
           <v-card-text>
             <v-row dense>
               <v-col cols="12">
@@ -146,7 +166,7 @@
       </v-col>
 
       <v-col cols="12">
-        <v-card title="Grep">
+        <v-card :id="getSlug('Grep')" title="Grep">
           <v-card-text>
             <v-row dense>
               <v-col cols="12">
@@ -172,7 +192,7 @@
       </v-col>
 
       <v-col cols="12">
-        <v-card title="ssh-copy-id">
+        <v-card :id="getSlug('ssh-copy-id')" title="ssh-copy-id">
           <v-card-text>
             <v-row dense>
               <v-col cols="12">
@@ -197,6 +217,15 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <v-fab
+      v-model="showScrollTop"
+      location="bottom end"
+      app
+      icon="mdi-arrow-up"
+      color="primary"
+      @click="scrollToTop"
+    />
   </v-container>
 </template>
 
@@ -352,5 +381,45 @@ const computedSshCopyIdCode = computed(() => {
     commands.push(`ssh-copy-id ${sshCopyIdUser.value}@${host}`);
   });
   return commands.join("\n");
+});
+
+const sections = [
+  "Скачать логи агента",
+  "Скачать логи бека",
+  "Деплой",
+  "Grep",
+  "ssh-copy-id",
+];
+
+const getSlug = (text: string): string => {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .trim();
+};
+
+const tocItems = computed(() =>
+  sections.map((section) => ({
+    title: section,
+    id: getSlug(section),
+  })),
+);
+
+const showScrollTop = ref(false);
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+onMounted(() => {
+  const handleScroll = () => {
+    showScrollTop.value = window.scrollY > 300;
+  };
+  window.addEventListener("scroll", handleScroll);
+  onUnmounted(() => {
+    window.removeEventListener("scroll", handleScroll);
+  });
 });
 </script>
