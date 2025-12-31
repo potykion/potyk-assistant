@@ -144,6 +144,32 @@
           </v-card-text>
         </v-card>
       </v-col>
+
+      <v-col cols="12">
+        <v-card title="Grep">
+          <v-card-text>
+            <v-row dense>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="grepSearchText"
+                  label="Что ищем"
+                  hide-details
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="grepFilePath"
+                  label="Где ищем"
+                  hide-details
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <code-block :code="computedGrepCode" />
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -175,6 +201,13 @@ const deployBackendHosts = ref<string[]>([
   "10.46.1.16",
 ]);
 const deployAgentHosts = ref<string[]>(["10.0.91.148"]);
+
+const grepSearchText = ref("a-96nBUmZ");
+const grepFilePath = ref("./log/148-agent.log");
+
+const grepOutputFile = computed(() => {
+  return `agent-${grepSearchText.value}.log`;
+});
 
 const deployBackendHostsText = computed({
   get: () => deployBackendHosts.value.join("\n"),
@@ -264,5 +297,16 @@ const computedDeployCode = computed(() => {
   const backendHostsStr = deployBackendHosts.value.join(",");
   const agentHostsStr = deployAgentHosts.value.join(",");
   return `frontend/docs/sync.sh "${backendHostsStr}" "${agentHostsStr}"`;
+});
+
+const computedGrepCode = computed(() => {
+  const parts: string[] = ["grep"];
+  parts.push("-A 50");
+  parts.push("-B 5");
+  parts.push("-a");
+  parts.push(`"${grepSearchText.value}"`);
+  parts.push(grepFilePath.value);
+  parts.push(`> ${grepOutputFile.value}`);
+  return parts.join(" ");
 });
 </script>
