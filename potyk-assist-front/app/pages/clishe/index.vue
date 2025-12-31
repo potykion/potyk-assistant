@@ -170,6 +170,32 @@
           </v-card-text>
         </v-card>
       </v-col>
+
+      <v-col cols="12">
+        <v-card title="ssh-copy-id">
+          <v-card-text>
+            <v-row dense>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="sshCopyIdUser"
+                  label="user"
+                  hide-details
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-textarea
+                  v-model="sshCopyIdHostsText"
+                  label="айпишники"
+                  hide-details
+                ></v-textarea>
+              </v-col>
+              <v-col cols="12">
+                <code-block :code="computedSshCopyIdCode" />
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -209,6 +235,9 @@ const grepOutputFile = computed(() => {
   return `agent-${grepSearchText.value}.log`;
 });
 
+const sshCopyIdUser = ref("root");
+const sshCopyIdHosts = ref<string[]>(["10.46.1.17"]);
+
 const deployBackendHostsText = computed({
   get: () => deployBackendHosts.value.join("\n"),
   set: (value: string) => {
@@ -234,6 +263,13 @@ const agentHostsText = computed({
   get: () => agentHosts.value.join("\n"),
   set: (value: string) => {
     agentHosts.value = value.split("\n").filter((h) => h.trim() !== "");
+  },
+});
+
+const sshCopyIdHostsText = computed({
+  get: () => sshCopyIdHosts.value.join("\n"),
+  set: (value: string) => {
+    sshCopyIdHosts.value = value.split("\n").filter((h) => h.trim() !== "");
   },
 });
 
@@ -308,5 +344,13 @@ const computedGrepCode = computed(() => {
   parts.push(grepFilePath.value);
   parts.push(`> ${grepOutputFile.value}`);
   return parts.join(" ");
+});
+
+const computedSshCopyIdCode = computed(() => {
+  const commands: string[] = [];
+  sshCopyIdHosts.value.forEach((host) => {
+    commands.push(`ssh-copy-id ${sshCopyIdUser.value}@${host}`);
+  });
+  return commands.join("\n");
 });
 </script>
