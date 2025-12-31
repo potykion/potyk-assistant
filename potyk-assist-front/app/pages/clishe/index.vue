@@ -35,6 +35,20 @@
                   hide-details
                 ></v-textarea>
               </v-col>
+              <v-col cols="6">
+                <v-checkbox
+                  v-model="agentLogTypes.agent"
+                  label="agent"
+                  hide-details
+                ></v-checkbox>
+              </v-col>
+              <v-col cols="6">
+                <v-checkbox
+                  v-model="agentLogTypes.failures"
+                  label="failures"
+                  hide-details
+                ></v-checkbox>
+              </v-col>
               <v-col cols="12">
                 <code-block :code="computedAgentCode" />
               </v-col>
@@ -69,24 +83,31 @@
                   hide-details
                 ></v-textarea>
               </v-col>
-              <v-col cols="4">
+              <v-col cols="3">
                 <v-checkbox
                   v-model="logTypes.backend"
                   label="backend"
                   hide-details
                 ></v-checkbox>
               </v-col>
-              <v-col cols="4">
+              <v-col cols="3">
                 <v-checkbox
                   v-model="logTypes.am1"
                   label="am-1"
                   hide-details
                 ></v-checkbox>
               </v-col>
-              <v-col cols="4">
+              <v-col cols="3">
                 <v-checkbox
                   v-model="logTypes.am2"
                   label="am-2"
+                  hide-details
+                ></v-checkbox>
+              </v-col>
+              <v-col cols="3">
+                <v-checkbox
+                  v-model="logTypes.failures"
+                  label="failures"
                   hide-details
                 ></v-checkbox>
               </v-col>
@@ -103,18 +124,24 @@
 
 <script setup lang="ts">
 const user = ref("ibs");
-const dir = ref("./logs");
+const dir = ref("./log");
 const hosts = ref<string[]>(["10.0.87.108", "10.0.87.107", "10.0.87.91"]);
 
 const logTypes = ref({
   backend: false,
   am1: true,
   am2: true,
+  failures: false,
 });
 
 const agentUser = ref("root");
 const agentDir = ref("./log");
 const agentHosts = ref<string[]>(["10.0.38.121"]);
+
+const agentLogTypes = ref({
+  agent: true,
+  failures: false,
+});
 
 const hostsText = computed({
   get: () => hosts.value.join("\n"),
@@ -153,17 +180,36 @@ const computedCode = computed(() => {
         `scp ${user.value}@${host}:/var/log/vms/am-2/agent_manager.log ${dir.value}/${tail}-am-2.log`,
       );
     }
+
+    if (logTypes.value.failures) {
+      commands.push(
+        `scp ${user.value}@${host}:/var/log/vms/failures.log ${dir.value}/${tail}-failures.log`,
+      );
+    }
   });
 
   return commands.join("\n");
 });
 
 const computedAgentCode = computed(() => {
-  return agentHosts.value
-    .map((host) => {
-      const tail = host.split(".").pop() || host;
-      return `scp ${agentUser.value}@${host}:/var/log/vms-agent/agent.log ${agentDir.value}/${tail}-agent.log`;
-    })
-    .join("\n");
+  const commands: string[] = [];
+
+  agentHosts.value.forEach((host) => {
+    const tail = host.split(".").pop() || host;
+
+    if (agentLogTypes.value.agent) {
+      commands.push(
+        `scp ${agentUser.value}@${host}:/var/log/vms-agent/agent.log ${agentDir.value}/${tail}-agent.log`,
+      );
+    }
+
+    if (agentLogTypes.value.failures) {
+      commands.push(
+        `scp ${agentUser.value}@${host}:/var/log/vms-agent/failures.log ${agentDir.value}/${tail}-failures.log`,
+      );
+    }
+  });
+
+  return commands.join("\n");
 });
 </script>
