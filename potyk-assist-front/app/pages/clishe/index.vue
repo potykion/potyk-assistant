@@ -9,7 +9,7 @@
         <code-block>cd /mnt/c/users/admin/PycharmProjects/ibs_vms/</code-block>
       </v-col>
 
-      <v-col>
+      <v-col cols="12">
         <v-card title="Скачать логи агента">
           <v-card-text>
             <v-row dense>
@@ -57,7 +57,7 @@
         </v-card>
       </v-col>
 
-      <v-col>
+      <v-col cols="12">
         <v-card title="Скачать логи бека">
           <v-card-text>
             <v-row dense>
@@ -118,6 +118,32 @@
           </v-card-text>
         </v-card>
       </v-col>
+
+      <v-col cols="12">
+        <v-card title="Деплой">
+          <v-card-text>
+            <v-row dense>
+              <v-col cols="12">
+                <v-textarea
+                  v-model="deployBackendHostsText"
+                  label="бэк хосты"
+                  hide-details
+                ></v-textarea>
+              </v-col>
+              <v-col cols="12">
+                <v-textarea
+                  v-model="deployAgentHostsText"
+                  label="агент хосты"
+                  hide-details
+                ></v-textarea>
+              </v-col>
+              <v-col cols="12">
+                <code-block :code="computedDeployCode" />
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -141,6 +167,27 @@ const agentHosts = ref<string[]>(["10.0.38.121"]);
 const agentLogTypes = ref({
   agent: true,
   failures: false,
+});
+
+const deployBackendHosts = ref<string[]>([
+  "10.46.1.15",
+  "10.46.1.17",
+  "10.46.1.16",
+]);
+const deployAgentHosts = ref<string[]>(["10.0.91.148"]);
+
+const deployBackendHostsText = computed({
+  get: () => deployBackendHosts.value.join("\n"),
+  set: (value: string) => {
+    deployBackendHosts.value = value.split("\n").filter((h) => h.trim() !== "");
+  },
+});
+
+const deployAgentHostsText = computed({
+  get: () => deployAgentHosts.value.join("\n"),
+  set: (value: string) => {
+    deployAgentHosts.value = value.split("\n").filter((h) => h.trim() !== "");
+  },
 });
 
 const hostsText = computed({
@@ -211,5 +258,11 @@ const computedAgentCode = computed(() => {
   });
 
   return commands.join("\n");
+});
+
+const computedDeployCode = computed(() => {
+  const backendHostsStr = deployBackendHosts.value.join(",");
+  const agentHostsStr = deployAgentHosts.value.join(",");
+  return `frontend/docs/sync.sh "${backendHostsStr}" "${agentHostsStr}"`;
 });
 </script>
