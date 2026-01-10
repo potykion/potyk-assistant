@@ -1,3 +1,5 @@
+from typing import Any
+
 from kys_in_rest.core.sqlite_utils import SqliteRepo
 from kys_in_rest.movies.entities.movie import Movie
 from kys_in_rest.movies.features.movie_repo import MovieRepo
@@ -6,13 +8,20 @@ from kys_in_rest.movies.features.movie_repo import MovieRepo
 class SqliteMovieRepo(MovieRepo, SqliteRepo):
     def list_movies(self) -> list[Movie]:
         rows = self.cursor.execute("select * from movies order by id").fetchall()
-        return [Movie(**row) for row in rows]
+        return [self._row_to_movie(row) for row in rows]
+    
+    def _row_to_movie(self, row: dict[str, Any]) -> Movie:
+        movie_dict = dict(row)
+        # Convert SQLite integer (0/1) to boolean
+        if "watched" in movie_dict:
+            movie_dict["watched"] = bool(movie_dict["watched"])
+        return Movie(**movie_dict)
 
     def create_movie(self, movie: Movie) -> Movie:
         self.cursor.execute(
             """
-            insert into movies (title, image, kinopoisk_url, download_url, watch_url, why)
-            values (?, ?, ?, ?, ?, ?)
+            insert into movies (title, image, kinopoisk_url, download_url, watch_url, why, watched)
+            values (?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 movie.title,
@@ -21,6 +30,7 @@ class SqliteMovieRepo(MovieRepo, SqliteRepo):
                 movie.download_url,
                 movie.watch_url,
                 movie.why,
+                1 if movie.watched else 0,
             ),
         )
         self.cursor.connection.commit()
@@ -33,7 +43,7 @@ class SqliteMovieRepo(MovieRepo, SqliteRepo):
         self.cursor.execute(
             """
             update movies
-            set title = ?, image = ?, kinopoisk_url = ?, download_url = ?, watch_url = ?, why = ?
+            set title = ?, image = ?, kinopoisk_url = ?, download_url = ?, watch_url = ?, why = ?, watched = ?
             where id = ?
             """,
             (
@@ -43,6 +53,7 @@ class SqliteMovieRepo(MovieRepo, SqliteRepo):
                 movie.download_url,
                 movie.watch_url,
                 movie.why,
+                1 if movie.watched else 0,
                 movie.id,
             ),
         )
@@ -52,5 +63,5 @@ class SqliteMovieRepo(MovieRepo, SqliteRepo):
         row = self.cursor.execute("select * from movies where id = ?", (movie_id,)).fetchone()
         if not row:
             return None
-        return Movie(**row)
+        return self._row_to_movie(row)
 

@@ -1,9 +1,10 @@
 import os
 import asyncio
+from typing import Any
 
 import dotenv
 import flask
-from flask import Flask
+from flask import Flask, Response
 from flask_cors import CORS
 from telegram import Bot
 from telegram.error import TelegramError
@@ -40,7 +41,9 @@ def create_app() -> Flask:
         if not bot:
             return None
         try:
-            async def fetch_username():
+            async def fetch_username() -> str | None:
+                if not bot:
+                    return None
                 bot_info = await bot.get_me()
                 return bot_info.username
             return asyncio.run(fetch_username())
@@ -102,7 +105,7 @@ def create_app() -> Flask:
         return flask.jsonify([c.model_dump() for c in checkins])
 
     @app.route("/auth/telegram", methods=["POST"])
-    def auth_telegram() -> flask.Response:
+    def auth_telegram() -> tuple[Response, int] | Response:
         data = flask.request.get_json()
         if not data:
             return flask.jsonify({"error": "No JSON data provided"}), 400
@@ -120,7 +123,7 @@ def create_app() -> Flask:
         }), 200
 
     @app.route("/auth/telegram/otp/request", methods=["POST"])
-    def auth_telegram_otp_request() -> flask.Response:
+    def auth_telegram_otp_request() -> tuple[Response, int] | Response:
         """Запрашивает OTP для авторизации через Telegram бота"""
         data = flask.request.get_json()
         if not data:
@@ -137,7 +140,9 @@ def create_app() -> Flask:
             # Пытаемся получить user_id по username через Bot API
             # Для этого нужно, чтобы пользователь уже взаимодействовал с ботом
             # Используем getChat для получения информации о пользователе
-            async def get_user_id():
+            async def get_user_id() -> int | None:
+                if not bot:
+                    return None
                 try:
                     # Пытаемся получить информацию о пользователе
                     # Это работает только если пользователь уже писал боту
@@ -160,7 +165,9 @@ def create_app() -> Flask:
             otp = otp_storage.generate_otp(username, user_id)
 
             # Отправляем OTP через бота
-            async def send_otp():
+            async def send_otp() -> bool:
+                if not bot:
+                    return False
                 try:
                     await bot.send_message(
                         chat_id=user_id,
@@ -184,7 +191,7 @@ def create_app() -> Flask:
             return flask.jsonify({"error": str(e)}), 500
 
     @app.route("/auth/telegram/otp/verify", methods=["POST"])
-    def auth_telegram_otp_verify() -> flask.Response:
+    def auth_telegram_otp_verify() -> tuple[Response, int] | Response:
         """Проверяет OTP и возвращает данные пользователя"""
         data = flask.request.get_json()
         if not data:
@@ -207,7 +214,13 @@ def create_app() -> Flask:
             return flask.jsonify({"error": "Telegram bot is not configured"}), 500
 
         try:
-            async def get_user_info():
+            async def get_user_info() -> dict[str, Any]:
+                if not bot:
+                    return {
+                        "id": user_id,
+                        "first_name": username,
+                        "username": username,
+                    }
                 try:
                     chat = await bot.get_chat(user_id)
                     return {

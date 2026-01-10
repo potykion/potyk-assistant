@@ -5,12 +5,32 @@
 
     <v-row dense>
       <v-col cols="12">
-        <h2><code>basis</code></h2>
+        <h2 :id="getSlug('basis')"><code>basis</code></h2>
+      </v-col>
+
+      <v-col cols="12">
+        <div class="text-center">
+          <div class="d-flex flex-wrap ga-2">
+            <v-chip
+              v-for="item in tocItems"
+              :key="item.id"
+              :href="`#${item.id}`"
+              variant="outlined"
+              class="ma-1"
+            >
+              {{ item.title }}
+            </v-chip>
+          </div>
+        </div>
+      </v-col>
+
+      <v-col cols="12">
         <code-block>cd /mnt/c/users/admin/PycharmProjects/ibs_vms/</code-block>
       </v-col>
 
-      <v-col>
-        <v-card title="Скачать логи агента">
+
+      <v-col cols="12">
+        <v-card :id="getSlug('Скачать логи агента')" title="Скачать логи агента">
           <v-card-text>
             <v-row dense>
               <v-col cols="6">
@@ -35,6 +55,20 @@
                   hide-details
                 ></v-textarea>
               </v-col>
+              <v-col cols="6">
+                <v-checkbox
+                  v-model="agentLogTypes.agent"
+                  label="agent"
+                  hide-details
+                ></v-checkbox>
+              </v-col>
+              <v-col cols="6">
+                <v-checkbox
+                  v-model="agentLogTypes.failures"
+                  label="failures"
+                  hide-details
+                ></v-checkbox>
+              </v-col>
               <v-col cols="12">
                 <code-block :code="computedAgentCode" />
               </v-col>
@@ -43,8 +77,8 @@
         </v-card>
       </v-col>
 
-      <v-col>
-        <v-card title="Скачать логи бека">
+      <v-col cols="12">
+        <v-card :id="getSlug('Скачать логи бека')" title="Скачать логи бека">
           <v-card-text>
             <v-row dense>
               <v-col cols="6">
@@ -69,24 +103,31 @@
                   hide-details
                 ></v-textarea>
               </v-col>
-              <v-col cols="4">
+              <v-col cols="3">
                 <v-checkbox
                   v-model="logTypes.backend"
                   label="backend"
                   hide-details
                 ></v-checkbox>
               </v-col>
-              <v-col cols="4">
+              <v-col cols="3">
                 <v-checkbox
                   v-model="logTypes.am1"
                   label="am-1"
                   hide-details
                 ></v-checkbox>
               </v-col>
-              <v-col cols="4">
+              <v-col cols="3">
                 <v-checkbox
                   v-model="logTypes.am2"
                   label="am-2"
+                  hide-details
+                ></v-checkbox>
+              </v-col>
+              <v-col cols="3">
+                <v-checkbox
+                  v-model="logTypes.failures"
+                  label="failures"
                   hide-details
                 ></v-checkbox>
               </v-col>
@@ -97,24 +138,148 @@
           </v-card-text>
         </v-card>
       </v-col>
+
+      <v-col cols="12">
+        <v-card :id="getSlug('Деплой')" title="Деплой">
+          <v-card-text>
+            <v-row dense>
+              <v-col cols="12">
+                <v-textarea
+                  v-model="deployBackendHostsText"
+                  label="бэк хосты"
+                  hide-details
+                ></v-textarea>
+              </v-col>
+              <v-col cols="12">
+                <v-textarea
+                  v-model="deployAgentHostsText"
+                  label="агент хосты"
+                  hide-details
+                ></v-textarea>
+              </v-col>
+              <v-col cols="12">
+                <code-block :code="computedDeployCode" />
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+      <v-col cols="12">
+        <v-card :id="getSlug('Grep')" title="Grep">
+          <v-card-text>
+            <v-row dense>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="grepSearchText"
+                  label="Что ищем"
+                  hide-details
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="grepFilePath"
+                  label="Где ищем"
+                  hide-details
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <code-block :code="computedGrepCode" />
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+      <v-col cols="12">
+        <v-card :id="getSlug('ssh-copy-id')" title="ssh-copy-id">
+          <v-card-text>
+            <v-row dense>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="sshCopyIdUser"
+                  label="user"
+                  hide-details
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-textarea
+                  v-model="sshCopyIdHostsText"
+                  label="айпишники"
+                  hide-details
+                ></v-textarea>
+              </v-col>
+              <v-col cols="12">
+                <code-block :code="computedSshCopyIdCode" />
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
     </v-row>
+
+    <v-fab
+      v-model="showScrollTop"
+      location="bottom end"
+      app
+      icon="mdi-arrow-up"
+      color="primary"
+      @click="scrollToTop"
+    />
   </v-container>
 </template>
 
 <script setup lang="ts">
 const user = ref("ibs");
-const dir = ref("./logs");
+const dir = ref("./log");
 const hosts = ref<string[]>(["10.0.87.108", "10.0.87.107", "10.0.87.91"]);
 
 const logTypes = ref({
   backend: false,
   am1: true,
   am2: true,
+  failures: false,
 });
 
 const agentUser = ref("root");
 const agentDir = ref("./log");
 const agentHosts = ref<string[]>(["10.0.38.121"]);
+
+const agentLogTypes = ref({
+  agent: true,
+  failures: false,
+});
+
+const deployBackendHosts = ref<string[]>([
+  "10.46.1.15",
+  "10.46.1.17",
+  "10.46.1.16",
+]);
+const deployAgentHosts = ref<string[]>(["10.0.91.148"]);
+
+const grepSearchText = ref("a-96nBUmZ");
+const grepFilePath = ref("./log/148-agent.log");
+
+const grepOutputFile = computed(() => {
+  return `agent-${grepSearchText.value}.log`;
+});
+
+const sshCopyIdUser = ref("root");
+const sshCopyIdHosts = ref<string[]>(["10.46.1.17"]);
+
+const deployBackendHostsText = computed({
+  get: () => deployBackendHosts.value.join("\n"),
+  set: (value: string) => {
+    deployBackendHosts.value = value.split("\n").filter((h) => h.trim() !== "");
+  },
+});
+
+const deployAgentHostsText = computed({
+  get: () => deployAgentHosts.value.join("\n"),
+  set: (value: string) => {
+    deployAgentHosts.value = value.split("\n").filter((h) => h.trim() !== "");
+  },
+});
 
 const hostsText = computed({
   get: () => hosts.value.join("\n"),
@@ -127,6 +292,13 @@ const agentHostsText = computed({
   get: () => agentHosts.value.join("\n"),
   set: (value: string) => {
     agentHosts.value = value.split("\n").filter((h) => h.trim() !== "");
+  },
+});
+
+const sshCopyIdHostsText = computed({
+  get: () => sshCopyIdHosts.value.join("\n"),
+  set: (value: string) => {
+    sshCopyIdHosts.value = value.split("\n").filter((h) => h.trim() !== "");
   },
 });
 
@@ -153,17 +325,101 @@ const computedCode = computed(() => {
         `scp ${user.value}@${host}:/var/log/vms/am-2/agent_manager.log ${dir.value}/${tail}-am-2.log`,
       );
     }
+
+    if (logTypes.value.failures) {
+      commands.push(
+        `scp ${user.value}@${host}:/var/log/vms/failures.log ${dir.value}/${tail}-failures.log`,
+      );
+    }
   });
 
   return commands.join("\n");
 });
 
 const computedAgentCode = computed(() => {
-  return agentHosts.value
-    .map((host) => {
-      const tail = host.split(".").pop() || host;
-      return `scp ${agentUser.value}@${host}:/var/log/vms-agent/agent.log ${agentDir.value}/${tail}-agent.log`;
-    })
-    .join("\n");
+  const commands: string[] = [];
+
+  agentHosts.value.forEach((host) => {
+    const tail = host.split(".").pop() || host;
+
+    if (agentLogTypes.value.agent) {
+      commands.push(
+        `scp ${agentUser.value}@${host}:/var/log/vms-agent/agent.log ${agentDir.value}/${tail}-agent.log`,
+      );
+    }
+
+    if (agentLogTypes.value.failures) {
+      commands.push(
+        `scp ${agentUser.value}@${host}:/var/log/vms-agent/failures.log ${agentDir.value}/${tail}-failures.log`,
+      );
+    }
+  });
+
+  return commands.join("\n");
+});
+
+const computedDeployCode = computed(() => {
+  const backendHostsStr = deployBackendHosts.value.join(",");
+  const agentHostsStr = deployAgentHosts.value.join(",");
+  return `frontend/docs/sync.sh "${backendHostsStr}" "${agentHostsStr}"`;
+});
+
+const computedGrepCode = computed(() => {
+  const parts: string[] = ["grep"];
+  parts.push("-A 50");
+  parts.push("-B 5");
+  parts.push("-a");
+  parts.push(`"${grepSearchText.value}"`);
+  parts.push(grepFilePath.value);
+  parts.push(`> ${grepOutputFile.value}`);
+  return parts.join(" ");
+});
+
+const computedSshCopyIdCode = computed(() => {
+  const commands: string[] = [];
+  sshCopyIdHosts.value.forEach((host) => {
+    commands.push(`ssh-copy-id ${sshCopyIdUser.value}@${host}`);
+  });
+  return commands.join("\n");
+});
+
+const sections = [
+  "Скачать логи агента",
+  "Скачать логи бека",
+  "Деплой",
+  "Grep",
+  "ssh-copy-id",
+];
+
+const getSlug = (text: string): string => {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .trim();
+};
+
+const tocItems = computed(() =>
+  sections.map((section) => ({
+    title: section,
+    id: getSlug(section),
+  })),
+);
+
+const showScrollTop = ref(false);
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+onMounted(() => {
+  const handleScroll = () => {
+    showScrollTop.value = window.scrollY > 300;
+  };
+  window.addEventListener("scroll", handleScroll);
+  onUnmounted(() => {
+    window.removeEventListener("scroll", handleScroll);
+  });
 });
 </script>

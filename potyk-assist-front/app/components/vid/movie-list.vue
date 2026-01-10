@@ -7,6 +7,7 @@ interface Movie {
   kinopoiskUrl: string;
   downloadUrl: string;
   watchUrl?: string;
+  watched?: boolean;
 }
 
 interface MovieServer {
@@ -17,15 +18,24 @@ interface MovieServer {
   kinopoisk_url: string;
   download_url: string;
   watch_url?: string;
+  watched?: boolean;
 }
 
 interface Props {
   editable?: boolean;
+  showCreateDialog?: boolean;
+  showArchiveDialog?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   editable: true,
+  showCreateDialog: false,
 });
+
+const emit = defineEmits<{
+  'update:showCreateDialog': [value: boolean];
+  'update:showArchiveDialog': [value: boolean];
+}>();
 
 const apiBaseUrl = import.meta.dev
   ? "http://127.0.0.1:5000"
@@ -39,6 +49,7 @@ const snakeToCamel = (serverMovie: MovieServer): Movie => ({
   kinopoiskUrl: serverMovie.kinopoisk_url,
   downloadUrl: serverMovie.download_url,
   watchUrl: serverMovie.watch_url,
+  watched: serverMovie.watched ?? false,
 });
 
 const camelToSnake = (movie: Movie): MovieServer => ({
@@ -49,6 +60,7 @@ const camelToSnake = (movie: Movie): MovieServer => ({
   kinopoisk_url: movie.kinopoiskUrl,
   download_url: movie.downloadUrl,
   watch_url: movie.watchUrl,
+  watched: movie.watched ?? false,
 });
 
 const { data: moviesData, refresh: refreshMovies } = await useFetch<
@@ -57,17 +69,20 @@ const { data: moviesData, refresh: refreshMovies } = await useFetch<
   default: () => [],
 });
 
-const movies = ref<Movie[]>((moviesData.value || []).map(snakeToCamel));
+const allMovies = ref<Movie[]>((moviesData.value || []).map(snakeToCamel));
 
 watch(
   moviesData,
   (newData) => {
     if (newData) {
-      movies.value = newData.map(snakeToCamel);
+      allMovies.value = newData.map(snakeToCamel);
     }
   },
   { immediate: true },
 );
+
+const movies = computed(() => allMovies.value.filter(m => !m.watched));
+const watchedMovies = computed(() => allMovies.value.filter(m => m.watched));
 
 const dialog = ref(false);
 const isCreating = ref(false);
@@ -80,6 +95,7 @@ const formData = ref<Movie>({
   kinopoiskUrl: "",
   downloadUrl: "",
   watchUrl: "",
+  watched: false,
 });
 const form = ref<any>(null);
 
@@ -110,9 +126,26 @@ const openCreateDialog = () => {
     kinopoiskUrl: "",
     downloadUrl: "",
     watchUrl: "",
+    watched: false,
   };
   dialog.value = true;
 };
+
+watch(() => props.showCreateDialog, (newVal) => {
+  if (newVal) {
+    openCreateDialog();
+    emit('update:showCreateDialog', false);
+  }
+});
+
+const archiveDialog = ref(false);
+
+watch(() => props.showArchiveDialog, (newVal) => {
+  if (newVal) {
+    archiveDialog.value = true;
+    emit('update:showArchiveDialog', false);
+  }
+});
 
 const openEditDialog = (index: number) => {
   if (!props.editable) {
@@ -120,7 +153,7 @@ const openEditDialog = (index: number) => {
   }
   isCreating.value = false;
   editingIndex.value = index;
-  const movie = movies.value[index];
+  const movie = allMovies.value[index];
   if (movie) {
     editingMovieId.value = movie.id ?? null;
     formData.value = {
@@ -130,9 +163,20 @@ const openEditDialog = (index: number) => {
       kinopoiskUrl: movie.kinopoiskUrl,
       downloadUrl: movie.downloadUrl,
       watchUrl: movie.watchUrl ?? "",
+      watched: movie.watched ?? false,
     };
   }
   dialog.value = true;
+};
+
+const openEditDialogById = (movieId: number | undefined) => {
+  if (!props.editable || movieId === undefined) {
+    return;
+  }
+  const index = allMovies.value.findIndex(m => m.id === movieId);
+  if (index !== -1) {
+    openEditDialog(index);
+  }
 };
 
 const closeDialog = () => {
@@ -147,6 +191,7 @@ const closeDialog = () => {
     kinopoiskUrl: "",
     downloadUrl: "",
     watchUrl: "",
+    watched: false,
   };
   form.value?.resetValidation();
 };
@@ -181,7 +226,7 @@ const saveMovie = async () => {
       });
 
       if (editingIndex.value !== null) {
-        movies.value[editingIndex.value] = {
+        allMovies.value[editingIndex.value] = {
           ...formData.value,
           id: editingMovieId.value,
         };
@@ -205,7 +250,7 @@ defineExpose({
     <v-row class="flex-sm-column flex-md-row">
       <v-col
         v-for="(movie, index) in movies"
-        :key="movie.title"
+        :key="movie.id || movie.title"
         md="3"
         xl="2"
         sm="12"
@@ -216,7 +261,7 @@ defineExpose({
               <template v-slot:append>
                 <v-btn
                   icon="mdi-pencil"
-                  @click="openEditDialog(index)"
+                  @click="openEditDialogById(movie.id)"
                   variant="flat"
                   color="white"
                 ></v-btn>
@@ -304,12 +349,84 @@ defineExpose({
               variant="outlined"
               :rules="[urlRule]"
             ></v-text-field>
+            <v-checkbox
+              v-model="formData.watched"
+              label="Просмотрено"
+              color="primary"
+            ></v-checkbox>
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn @click="closeDialog">Отмена</v-btn>
           <v-btn color="primary" @click="saveMovie">Сохранить</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="archiveDialog" max-width="1200">
+      <v-card>
+        <v-card-title>Архив просмотренных фильмов</v-card-title>
+        <v-card-text>
+          <v-row class="flex-sm-column flex-md-row">
+            <v-col
+              v-for="(movie, index) in watchedMovies"
+              :key="movie.title"
+              md="3"
+              xl="2"
+              sm="12"
+            >
+              <v-card class="movie-card" elevation="0" variant="outlined">
+                <v-img :src="movie.image" cover class="movie-image" height="400">
+                  <v-toolbar v-if="editable" color="transparent" class="edit-toolbar">
+                    <template v-slot:append>
+                      <v-btn
+                        icon="mdi-pencil"
+                        @click="() => { archiveDialog = false; openEditDialogById(movie.id); }"
+                        variant="flat"
+                        color="white"
+                      ></v-btn>
+                    </template>
+                  </v-toolbar>
+                </v-img>
+
+                <v-card-item>
+                  <v-card-title>{{ movie.title }}</v-card-title>
+                </v-card-item>
+
+                <v-card-text class="movie-why">
+                  <div class="movie-why-content">
+                    <b>Почему?:</b> <span v-html="movie.why"></span>
+                  </div>
+                </v-card-text>
+
+                <v-card-actions>
+                  <v-btn
+                    size="small"
+                    v-if="movie.kinopoiskUrl"
+                    :href="movie.kinopoiskUrl"
+                    >КП</v-btn
+                  >
+                  <v-btn
+                    size="small"
+                    v-if="movie.downloadUrl"
+                    :href="movie.downloadUrl"
+                    >Скачать</v-btn
+                  >
+                  <v-btn size="small" v-if="movie.watchUrl" :href="movie.watchUrl"
+                    >Смотреть</v-btn
+                  >
+                </v-card-actions>
+              </v-card>
+            </v-col>
+          </v-row>
+          <div v-if="watchedMovies.length === 0" class="text-center py-8">
+            <p class="text-body-1">Нет просмотренных фильмов</p>
+          </div>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="archiveDialog = false">Закрыть</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

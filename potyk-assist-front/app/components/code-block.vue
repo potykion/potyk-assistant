@@ -15,12 +15,45 @@ const copyToClipboard = async () => {
 
   if (!codeText) return;
 
+  const textToCopy = codeText.trim();
+
+  // Пробуем современный API (работает только на HTTPS или localhost)
+  if (navigator.clipboard && window.isSecureContext) {
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      copied.value = true;
+      setTimeout(() => {
+        copied.value = false;
+      }, 2000);
+      return;
+    } catch (err) {
+      console.error("Clipboard API failed:", err);
+      // Продолжаем к fallback методу
+    }
+  }
+
+  // Fallback: старый метод через execCommand (работает на HTTP)
   try {
-    await navigator.clipboard.writeText(codeText.trim());
-    copied.value = true;
-    setTimeout(() => {
-      copied.value = false;
-    }, 2000);
+    const textArea = document.createElement("textarea");
+    textArea.value = textToCopy;
+    textArea.style.position = "fixed";
+    textArea.style.left = "-999999px";
+    textArea.style.top = "-999999px";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    const successful = document.execCommand("copy");
+    document.body.removeChild(textArea);
+
+    if (successful) {
+      copied.value = true;
+      setTimeout(() => {
+        copied.value = false;
+      }, 2000);
+    } else {
+      console.error("execCommand copy failed");
+    }
   } catch (err) {
     console.error("Failed to copy:", err);
   }
@@ -36,7 +69,7 @@ const copyToClipboard = async () => {
       variant="text"
       @click="copyToClipboard"
     >
-      <v-icon icon="mdi-content-copy"> </v-icon>
+      <v-icon :icon="copied ? 'mdi-check' : 'mdi-content-copy'"> </v-icon>
     </v-btn>
 
     <pre
@@ -67,4 +100,5 @@ pre
     line-height: 1.5
     white-space: pre
 </style>
+
 
