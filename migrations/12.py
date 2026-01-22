@@ -15,6 +15,7 @@ def migrate(cursor: sqlite3.Cursor):
     cover  text    not null,
     link   text
 );
+INSERT INTO mu_album (title, artist, year, cover, link) VALUES ('Driving Insane', 'Black Sun Empire', 2004, 'https://avatars.yandex.net/get-music-content/119639/3fff4e3d.a.5852040-1/600x600', 'https://music.yandex.ru/album/5852040');
 
 
         """

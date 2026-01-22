@@ -14,6 +14,7 @@ from kys_in_rest.beer.features.beer_sync import BeerSync
 from kys_in_rest.core.cfg import root_dir
 from kys_in_rest.health.features.weight_repo import WeightRepo
 from kys_in_rest.movies.features.movie_repo import MovieRepo
+from kys_in_rest.music.features.album_repo import AlbumRepo
 from kys_in_rest.users.features.otp_storage import OtpStorage
 
 
@@ -90,6 +91,24 @@ def create_app() -> Flask:
         movie_repo.update_movie(movie)
         updated_movie = movie_repo.get_by_id(movie_id)
         return flask.jsonify(updated_movie.model_dump() if updated_movie else {}), 200
+
+    @app.route("/albums")
+    def albums() -> flask.Response:
+        albums_list = ioc.resolve(AlbumRepo).list_albums()
+        return flask.jsonify([a.model_dump() for a in albums_list])
+
+    @app.route("/albums", methods=["POST"])
+    def create_album() -> tuple[flask.Response, int]:
+        album_repo = ioc.resolve(AlbumRepo)
+        data = flask.request.get_json()
+        if not data:
+            return flask.jsonify({"error": "No JSON data provided"}), 400
+
+        from kys_in_rest.music.entities.album import Album
+
+        album = Album(**data)
+        created_album = album_repo.create_album(album)
+        return flask.jsonify(created_album.model_dump()), 201
 
     # todo auth required
     @app.route("/beer/sync", methods=["POST"])

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import {ref} from 'vue'
+import {ref, computed} from 'vue'
+import type {Album} from '../../components/mu/mu-data'
 import {featuredAlbums, listenLaterAlbums} from '../../components/mu/mu-data'
 
 const audioRef = ref<HTMLAudioElement | null>(null)
@@ -33,6 +34,42 @@ const toggleTrack = (src: string) => {
 const {data: genreArticles} = await useAsyncData(() =>
     queryCollection('content').where("path", "like", "%genres%").order("date", "DESC").all()
 )
+
+const apiBaseUrl = import.meta.dev
+  ? "http://127.0.0.1:5000"
+  : "http://84.201.131.244:5000"
+
+interface AlbumApi {
+  id: number
+  title: string
+  artist: string
+  year: number
+  cover: string
+  link: string | null
+}
+
+const {data: albumsData, refresh: refreshAlbums} = await useFetch<AlbumApi[]>(
+  `${apiBaseUrl}/albums`,
+  {
+    default: () => [],
+  }
+)
+
+const apiAlbums = computed<Album[]>(() => {
+  return (albumsData.value || []).map((album) => ({
+    id: String(album.id),
+    title: album.title,
+    artist: album.artist,
+    year: album.year,
+    cover: album.cover,
+    link: album.link || '',
+    track: null,
+  }))
+})
+
+const allFeaturedAlbums = computed(() => {
+  return [...featuredAlbums, ...apiAlbums.value]
+})
 
 const showCreateDialog = ref(false)
 const formData = ref({
@@ -77,16 +114,25 @@ const saveAlbum = async () => {
     return
   }
 
-  const album = {
-    title: formData.value.title,
-    artist: formData.value.artist,
-    year: parseInt(formData.value.year),
-    cover: formData.value.cover,
-    link: formData.value.link || '',
-  }
+  try {
+    const album = {
+      title: formData.value.title,
+      artist: formData.value.artist,
+      year: parseInt(formData.value.year),
+      cover: formData.value.cover,
+      link: formData.value.link || null,
+    }
 
-  console.log(album)
-  closeDialog()
+    await $fetch(`${apiBaseUrl}/albums`, {
+      method: "POST",
+      body: album,
+    })
+    
+    await refreshAlbums()
+    closeDialog()
+  } catch (error) {
+    console.error("Ошибка при сохранении альбома:", error)
+  }
 }
 </script>
 
@@ -108,7 +154,7 @@ const saveAlbum = async () => {
     </v-row>
     <v-row>
       <v-col
-          v-for="album in featuredAlbums"
+          v-for="album in allFeaturedAlbums"
           :key="album.id"
           cols="3"
       >
