@@ -33,6 +33,61 @@ const toggleTrack = (src: string) => {
 const {data: genreArticles} = await useAsyncData(() =>
     queryCollection('content').where("path", "like", "%genres%").order("date", "DESC").all()
 )
+
+const showCreateDialog = ref(false)
+const formData = ref({
+  title: '',
+  artist: '',
+  year: '',
+  cover: '',
+  link: '',
+})
+const form = ref<any>(null)
+
+const requiredRule = (value: string) => {
+  return !!value || "Поле обязательно для заполнения"
+}
+
+const openCreateDialog = () => {
+  showCreateDialog.value = true
+  formData.value = {
+    title: '',
+    artist: '',
+    year: '',
+    cover: '',
+    link: '',
+  }
+}
+
+const closeDialog = () => {
+  showCreateDialog.value = false
+  formData.value = {
+    title: '',
+    artist: '',
+    year: '',
+    cover: '',
+    link: '',
+  }
+  form.value?.resetValidation()
+}
+
+const saveAlbum = async () => {
+  const { valid } = await form.value.validate()
+  if (!valid) {
+    return
+  }
+
+  const album = {
+    title: formData.value.title,
+    artist: formData.value.artist,
+    year: parseInt(formData.value.year),
+    cover: formData.value.cover,
+    link: formData.value.link || '',
+  }
+
+  console.log(album)
+  closeDialog()
+}
 </script>
 
 <template>
@@ -40,8 +95,15 @@ const {data: genreArticles} = await useAsyncData(() =>
     <v-row>
       <v-col>
         <h1>mu</h1>
-        <h2>Featured</h2>
-
+        <div class="d-flex align-center justify-space-between mb-4">
+          <h2 class="mr-4">Featured</h2>
+          <v-btn
+            icon="mdi-plus"
+            color="primary"
+            @click="openCreateDialog"
+            variant="outlined"
+          ></v-btn>
+        </div>
       </v-col>
     </v-row>
     <v-row>
@@ -94,6 +156,57 @@ const {data: genreArticles} = await useAsyncData(() =>
 
 
     <audio ref="audioRef"></audio>
+
+    <v-dialog v-model="showCreateDialog" max-width="600">
+      <v-card>
+        <v-card-title>Добавить альбом</v-card-title>
+        <v-card-text>
+          <v-form ref="form">
+            <v-text-field
+              v-model="formData.title"
+              label="Название альбома"
+              variant="outlined"
+              class="mb-3"
+              :rules="[requiredRule]"
+            ></v-text-field>
+            <v-text-field
+              v-model="formData.artist"
+              label="Исполнитель"
+              variant="outlined"
+              class="mb-3"
+              :rules="[requiredRule]"
+            ></v-text-field>
+            <v-text-field
+              v-model="formData.year"
+              label="Год"
+              variant="outlined"
+              class="mb-3"
+              type="number"
+              :rules="[requiredRule]"
+            ></v-text-field>
+            <v-text-field
+              v-model="formData.cover"
+              label="Ссылка на обложку"
+              variant="outlined"
+              class="mb-3"
+              :rules="[requiredRule]"
+            ></v-text-field>
+            <v-text-field
+              v-model="formData.link"
+              label="Ссылка на прослушивание"
+              variant="outlined"
+              hint="Опционально"
+              persistent-hint
+            ></v-text-field>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="closeDialog">Отмена</v-btn>
+          <v-btn color="primary" @click="saveAlbum">Сохранить</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
   </v-container>
 </template>
