@@ -2,7 +2,7 @@ import sqlite3
 
 
 def migrate(cursor: sqlite3.Cursor):
-    cursor.execute(
+    cursor.executescript(
         """
         create table mu_album
 (
