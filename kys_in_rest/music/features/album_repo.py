@@ -9,3 +9,9 @@ class AlbumRepo(abc.ABC):
 
     @abc.abstractmethod
     def create_album(self, album: Album) -> Album: ...
+
+    @abc.abstractmethod
+    def update_album(self, album: Album) -> None: ...
+
+    @abc.abstractmethod
+    def get_by_id(self, album_id: int) -> Album | None: ...

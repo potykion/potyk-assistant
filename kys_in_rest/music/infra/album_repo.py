@@ -25,3 +25,29 @@ class SqliteAlbumRepo(AlbumRepo, SqliteRepo):
         self.cursor.connection.commit()
         album_id = self.cursor.lastrowid
         return Album(id=album_id, **album.model_dump(exclude={"id"}))
+
+    def update_album(self, album: Album) -> None:
+        if album.id is None:
+            raise ValueError("Album id is required for update")
+        self.cursor.execute(
+            """
+            update mu_album
+            set title = ?, artist = ?, year = ?, cover = ?, link = ?
+            where id = ?
+            """,
+            (
+                album.title,
+                album.artist,
+                album.year,
+                album.cover,
+                album.link,
+                album.id,
+            ),
+        )
+        self.cursor.connection.commit()
+
+    def get_by_id(self, album_id: int) -> Album | None:
+        row = self.cursor.execute("select * from mu_album where id = ?", (album_id,)).fetchone()
+        if not row:
+            return None
+        return Album(**dict(row))

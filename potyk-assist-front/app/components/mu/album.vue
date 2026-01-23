@@ -4,20 +4,42 @@ import type {Album} from './mu-data'
 const props = defineProps<{
   album: Album
   playing: boolean
+  editable?: boolean
 }>()
 
 const emit = defineEmits<{
   (e: 'toggle', src: string): void
+  (e: 'edit', albumId: number): void
 }>()
 
 const onToggle = (src: string) => {
   emit('toggle', src)
 }
+
+const onEdit = () => {
+  if (props.album.id && typeof props.album.id === 'string') {
+    const albumId = Number(props.album.id)
+    if (!isNaN(albumId)) {
+      emit('edit', albumId)
+    }
+  }
+}
 </script>
 
 <template>
   <v-card>
-    <v-img :src="props.album.cover"/>
+    <v-img :src="props.album.cover" class="album-image">
+      <v-toolbar v-if="editable" color="transparent" class="edit-toolbar">
+        <template v-slot:append>
+          <v-btn
+            icon="mdi-pencil"
+            @click="onEdit"
+            variant="flat"
+            color="white"
+          ></v-btn>
+        </template>
+      </v-toolbar>
+    </v-img>
 
     <v-card-item>
       <v-card-title class="text-subtitle-1	font-weight-semibold">{{ props.album.title }}</v-card-title>
@@ -56,4 +78,15 @@ const onToggle = (src: string) => {
   </v-card>
 </template>
 
+<style scoped lang="sass">
+.album-image
+  position: relative
+
+  .edit-toolbar
+    opacity: 0
+    transition: opacity 0.2s ease-in-out
+
+.album-image:hover .edit-toolbar
+  opacity: 1
+</style>
 

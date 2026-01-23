@@ -110,6 +110,24 @@ def create_app() -> Flask:
         created_album = album_repo.create_album(album)
         return flask.jsonify(created_album.model_dump()), 201
 
+    @app.route("/albums/<int:album_id>", methods=["PUT"])
+    def update_album(album_id: int) -> tuple[flask.Response, int]:
+        album_repo = ioc.resolve(AlbumRepo)
+        existing_album = album_repo.get_by_id(album_id)
+        if not existing_album:
+            return flask.jsonify({"error": "Album not found"}), 404
+
+        data = flask.request.get_json()
+        if not data:
+            return flask.jsonify({"error": "No JSON data provided"}), 400
+
+        from kys_in_rest.music.entities.album import Album
+
+        album = Album(id=album_id, **data)
+        album_repo.update_album(album)
+        updated_album = album_repo.get_by_id(album_id)
+        return flask.jsonify(updated_album.model_dump() if updated_album else {}), 200
+
     # todo auth required
     @app.route("/beer/sync", methods=["POST"])
     def beer_sync() -> flask.Response:

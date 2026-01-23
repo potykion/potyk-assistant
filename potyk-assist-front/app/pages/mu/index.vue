@@ -72,6 +72,8 @@ const allFeaturedAlbums = computed(() => {
 })
 
 const showCreateDialog = ref(false)
+const isCreating = ref(true)
+const editingAlbumId = ref<number | null>(null)
 const formData = ref({
   title: '',
   artist: '',
@@ -86,6 +88,8 @@ const requiredRule = (value: string) => {
 }
 
 const openCreateDialog = () => {
+  isCreating.value = true
+  editingAlbumId.value = null
   showCreateDialog.value = true
   formData.value = {
     title: '',
@@ -96,8 +100,26 @@ const openCreateDialog = () => {
   }
 }
 
+const openEditDialog = (albumId: number) => {
+  const album = apiAlbums.value.find(a => Number(a.id) === albumId)
+  if (!album) return
+  
+  isCreating.value = false
+  editingAlbumId.value = albumId
+  showCreateDialog.value = true
+  formData.value = {
+    title: album.title,
+    artist: album.artist,
+    year: String(album.year),
+    cover: album.cover,
+    link: album.link || '',
+  }
+}
+
 const closeDialog = () => {
   showCreateDialog.value = false
+  isCreating.value = true
+  editingAlbumId.value = null
   formData.value = {
     title: '',
     artist: '',
@@ -123,10 +145,21 @@ const saveAlbum = async () => {
       link: formData.value.link || null,
     }
 
-    await $fetch(`${apiBaseUrl}/albums`, {
-      method: "POST",
-      body: album,
-    })
+    if (isCreating.value) {
+      await $fetch(`${apiBaseUrl}/albums`, {
+        method: "POST",
+        body: album,
+      })
+    } else {
+      if (editingAlbumId.value === null) {
+        closeDialog()
+        return
+      }
+      await $fetch(`${apiBaseUrl}/albums/${editingAlbumId.value}`, {
+        method: "PUT",
+        body: album,
+      })
+    }
     
     await refreshAlbums()
     closeDialog()
@@ -161,7 +194,9 @@ const saveAlbum = async () => {
         <mu-album
             :album="album"
             :playing="album.track && playingSrc === album.track.src"
+            :editable="!!apiAlbums.find(a => a.id === album.id)"
             @toggle="toggleTrack"
+            @edit="openEditDialog"
         >
         </mu-album>
       </v-col>
@@ -205,7 +240,7 @@ const saveAlbum = async () => {
 
     <v-dialog v-model="showCreateDialog" max-width="600">
       <v-card>
-        <v-card-title>Добавить альбом</v-card-title>
+        <v-card-title>{{ isCreating ? "Добавить альбом" : "Редактировать альбом" }}</v-card-title>
         <v-card-text>
           <v-form ref="form">
             <v-text-field
