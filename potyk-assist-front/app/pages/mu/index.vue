@@ -48,8 +48,21 @@ interface AlbumApi {
   link: string | null
 }
 
+interface TagApi {
+  id: number
+  title: string
+  entity_type: string
+}
+
 const {data: albumsData, refresh: refreshAlbums} = await useFetch<AlbumApi[]>(
   `${apiBaseUrl}/albums`,
+  {
+    default: () => [],
+  }
+)
+
+const {data: tagsData} = await useFetch<TagApi[]>(
+  `${apiBaseUrl}/tags?entity_type=mu_album`,
   {
     default: () => [],
   }
@@ -80,6 +93,7 @@ const formData = ref({
   year: '',
   cover: '',
   link: '',
+  tags: [] as TagApi[],
 })
 const form = ref<any>(null)
 
@@ -97,6 +111,7 @@ const openCreateDialog = () => {
     year: '',
     cover: '',
     link: '',
+    tags: [],
   }
 }
 
@@ -126,6 +141,7 @@ const closeDialog = () => {
     year: '',
     cover: '',
     link: '',
+    tags: [],
   }
   form.value?.resetValidation()
 }
@@ -278,7 +294,21 @@ const saveAlbum = async () => {
               variant="outlined"
               hint="Опционально"
               persistent-hint
+              class="mb-3"
             ></v-text-field>
+            <v-autocomplete
+              v-model="formData.tags"
+              :items="tagsData || []"
+              item-title="title"
+              item-value="id"
+              label="Теги"
+              variant="outlined"
+              multiple
+              chips
+              closable-chips
+              hint="Опционально"
+              persistent-hint
+            ></v-autocomplete>
           </v-form>
         </v-card-text>
         <v-card-actions>

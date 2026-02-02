@@ -35,6 +35,8 @@ from kys_in_rest.music.infra.download_repo import (
 )
 from kys_in_rest.restaurants.features.ports import RestRepo
 from kys_in_rest.restaurants.infra.rest_repo import SqliteRestRepo
+from kys_in_rest.tags.features.tag_repo import TagRepo
+from kys_in_rest.tags.infra.tag_repo import SqliteTagRepo
 from kys_in_rest.tg.entities.command import TgCommandSetup
 from kys_in_rest.tg.features.flow_repo import FlowRepo
 from kys_in_rest.tg.features.repos.my_tg_channels_repo import MyTgChannelsRepo
@@ -77,6 +79,7 @@ def make_ioc(
     ioc.register(WeightRepo, SqliteWeightRepo)
     ioc.register(MovieRepo, SqliteMovieRepo)
     ioc.register(AlbumRepo, SqliteAlbumRepo)
+    ioc.register(TagRepo, SqliteTagRepo)
     ioc.register(WishlistRepo, SqliteWishlistRepo)
     ioc.register(SpendingRepo, SqliteSpendingRepo)
     ioc.register(MoneyGoalRepo, SqliteMoneyGoalRepo)

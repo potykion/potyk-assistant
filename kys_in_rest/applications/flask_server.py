@@ -15,6 +15,7 @@ from kys_in_rest.core.cfg import root_dir
 from kys_in_rest.health.features.weight_repo import WeightRepo
 from kys_in_rest.movies.features.movie_repo import MovieRepo
 from kys_in_rest.music.features.album_repo import AlbumRepo
+from kys_in_rest.tags.features.tag_repo import TagRepo
 from kys_in_rest.users.features.otp_storage import OtpStorage
 
 
@@ -127,6 +128,12 @@ def create_app() -> Flask:
         album_repo.update_album(album)
         updated_album = album_repo.get_by_id(album_id)
         return flask.jsonify(updated_album.model_dump() if updated_album else {}), 200
+
+    @app.route("/tags")
+    def tags() -> flask.Response:
+        entity_type = flask.request.args.get("entity_type")
+        tags_list = ioc.resolve(TagRepo).list_tags(entity_type=entity_type)
+        return flask.jsonify([t.model_dump() for t in tags_list])
 
     # todo auth required
     @app.route("/beer/sync", methods=["POST"])
