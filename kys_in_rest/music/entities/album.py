@@ -8,3 +8,4 @@ class Album(BaseModel):
     year: int
     cover: str
     link: str | None
+    tags: list[int] = []

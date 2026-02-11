@@ -46,6 +46,7 @@ interface AlbumApi {
   year: number
   cover: string
   link: string | null
+  tags?: number[]
 }
 
 interface TagApi {
@@ -93,7 +94,7 @@ const formData = ref({
   year: '',
   cover: '',
   link: '',
-  tags: [] as TagApi[],
+  tags: [] as number[],
 })
 const form = ref<any>(null)
 
@@ -117,8 +118,9 @@ const openCreateDialog = () => {
 
 const openEditDialog = (albumId: number) => {
   const album = apiAlbums.value.find(a => Number(a.id) === albumId)
+  const albumFromApi = albumsData.value?.find(a => a.id === albumId)
   if (!album) return
-  
+
   isCreating.value = false
   editingAlbumId.value = albumId
   showCreateDialog.value = true
@@ -128,6 +130,7 @@ const openEditDialog = (albumId: number) => {
     year: String(album.year),
     cover: album.cover,
     link: album.link || '',
+    tags: albumFromApi?.tags ?? [],
   }
 }
 
@@ -159,6 +162,7 @@ const saveAlbum = async () => {
       year: parseInt(formData.value.year),
       cover: formData.value.cover,
       link: formData.value.link || null,
+      tags: formData.value.tags,
     }
 
     if (isCreating.value) {
