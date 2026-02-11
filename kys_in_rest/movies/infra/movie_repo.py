@@ -15,13 +15,15 @@ class SqliteMovieRepo(MovieRepo, SqliteRepo):
         # Convert SQLite integer (0/1) to boolean
         if "watched" in movie_dict:
             movie_dict["watched"] = bool(movie_dict["watched"])
+        if "dropped" in movie_dict:
+            movie_dict["dropped"] = bool(movie_dict["dropped"])
         return Movie(**movie_dict)
 
     def create_movie(self, movie: Movie) -> Movie:
         self.cursor.execute(
             """
-            insert into movies (title, image, kinopoisk_url, download_url, watch_url, why, watched)
-            values (?, ?, ?, ?, ?, ?, ?)
+            insert into movies (title, image, kinopoisk_url, download_url, watch_url, why, watched, dropped)
+            values (?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 movie.title,
@@ -31,6 +33,7 @@ class SqliteMovieRepo(MovieRepo, SqliteRepo):
                 movie.watch_url,
                 movie.why,
                 1 if movie.watched else 0,
+                1 if movie.dropped else 0,
             ),
         )
         self.cursor.connection.commit()
@@ -43,7 +46,7 @@ class SqliteMovieRepo(MovieRepo, SqliteRepo):
         self.cursor.execute(
             """
             update movies
-            set title = ?, image = ?, kinopoisk_url = ?, download_url = ?, watch_url = ?, why = ?, watched = ?
+            set title = ?, image = ?, kinopoisk_url = ?, download_url = ?, watch_url = ?, why = ?, watched = ?, dropped = ?
             where id = ?
             """,
             (
@@ -54,6 +57,7 @@ class SqliteMovieRepo(MovieRepo, SqliteRepo):
                 movie.watch_url,
                 movie.why,
                 1 if movie.watched else 0,
+                1 if movie.dropped else 0,
                 movie.id,
             ),
         )

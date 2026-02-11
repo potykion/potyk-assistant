@@ -8,6 +8,7 @@ interface Movie {
   downloadUrl: string;
   watchUrl?: string;
   watched?: boolean;
+  dropped?: boolean;
 }
 
 interface MovieServer {
@@ -19,6 +20,7 @@ interface MovieServer {
   download_url: string;
   watch_url?: string;
   watched?: boolean;
+  dropped?: boolean;
 }
 
 interface Props {
@@ -50,6 +52,7 @@ const snakeToCamel = (serverMovie: MovieServer): Movie => ({
   downloadUrl: serverMovie.download_url,
   watchUrl: serverMovie.watch_url,
   watched: serverMovie.watched ?? false,
+  dropped: serverMovie.dropped ?? false,
 });
 
 const camelToSnake = (movie: Movie): MovieServer => ({
@@ -61,6 +64,7 @@ const camelToSnake = (movie: Movie): MovieServer => ({
   download_url: movie.downloadUrl,
   watch_url: movie.watchUrl,
   watched: movie.watched ?? false,
+  dropped: movie.dropped ?? false,
 });
 
 const { data: moviesData, refresh: refreshMovies } = await useFetch<
@@ -81,8 +85,9 @@ watch(
   { immediate: true },
 );
 
-const movies = computed(() => allMovies.value.filter(m => !m.watched));
+const movies = computed(() => allMovies.value.filter(m => !m.watched && !m.dropped));
 const watchedMovies = computed(() => allMovies.value.filter(m => m.watched));
+const droppedMovies = computed(() => allMovies.value.filter(m => m.dropped));
 
 const dialog = ref(false);
 const isCreating = ref(false);
@@ -96,6 +101,7 @@ const formData = ref<Movie>({
   downloadUrl: "",
   watchUrl: "",
   watched: false,
+  dropped: false,
 });
 const form = ref<any>(null);
 
@@ -127,6 +133,7 @@ const openCreateDialog = () => {
     downloadUrl: "",
     watchUrl: "",
     watched: false,
+    dropped: false,
   };
   dialog.value = true;
 };
@@ -164,6 +171,7 @@ const openEditDialog = (index: number) => {
       downloadUrl: movie.downloadUrl,
       watchUrl: movie.watchUrl ?? "",
       watched: movie.watched ?? false,
+      dropped: movie.dropped ?? false,
     };
   }
   dialog.value = true;
@@ -192,6 +200,7 @@ const closeDialog = () => {
     downloadUrl: "",
     watchUrl: "",
     watched: false,
+    dropped: false,
   };
   form.value?.resetValidation();
 };
@@ -354,6 +363,11 @@ defineExpose({
               label="Просмотрено"
               color="primary"
             ></v-checkbox>
+            <v-checkbox
+              v-model="formData.dropped"
+              label="Дроп"
+              color="primary"
+            ></v-checkbox>
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -422,6 +436,63 @@ defineExpose({
           </v-row>
           <div v-if="watchedMovies.length === 0" class="text-center py-8">
             <p class="text-body-1">Нет просмотренных фильмов</p>
+          </div>
+
+          <h3 class="mt-6 mb-3">Дроп</h3>
+          <v-row class="flex-sm-column flex-md-row">
+            <v-col
+              v-for="(movie, index) in droppedMovies"
+              :key="'drop-' + (movie.id ?? movie.title)"
+              md="3"
+              xl="2"
+              sm="12"
+            >
+              <v-card class="movie-card" elevation="0" variant="outlined">
+                <v-img :src="movie.image" cover class="movie-image" height="400">
+                  <v-toolbar v-if="editable" color="transparent" class="edit-toolbar">
+                    <template v-slot:append>
+                      <v-btn
+                        icon="mdi-pencil"
+                        @click="() => { archiveDialog = false; openEditDialogById(movie.id); }"
+                        variant="flat"
+                        color="white"
+                      ></v-btn>
+                    </template>
+                  </v-toolbar>
+                </v-img>
+
+                <v-card-item>
+                  <v-card-title>{{ movie.title }}</v-card-title>
+                </v-card-item>
+
+                <v-card-text class="movie-why">
+                  <div class="movie-why-content">
+                    <b>Почему?:</b> <span v-html="movie.why"></span>
+                  </div>
+                </v-card-text>
+
+                <v-card-actions>
+                  <v-btn
+                    size="small"
+                    v-if="movie.kinopoiskUrl"
+                    :href="movie.kinopoiskUrl"
+                    >КП</v-btn
+                  >
+                  <v-btn
+                    size="small"
+                    v-if="movie.downloadUrl"
+                    :href="movie.downloadUrl"
+                    >Скачать</v-btn
+                  >
+                  <v-btn size="small" v-if="movie.watchUrl" :href="movie.watchUrl"
+                    >Смотреть</v-btn
+                  >
+                </v-card-actions>
+              </v-card>
+            </v-col>
+          </v-row>
+          <div v-if="droppedMovies.length === 0" class="text-center py-8">
+            <p class="text-body-1">Нет дропнутых фильмов</p>
           </div>
         </v-card-text>
         <v-card-actions>

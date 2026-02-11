@@ -57,4 +57,3 @@ class TinkoffCandlesRepo(abc.ABC):
             Текущая цена инструмента
         """
         raise NotImplementedError
-
