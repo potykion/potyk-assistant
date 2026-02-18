@@ -2,7 +2,7 @@ import sqlite3
 
 from kys_in_rest.core.sqlite_utils import SqliteRepo
 from kys_in_rest.music.entities.album import Album
-from kys_in_rest.music.features.album_repo import AlbumRepo
+from kys_in_rest.music.features.ports.album_repo import AlbumRepo
 from kys_in_rest.tags.features.tag_repo import TagRepo
 
 

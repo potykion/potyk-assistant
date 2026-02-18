@@ -14,7 +14,7 @@ from kys_in_rest.beer.features.beer_sync import BeerSync
 from kys_in_rest.core.cfg import root_dir
 from kys_in_rest.health.features.weight_repo import WeightRepo
 from kys_in_rest.movies.features.movie_repo import MovieRepo
-from kys_in_rest.music.features.album_repo import AlbumRepo
+from kys_in_rest.music.features.ports.album_repo import AlbumRepo
 from kys_in_rest.tags.features.tag_repo import TagRepo
 from kys_in_rest.users.features.otp_storage import OtpStorage
 
