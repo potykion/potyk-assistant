@@ -26,7 +26,7 @@ from kys_in_rest.money.infra.spending_repo import SqliteSpendingRepo
 from kys_in_rest.money.infra.tinkoff_candles_repo import TinkoffInvestCandlesRepo
 from kys_in_rest.money.infra.zen_money_repo import SqliteWHttpZenMoneyRepo
 from kys_in_rest.music.features.album_repo import AlbumRepo
-from kys_in_rest.music.features.download_repo import DownloadRepo
+from kys_in_rest.music.features.ports.download_repo import DownloadRepo
 from kys_in_rest.music.infra.album_repo import SqliteAlbumRepo
 from kys_in_rest.music.infra.download_repo import (
     UrlDownloadRepo,

@@ -2,7 +2,7 @@ import sys
 import traceback
 
 from kys_in_rest.core.tg_utils import TgFeature
-from kys_in_rest.music.features.download_repo import DownloadRepo
+from kys_in_rest.music.features.ports.download_repo import DownloadRepo
 from kys_in_rest.tg.entities.input_tg_msg import InputTgMsg
 from kys_in_rest.tg.features.bot_msg_repo import BotMsgRepo
 from kys_in_rest.users.features.check_admin import CheckTgAdmin

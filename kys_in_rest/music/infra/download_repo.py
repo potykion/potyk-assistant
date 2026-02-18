@@ -9,7 +9,7 @@ from PIL import Image
 
 from kys_in_rest.core.musicbrainz import MusicBrainzClient
 from kys_in_rest.core.path_utils import do_in_dir
-from kys_in_rest.music.features.download_repo import DownloadRepo
+from kys_in_rest.music.features.ports.download_repo import DownloadRepo
 from kys_in_rest.tg.entities.audio import TgAudio
 
 
