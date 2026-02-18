@@ -1,4 +1,6 @@
+import io
 import os
+import zipfile
 import asyncio
 from typing import Any
 
@@ -15,6 +17,7 @@ from kys_in_rest.core.cfg import root_dir
 from kys_in_rest.health.features.weight_repo import WeightRepo
 from kys_in_rest.movies.features.movie_repo import MovieRepo
 from kys_in_rest.music.features.ports.album_repo import AlbumRepo
+from kys_in_rest.music.features.ports.download_repo import DownloadRepo
 from kys_in_rest.tags.features.tag_repo import TagRepo
 from kys_in_rest.users.features.otp_storage import OtpStorage
 
@@ -134,6 +137,55 @@ def create_app() -> Flask:
         entity_type = flask.request.args.get("entity_type")
         tags_list = ioc.resolve(TagRepo).list_tags(entity_type=entity_type)
         return flask.jsonify([t.model_dump() for t in tags_list])
+
+    @app.route("/music/download", methods=["POST"])
+    def music_download() -> tuple[flask.Response, int] | flask.Response:
+        data = flask.request.get_json()
+        if not data:
+            return flask.jsonify({"error": "No JSON data provided"}), 400
+        url = (data.get("url") or "").strip()
+        if not url:
+            return flask.jsonify({"error": "url is required"}), 400
+        try:
+            download_repo = ioc.resolve(DownloadRepo)
+            audios = download_repo.download_audio_from_url(url)
+        except Exception as e:
+            return flask.jsonify({"error": str(e)}), 500
+        if not audios:
+            return flask.jsonify({"error": "No audio received"}), 500
+
+        def safe_zip_name(name: str, used: set[str]) -> str:
+            for c in "/\\:*?\"<>|":
+                name = name.replace(c, "_")
+            base = (name.strip() or "audio") + ".mp3"
+            if base in used:
+                i = 1
+                while f"{base.removesuffix('.mp3')}_{i}.mp3" in used:
+                    i += 1
+                base = f"{base.removesuffix('.mp3')}_{i}.mp3"
+            used.add(base)
+            return base
+
+        if len(audios) == 1:
+            return flask.send_file(
+                io.BytesIO(audios[0].audio),
+                mimetype="audio/mpeg",
+                as_attachment=True,
+                download_name=audios[0].filename + ".mp3",
+            )
+        buf = io.BytesIO()
+        used: set[str] = set()
+        with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
+            for a in audios:
+                name = safe_zip_name(a.filename, used)
+                zf.writestr(name, a.audio)
+        buf.seek(0)
+        return flask.send_file(
+            buf,
+            mimetype="application/zip",
+            as_attachment=True,
+            download_name="tracks.zip",
+        )
 
     # todo auth required
     @app.route("/beer/sync", methods=["POST"])

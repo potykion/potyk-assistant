@@ -187,6 +187,61 @@ const saveAlbum = async () => {
     console.error("Ошибка при сохранении альбома:", error)
   }
 }
+
+const downloadUrl = ref('')
+const downloadLoading = ref(false)
+const downloadError = ref('')
+const downloadSnackbar = ref(false)
+
+const startDownload = async () => {
+  const url = downloadUrl.value?.trim()
+  if (!url) {
+    downloadError.value = 'Введите ссылку'
+    downloadSnackbar.value = true
+    return
+  }
+  downloadLoading.value = true
+  downloadError.value = ''
+  try {
+    const res = await fetch(`${apiBaseUrl}/music/download`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url }),
+    })
+    if (!res.ok) {
+      const text = await res.text()
+      let errMsg = 'Ошибка загрузки'
+      try {
+        const j = JSON.parse(text) as { error?: string }
+        if (j.error) errMsg = j.error
+      } catch {
+        // ignore
+      }
+      downloadError.value = errMsg
+      downloadSnackbar.value = true
+      return
+    }
+    const blob = await res.blob()
+    const disp = res.headers.get('Content-Disposition')
+    let filename = 'download.mp3'
+    if (disp) {
+      const m = disp.match(/filename="?([^";]+)"?/)
+      if (m) filename = m[1].trim()
+    } else if (blob.type.includes('zip')) {
+      filename = 'tracks.zip'
+    }
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = filename
+    a.click()
+    URL.revokeObjectURL(a.href)
+  } catch (e) {
+    downloadError.value = e instanceof Error ? e.message : 'Ошибка загрузки'
+    downloadSnackbar.value = true
+  } finally {
+    downloadLoading.value = false
+  }
+}
 </script>
 
 <template>
@@ -194,6 +249,29 @@ const saveAlbum = async () => {
     <v-row>
       <v-col>
         <h1>mu</h1>
+        <v-card variant="outlined" class="mb-4 pa-3">
+          <v-card-title class="text-subtitle-1 px-0">Скачать музыку</v-card-title>
+          <div class="d-flex align-center flex-wrap">
+            <v-text-field
+              v-model="downloadUrl"
+              placeholder="Ссылка на Я.Музыку или YouTube"
+              variant="outlined"
+              density="compact"
+              hide-details
+              class="flex-grow-1 mr-2"
+              style="min-width: 200px"
+              @keydown.enter="startDownload"
+            />
+            <v-btn
+              color="primary"
+              :loading="downloadLoading"
+              :disabled="downloadLoading"
+              @click="startDownload"
+            >
+              Скачать
+            </v-btn>
+          </div>
+        </v-card>
         <div class="d-flex align-center justify-space-between mb-4">
           <h2 class="mr-4">Featured</h2>
           <v-btn
@@ -257,6 +335,14 @@ const saveAlbum = async () => {
 
 
     <audio ref="audioRef"></audio>
+
+    <v-snackbar
+      v-model="downloadSnackbar"
+      color="error"
+      location="bottom"
+    >
+      {{ downloadError }}
+    </v-snackbar>
 
     <v-dialog v-model="showCreateDialog" max-width="600">
       <v-card>
