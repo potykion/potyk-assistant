@@ -57,3 +57,5 @@ class BBCli:
         resp = self.client.post(urljoin(self.base_url, path), files=files)
         if resp.is_success:
             return {"result": "ok"}
+        raise Exception("blyad")
+
