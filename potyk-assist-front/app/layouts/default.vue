@@ -8,6 +8,7 @@
         <v-btn size="x-small" to="/vid">vid</v-btn>
         <v-btn size="x-small" to="/mu">mu</v-btn>
         <v-btn size="x-small" to="/clishe">clishe</v-btn>
+        <v-btn size="x-small" to="/bb">bb</v-btn>
       </v-app-bar-title>
 
       <template v-slot:append>

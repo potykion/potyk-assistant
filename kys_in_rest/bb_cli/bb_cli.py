@@ -1,4 +1,5 @@
 from urllib.parse import urljoin
+from typing import Any
 
 import httpx
 
@@ -11,8 +12,8 @@ class BBCli:
         api_token: str,
         org: str,
         repo: str,
-        base_url="https://api.bitbucket.org",
-    ):
+        base_url: str = "https://api.bitbucket.org",
+    ) -> None:
         self.email = email
         self.api_token = api_token
         self.client = httpx.Client(auth=(self.email, self.api_token))
@@ -20,14 +21,14 @@ class BBCli:
         self.repo = repo
         self.base_url = base_url
 
-    def __del__(self):
+    def __del__(self) -> None:
         self.client.close()
 
     def get_src(
         self,
         path_wo_slash: str,
-        branch="master",
-    ):
+        branch: str = "master",
+    ) -> str:
         path = f"/2.0/repositories/{self.org}/{self.repo}/src/{branch}/{path_wo_slash}"
         resp = self.client.get(urljoin(self.base_url, path))
         return resp.text
@@ -38,11 +39,11 @@ class BBCli:
         path_wo_slash: str,
         content: str,
         msg: str | None = None,
-        branch="master",
-    ):
+        branch: str = "master",
+    ) -> dict[str, Any]:
         msg = msg or f"Updated {path_wo_slash}"
 
-        files = {
+        files: dict[str, Any] = {
             "message": (None, msg),
             "branch": (None, branch),
             f"/{path_wo_slash}": (
@@ -54,4 +55,7 @@ class BBCli:
         path = f"/2.0/repositories/{self.org}/{self.repo}/src"
 
         resp = self.client.post(urljoin(self.base_url, path), files=files)
-        return resp.json()
+        payload = resp.json()
+        if isinstance(payload, dict):
+            return payload
+        return {"result": payload}

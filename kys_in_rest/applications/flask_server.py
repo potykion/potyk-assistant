@@ -12,6 +12,7 @@ from telegram import Bot
 from telegram.error import TelegramError
 
 from kys_in_rest.applications.ioc import make_ioc
+from kys_in_rest.bb_cli.bb_cli import BBCli
 from kys_in_rest.beer.features.beer_sync import BeerSync
 from kys_in_rest.core.cfg import root_dir
 from kys_in_rest.health.features.weight_repo import WeightRepo
@@ -186,6 +187,62 @@ def create_app() -> Flask:
             as_attachment=True,
             download_name="tracks.zip",
         )
+
+    @app.route("/bb/src", methods=["POST"])
+    def bb_src() -> tuple[flask.Response, int] | flask.Response:
+        data = flask.request.get_json()
+        if not data:
+            return flask.jsonify({"error": "No JSON data provided"}), 400
+
+        required = ["email", "api_token", "org", "repo", "path"]
+        missing = [key for key in required if not (data.get(key) or "").strip()]
+        if missing:
+            return flask.jsonify({"error": f"Missing required fields: {', '.join(missing)}"}), 400
+
+        try:
+            bb_cli = BBCli(
+                email=data["email"].strip(),
+                api_token=data["api_token"].strip(),
+                org=data["org"].strip(),
+                repo=data["repo"].strip(),
+                base_url=(data.get("base_url") or "https://api.bitbucket.org").strip(),
+            )
+            content = bb_cli.get_src(
+                path_wo_slash=data["path"].strip(),
+                branch=(data.get("branch") or "master").strip(),
+            )
+            return flask.jsonify({"content": content}), 200
+        except Exception as e:
+            return flask.jsonify({"error": str(e)}), 500
+
+    @app.route("/bb/commit", methods=["POST"])
+    def bb_commit() -> tuple[flask.Response, int] | flask.Response:
+        data = flask.request.get_json()
+        if not data:
+            return flask.jsonify({"error": "No JSON data provided"}), 400
+
+        required = ["email", "api_token", "org", "repo", "path", "content"]
+        missing = [key for key in required if data.get(key) is None or str(data.get(key)).strip() == ""]
+        if missing:
+            return flask.jsonify({"error": f"Missing required fields: {', '.join(missing)}"}), 400
+
+        try:
+            bb_cli = BBCli(
+                email=str(data["email"]).strip(),
+                api_token=str(data["api_token"]).strip(),
+                org=str(data["org"]).strip(),
+                repo=str(data["repo"]).strip(),
+                base_url=(str(data.get("base_url")) if data.get("base_url") else "https://api.bitbucket.org").strip(),
+            )
+            result = bb_cli.commit(
+                path_wo_slash=str(data["path"]).strip(),
+                content=str(data["content"]),
+                msg=(str(data["msg"]).strip() if data.get("msg") else None),
+                branch=(str(data.get("branch")) if data.get("branch") else "master").strip(),
+            )
+            return flask.jsonify(result), 200
+        except Exception as e:
+            return flask.jsonify({"error": str(e)}), 500
 
     # todo auth required
     @app.route("/beer/sync", methods=["POST"])

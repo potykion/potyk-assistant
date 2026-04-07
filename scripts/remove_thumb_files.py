@@ -53,10 +53,10 @@ def main() -> None:
     """Основная функция"""
     # Список директорий для обработки
     directories = [
-        # r"C:\Users\admin\Downloads\Telegram Desktop\ChatExport_2026-02-11\photos",
-        # r"C:\Users\admin\Downloads\Telegram Desktop\ChatExport_2026-02-11\video_files",
-        # r"C:\Users\admin\Downloads\Telegram Desktop\ChatExport_2026-02-11\stickers",
-        r"C:\Users\admin\Downloads\Telegram Desktop\ChatExport_2026-02-11\round_video_messages",
+        r"C:\Users\admin\Downloads\Telegram Desktop\ChatExport_2026-03-16\photos",
+        r"C:\Users\admin\Downloads\Telegram Desktop\ChatExport_2026-03-16\video_files",
+        r"C:\Users\admin\Downloads\Telegram Desktop\ChatExport_2026-03-16\stickers",
+        r"C:\Users\admin\Downloads\Telegram Desktop\ChatExport_2026-03-16\round_video_messages",
     ]
     
     total_removed = 0
