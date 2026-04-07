@@ -13,12 +13,56 @@ const bbBranch = ref("master")
 const bbPath = ref("")
 const bbMsg = ref("")
 const bbFileSrc = ref("")
+const bbFormStorageKey = "bb-form-v1"
 
 const readLoading = ref(false)
 const commitLoading = ref(false)
 const bbError = ref("")
 const bbSuccess = ref("")
 const bbSnackbar = ref(false)
+
+onMounted(() => {
+  const raw = localStorage.getItem(bbFormStorageKey)
+  if (!raw) {
+    return
+  }
+
+  try {
+    const saved = JSON.parse(raw) as {
+      email?: string
+      token?: string
+      org?: string
+      repo?: string
+      branch?: string
+      msg?: string
+      fileSrc?: string
+    }
+    bbEmail.value = saved.email || ""
+    bbToken.value = saved.token || bbToken.value
+    bbOrg.value = saved.org || ""
+    bbRepo.value = saved.repo || ""
+    bbBranch.value = saved.branch || "master"
+    bbMsg.value = saved.msg || ""
+    bbFileSrc.value = saved.fileSrc || ""
+  } catch {
+    // ignore malformed localStorage payload
+  }
+})
+
+watch([bbEmail, bbToken, bbOrg, bbRepo, bbBranch, bbMsg, bbFileSrc], () => {
+  localStorage.setItem(
+    bbFormStorageKey,
+    JSON.stringify({
+      email: bbEmail.value,
+      token: bbToken.value,
+      org: bbOrg.value,
+      repo: bbRepo.value,
+      branch: bbBranch.value,
+      msg: bbMsg.value,
+      fileSrc: bbFileSrc.value,
+    }),
+  )
+})
 
 const showError = (message: string) => {
   bbError.value = message
@@ -109,7 +153,7 @@ const commitFile = async () => {
   <v-container>
     <h1 class="mb-4">bb</h1>
 
-    <v-card variant="outlined" class="pa-4 mb-4">
+    <v-card variant="plain" >
       <v-card-title class="px-0">Get file</v-card-title>
       <v-form @submit.prevent="fetchFile">
         <v-row>
@@ -136,7 +180,7 @@ const commitFile = async () => {
       </v-form>
     </v-card>
 
-    <v-card variant="outlined" class="pa-4">
+    <v-card variant="plain" >
       <v-card-title class="px-0">Commit file</v-card-title>
       <v-form @submit.prevent="commitFile">
         <v-textarea
