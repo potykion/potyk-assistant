@@ -55,7 +55,5 @@ class BBCli:
         path = f"/2.0/repositories/{self.org}/{self.repo}/src"
 
         resp = self.client.post(urljoin(self.base_url, path), files=files)
-        payload = resp.json()
-        if isinstance(payload, dict):
-            return payload
-        return {"result": payload}
+        if resp.is_success:
+            return {"result": "ok"}
